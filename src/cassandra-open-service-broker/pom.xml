@@ -22,6 +22,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+<!-- 	<springCloudServiceBrokerVersion>1.0.1.RELEASE</springCloudServiceBrokerVersion> -->
+		<springCloudServiceBrokerVersion>1.0.0.RELEASE</springCloudServiceBrokerVersion>		
+		
+		
 	</properties>
 
 	<dependencies>
@@ -29,6 +33,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+		
+	<dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-cloudfoundry-service-broker</artifactId>
+        <version>${springCloudServiceBrokerVersion}</version>
+    </dependency>		
 		
 <!-- 		<dependency> -->
 <!-- 			<groupId>org.springframework.boot</groupId> -->
@@ -45,6 +55,14 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+ 	<dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-cloudfoundry-service-broker</artifactId>
+        <version>${springCloudServiceBrokerVersion}</version>
+        <classifier>tests</classifier>
+        <scope>test</scope>
+    </dependency>	
 	</dependencies>
 
 	<build>
