@@ -4,10 +4,10 @@ set -x
 
 . common/setup-java-prepackaging.sh
 
-cd ${BUILD_DIR}/broker-parent
+cd ${BUILD_DIR}/cassandra-open-service-broker
 ./mvnw clean install -DskipTests=true
-mv hazelcast-broker/target/hazelcast-broker-0.0.1-SNAPSHOT.jar  ${BUILD_DIR}
+mv target/cassandra-open-service-broker-0.0.1-SNAPSHOT.jar  ${BUILD_DIR}
 
 cd ${BUILD_DIR}
-rm -rf broker-parent 
+rm -rf cassandra-open-service-broker 
 
