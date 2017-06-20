@@ -4,6 +4,10 @@ packages:
 - java-common
 - openjdk
 - cassandra-broker-pkg
+consumes:
+- name: seeds
+  type: cassandra_seeds
+
 templates:
   bin/ctl: bin/ctl
   bin/monit_debugger: bin/monit_debugger
