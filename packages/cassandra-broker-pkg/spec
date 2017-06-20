@@ -1,0 +1,7 @@
+---
+name: cassandra-broker-pkg 
+dependencies: []
+files:
+- cassandra-open-service-broker/**/*
+- openjdk/*
+- common/setup-java-prepackaging.sh
