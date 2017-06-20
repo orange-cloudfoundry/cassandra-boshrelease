@@ -5,3 +5,8 @@ logging:
 spring:
   main:
     show-banner: true
+
+    
+cassandra:
+	contactpoints: <% seeds = link('seeds') %><% seeds.instances.each do |instance| %><%= instance.address %>,<% end %>
+	

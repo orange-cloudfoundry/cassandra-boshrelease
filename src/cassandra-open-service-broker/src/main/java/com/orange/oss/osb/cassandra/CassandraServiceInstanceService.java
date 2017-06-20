@@ -1,5 +1,7 @@
 package com.orange.oss.osb.cassandra;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.servicebroker.model.CreateServiceInstanceRequest;
 import org.springframework.cloud.servicebroker.model.CreateServiceInstanceResponse;
@@ -15,6 +17,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class CassandraServiceInstanceService implements ServiceInstanceService {
 
+	
+	private static Logger logger=LoggerFactory.getLogger(CassandraServiceInstanceService.class.getName());
+	
 	@Autowired
 	public CassandraServiceInstanceService(){
 		
