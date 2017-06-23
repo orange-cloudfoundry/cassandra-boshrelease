@@ -9,4 +9,9 @@ spring:
     
 cassandra:
 	contactpoints: <% seeds = link('seeds') %><% seeds.instances.each do |instance| %><%= instance.address %>,<% end %>
+
+spring:
+	data:
+		cassandra:
+			password: <%=properties.cassandra_seed.admin_password%>	
 	

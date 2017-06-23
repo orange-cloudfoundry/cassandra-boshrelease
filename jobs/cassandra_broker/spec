@@ -14,4 +14,6 @@ templates:
   helpers/ctl_setup.sh: helpers/ctl_setup.sh
   helpers/ctl_utils.sh: helpers/ctl_utils.sh
   config/cassandra-broker-config.properties.erb: config/cassandra-broker-config.properties
-properties: {}
+properties:
+	cassandra_seed.admin_password:
+		description: cassandra admin password

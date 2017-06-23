@@ -15,13 +15,18 @@ public class CassandraServiceInstanceBindingService implements ServiceInstanceBi
 	
 	@Override
 	public CreateServiceInstanceBindingResponse createServiceInstanceBinding(CreateServiceInstanceBindingRequest arg0) {
-		// TODO Auto-generated method stub
+		// TODO generate a random user / password
+		// create user in cassandra
+		// associate user to keySpace
+		
 		return null;
 	}
 
 	@Override
 	public void deleteServiceInstanceBinding(DeleteServiceInstanceBindingRequest arg0) {
-		// TODO Auto-generated method stub
+		// TODO 
+		// dissociate user from keySpace
+		// delete keyspace
 		
 	}
 
