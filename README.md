@@ -1,19 +1,19 @@
 # Cassandra CF Service
 
-##Introduction
+## Introduction
 
 This page describes the architecture of Cassandra service for CloudFoundry using the new Service Broker API version 2.
 
-##Components
+## Components
 
-###Casssandra Broker
+### Casssandra Broker
 
 The cassandra broker implements the 5 REST endpoints required by Cloud Foundry to write V2 services. Cassandra Broker is divided into 3 components
 * The Broker code itself that implements the 5 REST endpoints
 * Cassandra Admin Service which uses Cassandra DataStax client to connect to runnning cassandra cluster and create/deletes keyspace
 * H2 Database which saves service related meta deta (For eg. service id, credentials, # of services)
 
-###Cassandra Server
+### Cassandra Server
 
 The Cassandra server (node) is deployed on a seperate VM and can be deployed on any number of VMs depending on how many nodes we want as part of the cluster. The Cassandra admin service mentioned above creates keySpace on this running Cassandra Cluster for further consumption 
 
@@ -25,7 +25,7 @@ We use BOSH to deploy Cassandra Broker and Cassandra Nodes (Running Cassandra se
 * Upload the release to the Bosh Director (bosh upload release)
 * Deploy the release using manifest file (Sample manifest file can be found cassandra_broker.yml)
 
-##Configuring CF to use Cassandra service
+## Configuring CF to use Cassandra service
 ### Authentication
 According to http://docs.gopivotal.com/pivotalcf/services/managing-service-brokers.html brokers should use HTTP basic authentication to authenticate clients. The "cf create-service-broker" command expects the credentials for the cloud controller to authenticate itself to the broker. This is set in the broker in the config-context.xml file, the values in p4 for testing are admin/password.
 
@@ -80,27 +80,27 @@ The Cassandra properties files are made configurable via BOSH erb files and are 
 
 The Data center layout is configurable and can be configured via deployment manifest file via the Topology section mentioned above
 
-##Upgrades
+## Upgrades
 
 Upgrading Cassandra with a new Cassandra version or with some changes in the properties is quite straightforward
 
 Since the deployment of the Cassandra Cluster is controlled via Bosh, we leverage BOSH functionality to do any version/property upgrade.
 
-###Upgrading Casandra Version
+### Upgrading Casandra Version
 * Replace the Blob with the new version in the location blobs/cassandra/
 * In the packaging script change the version name, scripts available at packages/cassandra/
 * create release and deploy
 
-###Upgrading/Updating Cassandra YAML
+### Upgrading/Updating Cassandra YAML
 * Change the properties file present here jobs/cassandra_server/templates/config/
 * There are certain values which are configurable via manifest file itself and mentioned in the above segment
 * create release and deploy
 
-##Debugging
+## Debugging
 
 Bosh vms will list out the IP address for Cassandra VMs. Cassandra data is store in persistent directory /var/vcap/store/cassandra_server 
 
-###Log Files
+### Log Files
 
 There are 4 places that have log files related to cassandra
 * Cassandra Broker - The logs can be found at /var/vcap/sys/log/cassandra_broker. This will basically log all the service broker code about creation/deletion of service/keyspaces etc.
@@ -108,7 +108,7 @@ There are 4 places that have log files related to cassandra
 * Cassandra Seed - The logs can be found at /var/vcap/sys/log/cassandra_seed. This will basically log the cassandra server startup logs and is helpful in determing what went wrong during startup
 * Cassandra runtime log - The logs can be found at /var/vcap/store/cassandra_server/system.log in the same directory where data/commitlog is present.
 
-###Running Nodetool/Cassandra-cli/Cassandra-Stress
+### Running Nodetool/Cassandra-cli/Cassandra-Stress
 
 If you are SSH'ed into the cassandra VM and need to run the nodetool or cassandra-cli provided out of the box from cassandra, run this command from with the Casasndra VM
 ```sh
@@ -123,7 +123,7 @@ To run cassandra-cli run this command
 "JAVA_HOME=/var/vcap/packages/java/jre1.7.0_55 CASSANDRA_CONF=/var/vcap/jobs/cassandra_server/conf ./cassandra-cli"
 ```
 
-##Cleanup/ Removing snapshot
+## Cleanup/ Removing snapshot
 
 When a keyspace is deleted/dropped cassandra takes a snapshot of the keyspace for security/backup purpose. if you wish to remove the snapshot you will have to do it manually by running this command
 ```sh
@@ -138,6 +138,6 @@ cd /var/vcap/packages/cassandra_server/bin (or cd /var/vcap/packages/cassandra_s
 cd /var/vcap/packages/cassandra_server/bin (or cd /var/vcap/packages/cassandra_seed/bin or cd /var/vcap/packages/cassandra_injector repectively if you are ou a cassandra server, seed or injector node)
 ./nodetool status -r    (to obtain all the hostname of your cluster and to use one or more of it to connect with)
 
-###Authorization
+### Authorization
 
 Currently the Cassandra keySpace created via service can be used by any user if they have the Cassandra nodes IP address. In future this can be avoided by creating authorization per keySpace and return back credential to access that keySpace only to the app/user who consumes that service.
