@@ -19,8 +19,8 @@ case $1 in
 
 	exec chpst -u vcap:vcap $JAVA_HOME/bin/java  \
                -server -XX:+UseG1GC -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=25 -Xms128M -Xmx512M -Dlogging.config=$JOB_DIR/config/logback.xml \
+               -Dspring.config.location=file:$JOB_DIR/config/application.yml \
                -jar /var/vcap/packages/cassandra-broker-pkg/cassandra-broker.jar  \
-               -Dspring.config.location=file:/var/vcap/jobs/broker/config/application.yml \               
                >>$LOG_DIR/$JOB_NAME.log 2>&1
     ;;
 
