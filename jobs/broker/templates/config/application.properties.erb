@@ -1,0 +1,21 @@
+
+logging.level=DEBUG
+
+management.context-path=/admin
+
+pidfile=/var/vcap/sys/run/broker/broker.pid
+
+security.user.name=<%= p('broker.user') %>
+security.user.password=<%= p('broker.password') %>
+
+spring.main.show-banner=true
+spring.data.cassandra.password=<%= p('cassandra_seed.admin_password') %>
+spring.data.cassandra.contact-points=<% seeds = link('seeds') %><% seeds.instances.each do |instance| %><%= instance.address %>,<% end %>
+spring.data.cassandra.single-contact-points=<%= link('seeds').instances[0].address %>
+spring.data.cassandra.username=cassandra
+spring.data.cassandra.port=9042
+
+      
+      
+      
+      

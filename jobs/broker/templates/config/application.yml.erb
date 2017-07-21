@@ -3,25 +3,22 @@ logging:
   level: DEBUG
 
 management:
-  context-path: /admin    
+  context-path: /admin
 
 pidfile: /var/vcap/sys/run/broker/broker.pid
 
 security:
-	user:
-		name: <%= p('broker.user') %>
-		password: <%= p('broker.password') %>
+  user:
+    name: <%= p('broker.user') %>
+    password: <%= p('broker.password') %>
 
 spring:
   main:
     show-banner: true
-
-
-
-spring:
-	data:
-		cassandra:
-			password: <%= p('cassandra_seed.admin_password') %>	
-	                contact-points: <% seeds = link('seeds') %><% seeds.instances.each do |instance| %><%= instance.address %>,<% end %>
-                        username: cassandra
-                        port: 9042
+  data:
+    cassandra:
+      password: <%= p('cassandra_seed.admin_password') %>
+      contact-points: <% seeds = link('seeds') %><% seeds.instances.each do |instance| %><%= instance.address %>,<% end %>
+      single-contact-points: <%= link('seeds').instances[0].address %>
+      username: cassandra
+      port: 9042

@@ -17,12 +17,10 @@ case $1 in
     # store pid in $PIDFILE
     echo $$ > $PIDFILE
 
-#    exec chpst -u vcap:vcap broker \
-#         >>$LOG_DIR/$JOB_NAME.log 2>&1
-
 	exec chpst -u vcap:vcap $JAVA_HOME/bin/java  \
-               -server -XX:+UseG1GC -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=25 -Xms128M -Xmx512M -Dlogback.configurationFile=$JOB_DIR/config/logback.xml \
+               -server -XX:+UseG1GC -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=25 -Xms128M -Xmx512M -Dlogging.config=$JOB_DIR/config/logback.xml \
                -jar /var/vcap/packages/cassandra-broker-pkg/cassandra-broker.jar  \
+               -Dspring.config.location=file:/var/vcap/jobs/broker/config/application.yml \               
                >>$LOG_DIR/$JOB_NAME.log 2>&1
     ;;
 
