@@ -1,1 +1,0 @@
-include 'spring-service-broker', 'xdb', 'cassandra'

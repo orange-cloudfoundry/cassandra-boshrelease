@@ -3,11 +3,8 @@ set -u # report the usage of uninitialized variables
 
 # $BOSH_COMPILE_TARGET - where this package & spec'd source files are available
 # $BOSH_INSTALL_TARGET - where you copy/install files to be included in package
-/sbin/swapoff -a
 
 export HOME=/var/vcap
-
-cp -a brokers $BOSH_INSTALL_TARGET/brokers
 
 tar -zxf cassandra/apache-cassandra-3.9-bin.tar.gz
 cp -a apache-cassandra-3.9/* $BOSH_INSTALL_TARGET

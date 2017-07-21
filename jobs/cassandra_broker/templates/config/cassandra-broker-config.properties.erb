@@ -1,4 +1,0 @@
-# This file will be copied to Cassandra Broker resource directory where it will be picked up AppConfig.java to get
-# information about seeds it needs to connect to
-seeds=<% seeds = link('seeds') %><% seeds.instances.each do |instance| %><%= instance.address %>,<% end %>
-#FIX SSL CONF with.ssl=   p('cassandra_server.client_server_encryption') 

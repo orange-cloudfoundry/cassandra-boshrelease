@@ -1,5 +1,0 @@
-check process cassandra_broker
-  with pidfile /var/vcap/sys/run/cassandra_broker/cassandra_broker.pid
-  start program "/var/vcap/jobs/cassandra_broker/bin/monit_debugger cassandra_broker_ctl '/var/vcap/jobs/cassandra_broker/bin/cassandra_broker_ctl start'"
-  stop program "/var/vcap/jobs/cassandra_broker/bin/monit_debugger cassandra_broker_ctl '/var/vcap/jobs/cassandra_broker/bin/cassandra_broker_ctl stop'"
-  group vcap

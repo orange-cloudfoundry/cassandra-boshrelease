@@ -9,20 +9,19 @@ pidfile: /var/vcap/sys/run/broker/broker.pid
 
 security:
 	user:
-		name: <%=broker.user%>
-		password: <%=broker.password%>
+		name: <%= p('broker.user') %>
+		password: <%= p('broker.password') %>
 
 spring:
   main:
     show-banner: true
 
 
-    
-cassandra:
-	contactpoints: <% seeds = link('seeds') %><% seeds.instances.each do |instance| %><%= instance.address %>,<% end %>
 
 spring:
 	data:
 		cassandra:
-			password: <%=properties.cassandra_seed.admin_password%>	
-	
+			password: <%= p('cassandra_seed.admin_password') %>	
+	                contact-points: <% seeds = link('seeds') %><% seeds.instances.each do |instance| %><%= instance.address %>,<% end %>
+                        username: cassandra
+                        port: 9042

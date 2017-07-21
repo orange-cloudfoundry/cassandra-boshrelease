@@ -1,8 +1,0 @@
-subprojects {
-  project.repositories { maven { url mavenRepo } }
-}
-
-task wrapper(type: Wrapper) {
-  gradleVersion = '2.0'
-}
-

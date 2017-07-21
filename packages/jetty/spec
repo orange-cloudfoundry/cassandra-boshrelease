@@ -1,4 +1,0 @@
----
-name: jetty
-files:
-  - jetty/jetty-runner-9.4.0.v20161208.jar

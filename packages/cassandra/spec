@@ -2,8 +2,6 @@
 name: cassandra
 dependencies:
 - openjdk 
-- jetty
 files:
-- brokers/**/*
 - openjdk/**/*
 - cassandra/apache-cassandra-3.9-bin.tar.gz
