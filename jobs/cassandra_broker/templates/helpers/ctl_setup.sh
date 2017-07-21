@@ -79,3 +79,12 @@ done
 PIDFILE=$RUN_DIR/$output_label.pid
 
 echo '$PATH' $PATH
+
+# adding GOPATH for go 
+mkdir -p /var/vcap/packages/golang/Projets/goprojects
+echo 'export GOROOT=/var/vcap/packages/golang/bin' >> ~root/.profile
+echo 'export GOPATH=/var/vcap/packages/golang/Projets/goprojects'  >> ~root/.profile
+echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin'  >> ~root/.profile
+echo 'alias go=$GOROOT/./go'  >> ~root/.profile
+
+

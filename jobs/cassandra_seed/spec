@@ -15,6 +15,7 @@ templates:
   bin/monit_debugger: bin/monit_debugger
   bin/node-tool.sh: bin/node-tool.sh
   bin/cql-sh.sh: bin/cql-sh.sh
+  bin/sstable-loader.sh: bin/sstable-loader.sh
   tools/bin/cassandra-stress.sh: tools/bin/cassandra-stress.sh
   bin/cassandra-cli.sh: bin/cassandra-cli.sh
   bin/clean-snapshot.sh: bin/clean-snapshot.sh 
@@ -31,6 +32,8 @@ templates:
   config/logback-tools.xml.erb: conf/logback-tools.xml
   config/commitlog_archiving.properties.erb: conf/commitlog_archiving.properties
   config/cqlshrc.sample.erb: conf/cqlshrc.sample
+  bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
+  bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
 
 properties:
   cassandra_seed.cluster_name:

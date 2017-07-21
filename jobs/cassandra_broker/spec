@@ -4,6 +4,7 @@ packages:
 - openjdk
 - cassandra
 - jetty
+- golang
 consumes:
 - name: seeds
   type: cassandra_seeds

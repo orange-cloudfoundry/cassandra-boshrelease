@@ -47,7 +47,10 @@ export RUN_DIR=/var/vcap/sys/run/$JOB_NAME
 export LOG_DIR=/var/vcap/sys/log/$JOB_NAME
 export TMP_DIR=/var/vcap/sys/tmp/$JOB_NAME
 export STORE_DIR=/var/vcap/store/$JOB_NAME
-for dir in $RUN_DIR $LOG_DIR $TMP_DIR $STORE_DIR
+export BACKUP_DATA_DIR=/var/vcap/store/backups
+export RESTORE_DATA_DIR=/var/vcap/store/restores
+
+for dir in $RUN_DIR $LOG_DIR $TMP_DIR $STORE_DIR $BACKUP_DATA_DIR $RESTORE_DATA_DIR
 do
   mkdir -p ${dir}
   chown vcap:vcap ${dir}
@@ -88,8 +91,12 @@ then
 fi
 mkdir -p $JOB_DIR/tools/bin/graph
 chmod 777 $JOB_DIR/tools/bin/graph
-echo ' verif creation rep graph : ' `ls -ltr $JOB_DIR/tools/bin/graph`
+#echo ' verif creation rep graph : ' `ls -ltr $JOB_DIR/tools/bin/graph`
 chmod +x  $JOB_DIR/tools/bin/cassandra-stress.sh
-echo ' verif cassandra-stress : ' `ls -ltr $JOB_DIR/tools/bin/cassandra-stress.sh`
+#echo ' verif cassandra-stress : ' `ls -ltr $JOB_DIR/tools/bin/cassandra-stress.sh`
 
-
+#mkdir -p /var/vcap/store/backups
+#chmod 644 /var/vcap/store/backups
+#mkdir -p /var/vcap/store/restores
+#chmod 644 /var/vcap/store/restores
+mount -o remount ,exec,suid,nodev /tmp
