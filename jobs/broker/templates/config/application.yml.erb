@@ -2,9 +2,20 @@
 logging:
   level: DEBUG
 
+management:
+  context-path: /admin    
+
+pidfile: /var/vcap/sys/run/broker/broker.pid
+
+security:
+	user:
+		name: <%=broker.user%>
+		password: <%=broker.password%>
+
 spring:
   main:
     show-banner: true
+
 
     
 cassandra:
