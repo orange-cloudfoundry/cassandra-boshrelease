@@ -7,7 +7,3 @@ openjdk/openjdk.tar.gz:
   object_id: a74df715-20cc-4c89-8020-74a4a9e32fd9
   sha: 9fc65908420c92047346e5bcc66fee0aad422c5e
   size: 126476497
-jetty/jetty-runner-9.4.0.v20161208.jar:
-  object_id: 6c31ee54-42f0-47e8-812f-96fb06e8a689
-  sha: 7f8c6870465587230211194f9bacec72189406c2
-  size: 6598167
