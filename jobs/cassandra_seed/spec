@@ -34,6 +34,7 @@ templates:
   config/cqlshrc.sample.erb: conf/cqlshrc.sample
   bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
   bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
+  bin/sec-sysauth.sh: bin/post-start
 
 properties:
   cassandra_seed.cluster_name:
