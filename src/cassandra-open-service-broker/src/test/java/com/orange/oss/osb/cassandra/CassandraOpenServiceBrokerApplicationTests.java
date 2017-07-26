@@ -4,6 +4,8 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.orange.oss.osb.cassandra.helper.TestCassandraConfiguration;
 import com.orange.oss.osb.cassandra.util.Converter;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +48,12 @@ public class CassandraOpenServiceBrokerApplicationTests {
     private static final int EXPECTED_REVOKED_PERMISSIONS = 0;
     private static final int EXPECTED_GRANTED_PERMISSIONS = 6;
 
+
+//    @Before
+//    public void clean() {
+//        this.dropKeyspace();
+//        this.dropRole();
+//    }
 
     @Test
     public void createServiceInstanceShouldCreateNewKeyspaceInCassandra() {
@@ -124,6 +132,15 @@ public class CassandraOpenServiceBrokerApplicationTests {
         assertEquals("Roles counter", 1, rolesCounterAfter - rolesCounterBefore);
         // Assert that the permissions are granted to role on keyspace
         assertEquals("Permissions counter", EXPECTED_GRANTED_PERMISSIONS, this.countPermissionsOnKeyspace());
+        // Assert non null expected Credentials (deeper unit testing is performed in ConverterTest)
+        CreateServiceInstanceAppBindingResponse createServiceInstanceAppBindingResponse = (CreateServiceInstanceAppBindingResponse)createServiceInstanceBindingResponse;
+        Map<String, Object> credentials = createServiceInstanceAppBindingResponse.getCredentials();
+        assertNotNull("Credentials are null", credentials);
+        assertNotNull("contact-points are null", credentials.get("contact-points"));
+        assertNotNull("port is null", credentials.get("port"));
+        assertNotNull("login is null", credentials.get("login"));
+        assertNotNull("password is null", credentials.get("password"));
+        assertNotNull("jdbcUrl is null", credentials.get("jdbcUrl"));
 
         //Clean up permissions, roles and keyspace
         this.revokePermissions();

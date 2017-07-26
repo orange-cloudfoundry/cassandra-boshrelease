@@ -1,21 +1,24 @@
 package com.orange.oss.osb.cassandra;
 
 import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.PlainTextAuthProvider;
 import com.datastax.driver.core.Session;
 import com.orange.oss.osb.cassandra.util.Converter;
 import org.apache.commons.text.RandomStringGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.servicebroker.model.CreateServiceInstanceAppBindingResponse;
 import org.springframework.cloud.servicebroker.model.CreateServiceInstanceBindingRequest;
 import org.springframework.cloud.servicebroker.model.CreateServiceInstanceBindingResponse;
 import org.springframework.cloud.servicebroker.model.DeleteServiceInstanceBindingRequest;
 import org.springframework.cloud.servicebroker.service.ServiceInstanceBindingService;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
-public class CassandraServiceInstanceBindingService implements ServiceInstanceBindingService  {
+public class CassandraServiceInstanceBindingService implements ServiceInstanceBindingService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CassandraServiceInstanceBindingService.class.getName());
 	private Cluster cluster = null;
@@ -34,22 +37,25 @@ public class CassandraServiceInstanceBindingService implements ServiceInstanceBi
 
 	@Override
 	public CreateServiceInstanceBindingResponse createServiceInstanceBinding(CreateServiceInstanceBindingRequest arg0) {
-		// TODO use binding_uuid as role name and generate a random password
-		// TODO broker exception
-		this.createRole(arg0.getBindingId());
+		//Create role
+		String passwordGenerated = this.createRole(arg0.getBindingId());
+		//Grant role
 		this.grantRoleOnKeyspace(arg0.getServiceInstanceId(), arg0.getBindingId());
-		return new CreateServiceInstanceBindingResponse();
+		//Build credentials
+		CreateServiceInstanceAppBindingResponse createServiceInstanceAppBindingResponse = new CreateServiceInstanceAppBindingResponse();
+		Map<String, Object> credentials = Converter.buildCredentials(this.contactPoints, String.valueOf(port), arg0.getServiceInstanceId(), arg0.getBindingId(), passwordGenerated);
+		return createServiceInstanceAppBindingResponse.withCredentials(credentials);
+
 	}
 
 	@Override
 	public void deleteServiceInstanceBinding(DeleteServiceInstanceBindingRequest arg0) {
-		// TODO 
 		// TODO broker exception
 		this.revokeRoleOnKeyspace(arg0.getServiceInstanceId(), arg0.getBindingId());
 		this.dropRole(arg0.getBindingId());
 	}
 
-	private void createRole(String pRoleName) {
+	private String createRole(String pRoleName) {
 
 		//TODO : Test if role doesn't exist
 		Session session = this.open();
@@ -58,10 +64,10 @@ public class CassandraServiceInstanceBindingService implements ServiceInstanceBi
 		LOGGER.info("Role Name converted : " + roleNameConverted);
 		String passwordGenerated = this.generatePassword();
 		LOGGER.info("Password generated : " + passwordGenerated);
-		//session.execute("CREATE ROLE " + roleNameConverted + " WITH PASSWORD = " + "'toto'" + " AND LOGIN = true");
 		session.execute("CREATE ROLE " + roleNameConverted + " WITH PASSWORD = '" + passwordGenerated + "' AND LOGIN = true");
 		LOGGER.info("End creating Role " + roleNameConverted);
 		disconnect(session);
+		return passwordGenerated;
 	}
 
 	private void grantRoleOnKeyspace(String pKeyspaceName, String pRoleName) {
@@ -73,7 +79,7 @@ public class CassandraServiceInstanceBindingService implements ServiceInstanceBi
 		String keyspaceNameConverted = Converter.uuidToKeyspaceName(pKeyspaceName);
 		LOGGER.info("Role Name converted : " + roleNameConverted);
 		LOGGER.info("Keyspace Name converted : " + keyspaceNameConverted);
-		session.execute("GRANT ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " TO " + roleNameConverted );
+		session.execute("GRANT ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " TO " + roleNameConverted);
 		LOGGER.info("End granting Role On Keyspace");
 		disconnect(session);
 	}
@@ -96,13 +102,13 @@ public class CassandraServiceInstanceBindingService implements ServiceInstanceBi
 		String keyspaceNameConverted = Converter.uuidToKeyspaceName(pKeyspaceName);
 		LOGGER.info("Role Name converted : " + roleNameConverted);
 		LOGGER.info("Keyspace Name converted : " + keyspaceNameConverted);
-		session.execute("REVOKE ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " FROM " + roleNameConverted );
+		session.execute("REVOKE ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " FROM " + roleNameConverted);
 		LOGGER.info("End revoking Role On Keyspace");
 		disconnect(session);
 	}
 
-	private Session open(){
-		if (this.cluster == null){
+	private Session open() {
+		if (this.cluster == null) {
 //			PlainTextAuthProvider ptap = new PlainTextAuthProvider(user, password);
 			this.cluster = Cluster.builder()
 					.addContactPoints(contactPoints)
@@ -114,7 +120,7 @@ public class CassandraServiceInstanceBindingService implements ServiceInstanceBi
 		return this.cluster.connect();
 	}
 
-	private void disconnect(Session session){
+	private void disconnect(Session session) {
 		session.close();
 	}
 
@@ -124,4 +130,5 @@ public class CassandraServiceInstanceBindingService implements ServiceInstanceBi
 				.build();
 		return generator.generate(10);
 	}
+
 }
