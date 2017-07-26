@@ -49,8 +49,9 @@ export TMP_DIR=/var/vcap/sys/tmp/$JOB_NAME
 export STORE_DIR=/var/vcap/store/$JOB_NAME
 export BACKUP_DATA_DIR=/var/vcap/store/backups
 export RESTORE_DATA_DIR=/var/vcap/store/restores
+#export CQLSH_DIR=/var/vcap/store/cqlhist
 
-for dir in $RUN_DIR $LOG_DIR $TMP_DIR $STORE_DIR $BACKUP_DATA_DIR $RESTORE_DATA_DIR
+for dir in $RUN_DIR $LOG_DIR $TMP_DIR $STORE_DIR $BACKUP_DATA_DIR $RESTORE_DATA_DIR 
 do
   mkdir -p ${dir}
   chown vcap:vcap ${dir}
@@ -61,6 +62,8 @@ export TMPDIR=$TMP_DIR
 export C_INCLUDE_PATH=/var/vcap/packages/mysqlclient/include/mysql:/var/vcap/packages/sqlite/include:/var/vcap/packages/libpq/include
 export LIBRARY_PATH=/var/vcap/packages/mysqlclient/lib/mysql:/var/vcap/packages/sqlite/lib:/var/vcap/packages/libpq/lib
 
+#  pour test cqlsh history /root/.cassandra
+# chmod 777 /root
 # consistent place for vendoring python libraries within package
 if [[ -d ${WEBAPP_DIR:-/xxxx} ]]
 then
@@ -91,13 +94,6 @@ then
 fi
 mkdir -p $JOB_DIR/tools/bin/graph
 chmod 777 $JOB_DIR/tools/bin/graph
-#echo ' verif creation rep graph : ' `ls -ltr $JOB_DIR/tools/bin/graph`
 chmod +x  $JOB_DIR/tools/bin/cassandra-stress.sh
-#echo ' verif cassandra-stress : ' `ls -ltr $JOB_DIR/tools/bin/cassandra-stress.sh`
 
-#mkdir -p /var/vcap/store/backups
-#chmod 644 /var/vcap/store/backups
-#mkdir -p /var/vcap/store/restores
-#chmod 644 /var/vcap/store/restores
 mount -o remount ,exec,suid,nodev /tmp
-
