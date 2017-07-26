@@ -39,11 +39,11 @@ public class CatalogConfig {
 	private Map<String, Object> getServiceDefinitionMetadata() {
 		Map<String, Object> sdMetadata = new HashMap<>();
 		sdMetadata.put("displayName", "cassandra");
-		sdMetadata.put("imageUrl", "http://info.mongodb.com/rs/mongodb/images/MongoDB_Logo_Full.png");
+		sdMetadata.put("imageUrl", "http://cassandra.apache.org/img/cassandra_logo.png");
 		sdMetadata.put("longDescription", "cassandra Service");
-		sdMetadata.put("providerDisplayName", "Pivotal");
-		sdMetadata.put("documentationUrl", "https://github.com/spring-cloud-samples/cloudfoundry-mongodb-service-broker");
-		sdMetadata.put("supportUrl", "https://github.com/spring-cloud-samples/cloudfoundry-mongodb-service-broker");
+		sdMetadata.put("providerDisplayName", "Orange");
+		sdMetadata.put("documentationUrl", "https://github.com/orange-cloudfoundry/cassandra-cf-service-boshrelease\n");
+		sdMetadata.put("supportUrl", "https://github.com/orange-cloudfoundry/cassandra-cf-service-boshrelease\n");
 		return sdMetadata;
 	}
 	
