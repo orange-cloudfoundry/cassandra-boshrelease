@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.cassandra.ClusterBuilderCustomizer;
 import org.springframework.cassandra.core.CqlTemplate;
 import org.springframework.cloud.servicebroker.model.CreateServiceInstanceRequest;
 import org.springframework.cloud.servicebroker.model.CreateServiceInstanceResponse;
@@ -18,6 +19,8 @@ import org.springframework.cloud.servicebroker.model.GetLastServiceOperationResp
 import org.springframework.cloud.servicebroker.model.UpdateServiceInstanceRequest;
 import org.springframework.cloud.servicebroker.model.UpdateServiceInstanceResponse;
 import org.springframework.cloud.servicebroker.service.ServiceInstanceService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Service;
 
 
@@ -26,10 +29,10 @@ public class CassandraServiceInstanceService implements ServiceInstanceService {
 
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CassandraServiceInstanceService.class.getName());
-	private Cluster cluster = null;
+	//private Cluster cluster = null;
 
-//	@Autowired
-//	CqlTemplate template;
+	@Autowired
+	private CassandraTemplate template;
 
 	@Value("${spring.data.cassandra.contact-points}")
 	private String contactPoints;
@@ -43,9 +46,11 @@ public class CassandraServiceInstanceService implements ServiceInstanceService {
 	@Value("${spring.data.cassandra.password}")
 	private String password;
 
+	//@Autowired
+	//public CassandraServiceInstanceService(CassandraTemplate pCassandraTemplate){
+	//	this.template = pCassandraTemplate;
+	//}
 
-
-	@Autowired
 	public CassandraServiceInstanceService(){
 	}
 
@@ -75,44 +80,44 @@ public class CassandraServiceInstanceService implements ServiceInstanceService {
 		return null;
 	}
 
-	private Session open(){
-		if (this.cluster == null){
+//	private Session open(){
+//		if (this.cluster == null){
 //			PlainTextAuthProvider ptap = new PlainTextAuthProvider(user, password);
-			this.cluster = Cluster.builder()
-					.addContactPoints(contactPoints)
-					.withPort(port)
-					.withCredentials(user, password)
+//			this.cluster = Cluster.builder()
+//					.addContactPoints(contactPoints)
+//					.withPort(port)
+//					.withCredentials(user, password)
 //					.withAuthProvider(ptap)
-					.build();
-		}
-		return this.cluster.connect();
-	}
+//					.build();
+//		}
+//		return this.cluster.connect();
+//	}
 
-	private void disconnect(Session session){
-		session.close();
-	}
+//	private void disconnect(Session session){
+//		session.close();
+//	}
 
 	private void createKeyspace(String pKeyspaceName) {
 
 		//TODO : Test if keyspace doesn't exist
-		Session session = this.open();
+		//Session session = this.open();
 		LOGGER.info("Begin creating KeySpace " + pKeyspaceName);
 		String keyspaceNameConverted = Converter.uuidToKeyspaceName(pKeyspaceName);
 		LOGGER.info("KeySpace Name converted : " + keyspaceNameConverted);
-		session.execute("CREATE KEYSPACE " + keyspaceNameConverted + " WITH REPLICATION " + "= {'class':'SimpleStrategy', 'replication_factor': 3};");
+		this.template.getSession().execute("CREATE KEYSPACE " + keyspaceNameConverted + " WITH REPLICATION " + "= {'class':'SimpleStrategy', 'replication_factor': 3};");
 		LOGGER.info("End creating KeySpace " + keyspaceNameConverted);
-        disconnect(session);
+        //disconnect(session);
 	}
 
     private void dropKeyspace(String pKeyspaceName) {
 
 		//TODO : Test if keyspace exists
-		Session session = this.open();
+		//Session session = this.open();
         LOGGER.info("Begin deleting KeySpace " + pKeyspaceName);
 		String keyspaceNameConverted = Converter.uuidToKeyspaceName(pKeyspaceName);
 		LOGGER.info("KeySpace Name converted : " + keyspaceNameConverted);
-        session.execute("DROP KEYSPACE " + keyspaceNameConverted);
+		this.template.getSession().execute("DROP KEYSPACE " + keyspaceNameConverted);
         LOGGER.info("End deleting KeySpace " + keyspaceNameConverted);
-		disconnect(session);
+		//disconnect(session);
     }
 }

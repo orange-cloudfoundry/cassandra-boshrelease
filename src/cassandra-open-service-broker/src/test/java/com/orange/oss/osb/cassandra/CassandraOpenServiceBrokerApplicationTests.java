@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.servicebroker.model.*;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -26,6 +27,9 @@ import static org.junit.Assert.*;
 @ActiveProfiles("test")
 @SpringBootTest
 public class CassandraOpenServiceBrokerApplicationTests {
+
+    @Autowired
+    private CassandraTemplate template;
 
     @Autowired
     private CatalogConfig catalogConfig;
@@ -198,7 +202,8 @@ public class CassandraOpenServiceBrokerApplicationTests {
     }
 
     private int countKeyspaces() {
-        ResultSet results = TestCassandraConfiguration.session.execute(SELECT_KEYSPACES);
+        //ResultSet results = TestCassandraConfiguration.session.execute(SELECT_KEYSPACES);
+        ResultSet results = this.template.getSession().execute(SELECT_KEYSPACES);
         int counter = 0;
         for (Row row : results.all()) {
             String ksName = row.getString("keyspace_name");
@@ -210,12 +215,14 @@ public class CassandraOpenServiceBrokerApplicationTests {
 
     private Row selectKeyspaceByName(String pKeyspaceName) {
         String query = SELECT_KEYSPACE_BY_NAME + "'" + pKeyspaceName + "'";
-        ResultSet results = TestCassandraConfiguration.session.execute(query);
+        //ResultSet results = TestCassandraConfiguration.session.execute(query);
+        ResultSet results = this.template.getSession().execute(query);
         return results.one();
     }
 
     private int countRoles() {
-        ResultSet results = TestCassandraConfiguration.session.execute(LIST_ROLES);
+        //ResultSet results = TestCassandraConfiguration.session.execute(LIST_ROLES);
+        ResultSet results = this.template.getSession().execute(LIST_ROLES);
         int counter = 0;
         for (Row row : results.all()) {
             String roleName = row.getString("role");
@@ -228,7 +235,9 @@ public class CassandraOpenServiceBrokerApplicationTests {
     private int countAllPermissionsOfARole() {
         String roleNameConverted = Converter.uuidToRoleName(BINDING_UUID);
 
-        ResultSet results = TestCassandraConfiguration.session.execute(LIST_ALL_PERMISSIONS);
+        //ResultSet results = TestCassandraConfiguration.session.execute(LIST_ALL_PERMISSIONS);
+        ResultSet results = this.template.getSession().execute(LIST_ALL_PERMISSIONS);
+
         int counter = 0;
         for (Row row : results.all()) {
             String role = row.getString("role");
@@ -244,7 +253,10 @@ public class CassandraOpenServiceBrokerApplicationTests {
         String keyspaceNameConverted = Converter.uuidToKeyspaceName(SERVICE_INSTANCE_UUID);
         String roleNameConverted = Converter.uuidToRoleName(BINDING_UUID);
 
-        ResultSet results = TestCassandraConfiguration.session.execute(LIST_PERMISSIONS_OF_A_ROLE + roleNameConverted);
+        //ResultSet results = TestCassandraConfiguration.session.execute(LIST_PERMISSIONS_OF_A_ROLE + roleNameConverted);
+        ResultSet results = this.template.getSession().execute(LIST_PERMISSIONS_OF_A_ROLE + roleNameConverted);
+
+
         int counter = 0;
         for (Row row : results.all()) {
             String resource = row.getString("resource");
@@ -256,31 +268,32 @@ public class CassandraOpenServiceBrokerApplicationTests {
         return counter;
     }
 
-
-
-
     private void createKeyspace(){
         String keyspaceNameConverted = Converter.uuidToKeyspaceName(SERVICE_INSTANCE_UUID);
         LOGGER.info("KeySpace Name converted : " + keyspaceNameConverted);
-        TestCassandraConfiguration.session.execute("CREATE KEYSPACE " + keyspaceNameConverted + " WITH REPLICATION " + "= {'class':'SimpleStrategy', 'replication_factor': 3};");
+        //TestCassandraConfiguration.session.execute("CREATE KEYSPACE " + keyspaceNameConverted + " WITH REPLICATION " + "= {'class':'SimpleStrategy', 'replication_factor': 3};");
+        this.template.getSession().execute("CREATE KEYSPACE " + keyspaceNameConverted + " WITH REPLICATION " + "= {'class':'SimpleStrategy', 'replication_factor': 3};");
     }
 
     private void dropKeyspace(){
         String keyspaceNameConverted = Converter.uuidToKeyspaceName(SERVICE_INSTANCE_UUID);
         LOGGER.info("KeySpace Name converted : " + keyspaceNameConverted);
-        TestCassandraConfiguration.session.execute("DROP KEYSPACE " + keyspaceNameConverted);
+        //TestCassandraConfiguration.session.execute("DROP KEYSPACE " + keyspaceNameConverted);
+        this.template.getSession().execute("DROP KEYSPACE " + keyspaceNameConverted);
     }
 
     private void createRole(){
         String roleNameConverted = Converter.uuidToRoleName(BINDING_UUID);
         LOGGER.info("Role Name converted : " + roleNameConverted);
-        TestCassandraConfiguration.session.execute("CREATE ROLE " + roleNameConverted);
+        //TestCassandraConfiguration.session.execute("CREATE ROLE " + roleNameConverted);
+        this.template.getSession().execute("CREATE ROLE " + roleNameConverted);
     }
 
     private void dropRole(){
         String roleNameConverted = Converter.uuidToRoleName(BINDING_UUID);
         LOGGER.info("Role Name converted : " + roleNameConverted);
-        TestCassandraConfiguration.session.execute("DROP ROLE " + roleNameConverted);
+        //TestCassandraConfiguration.session.execute("DROP ROLE " + roleNameConverted);
+        this.template.getSession().execute("DROP ROLE " + roleNameConverted);
     }
 
     private void grantPermissions(){
@@ -288,7 +301,8 @@ public class CassandraOpenServiceBrokerApplicationTests {
         String roleNameConverted = Converter.uuidToRoleName(BINDING_UUID);
         LOGGER.info("Keyspace Name converted : " + keyspaceNameConverted);
         LOGGER.info("Role Name converted : " + roleNameConverted);
-        TestCassandraConfiguration.session.execute("GRANT ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " TO " + roleNameConverted);
+        //TestCassandraConfiguration.session.execute("GRANT ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " TO " + roleNameConverted);
+        this.template.getSession().execute("GRANT ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " TO " + roleNameConverted);
     }
 
     private void revokePermissions(){
@@ -296,9 +310,7 @@ public class CassandraOpenServiceBrokerApplicationTests {
         String roleNameConverted = Converter.uuidToRoleName(BINDING_UUID);
         LOGGER.info("Keyspace Name converted : " + keyspaceNameConverted);
         LOGGER.info("Role Name converted : " + roleNameConverted);
-        TestCassandraConfiguration.session.execute("REVOKE ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " FROM " + roleNameConverted);
+        //TestCassandraConfiguration.session.execute("REVOKE ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " FROM " + roleNameConverted);
+        this.template.getSession().execute("REVOKE ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " FROM " + roleNameConverted);
     }
-
-
-
 }

@@ -7,15 +7,18 @@ import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.cassandra.core.CassandraTemplate;
+
 import java.time.Duration;
 
-@Configuration
-public class TestCassandraConfiguration implements DisposableBean{
-
+//@Configuration
+//public class TestCassandraConfiguration implements DisposableBean{
+public class TestCassandraConfiguration{
     private static final Logger LOGGER = LoggerFactory.getLogger(TestCassandraConfiguration.class);
 
     @Value("${cassandra.startupTimeoutInSeconds}")
@@ -44,7 +47,7 @@ public class TestCassandraConfiguration implements DisposableBean{
         return session;
     }
 
-    @Override
+//    @Override
     public void destroy() throws Exception {
         if (cluster != null) {
             cluster.close();
@@ -66,7 +69,6 @@ public class TestCassandraConfiguration implements DisposableBean{
                         .withCredentials(user, password)
         //                .withAuthProvider(ptap)
                         .build();
-
         session = cluster.connect();
     }
 }
