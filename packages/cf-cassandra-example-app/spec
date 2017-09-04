@@ -1,0 +1,5 @@
+---
+name: cf-cassandra-example-app
+dependencies: []
+files:
+- cf-cassandra-example-app/cf-cassandra-example-app*.tgz

@@ -49,6 +49,7 @@ public final class Converter {
         credentials.put("port", pPort);
         credentials.put("login", Converter.uuidToRoleName(pRoleName));
         credentials.put("password", pPasswordGenerated);
+        credentials.put("keyspaceName", Converter.uuidToKeyspaceName(pKeyspaceName));
         String cassandraJdbcUrl = "jdbc:cassandra://" + normalizedContactPoints + ":" + pPort + "/" + Converter.uuidToKeyspaceName(pKeyspaceName);
         credentials.put("jdbcUrl", cassandraJdbcUrl);
         return credentials;

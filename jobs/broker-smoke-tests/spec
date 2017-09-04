@@ -1,0 +1,37 @@
+---
+name: broker-smoke-tests
+
+packages: [cf-cli, cf-cassandra-example-app]
+
+templates:
+  bin/run: bin/run
+  helpers/ctl_setup.sh: helpers/ctl_setup.sh
+  helpers/ctl_utils.sh: helpers/ctl_utils.sh
+
+properties:
+  cf.api.url:
+    description: 'Full URL of Cloud Foundry API'
+  cf.admin.username:
+    description: 'Username of the Cloud Foundry admin user'
+  cf.admin.password:
+    description: 'Password of the Cloud Foundry admin user'
+  cf.skip.ssl.validation:
+    description: 'Skip SSL validation when connecting to Cloud Foundry API'
+    default: false
+  cf.org:
+    description: 'Organization to host cassandra-example-app'
+    default: service-sandbox
+  cf.space:
+    description: 'Space within organization to run cassandra-example-app'
+    default: cassandra
+  cf.cassandra.appdomain:
+    description: 'CF cassandra application domain'
+  cf.cassandra.servicename:
+    description: 'CF marketplace service name to use to get Cassandra instance'
+    default: cassandra
+  cf.cassandra.serviceplan:
+    description: 'CF marketplace service plan to use to get Cassandra instance (from service_name)'
+    default: default
+  cf.cassandra.serviceinstancename:
+    description: 'Name of cassandra service instance used by broker'
+    default: cassandra-instance

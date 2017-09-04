@@ -79,6 +79,7 @@ public class ConverterTest {
         assertEquals("port", port, credentials.get("port"));
         assertEquals("login", Converter.uuidToRoleName(roleName), credentials.get("login"));
         assertEquals("password", passwordGenerated, credentials.get("password"));
+        assertEquals("keyspaceName", Converter.uuidToKeyspaceName(keyspaceName), credentials.get("keyspaceName"));
         assertEquals("jdbcUrl", jdbcUrl, credentials.get("jdbcUrl"));
     }
 }

@@ -1,0 +1,19 @@
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+# Detect # of CPUs so make jobs can be parallelized
+CPUS=$(grep -c ^processor /proc/cpuinfo)
+ # Available variables
+# $BOSH_COMPILE_TARGET - where this package & spec'd source files are available
+# $BOSH_INSTALL_TARGET - where you copy/install files to be included in package
+export HOME=/var/vcap
+
+#Assuming there is a directory cf-cassandra-example-app (from spec file)
+cd cf-cli
+tar xzf cf-cli*.tgz
+
+#The tgz content (cf directory) is copied to ${BOSH_INSTALL_TARGET} under the sub-directory cf-cli (from spec file)
+BIN_DIR=${BOSH_INSTALL_TARGET}/bin
+mkdir -p ${BIN_DIR}
+cp cf ${BIN_DIR}/cf
+
