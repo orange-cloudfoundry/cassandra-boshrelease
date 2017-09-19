@@ -234,3 +234,5 @@ properties:
     description:
   cassandra_seed.topology:
     description:
+  cassandra_seed.cass_pwd:
+    default: cassandra
