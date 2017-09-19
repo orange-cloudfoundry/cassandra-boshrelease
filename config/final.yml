@@ -1,5 +1,5 @@
 ---
-final_name: cassandra39-services
+final_name: cassandra39-serv_pwd
 blobstore:
   provider: s3 
   options:
