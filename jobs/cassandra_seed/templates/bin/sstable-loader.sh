@@ -11,7 +11,7 @@ export CASSANDRA_TOOL=/var/vcap/packages/cassandra/tools/bin
 
 export JAVA_HOME=/var/vcap/packages/openjdk
 export PATH=$PATH:/var/vcap/packages/openjdk/bin:$CASSANDRA_BIN:$CASSANDRA_CONF:$CASSANDRA_TOOL
-
+export CASS_PWD="<%=properties.cassandra_seed.cass_pwd%>"
 ## export CASSANDRA_CONF=/var/vcap/jobs/cassandra_seed/conf
 
 pushd /var/vcap/packages/cassandra/tools/bin
@@ -22,7 +22,7 @@ popd
 exit 0
 fi
 
-exec chpst -u vcap:vcap /var/vcap/packages/cassandra/bin/sstableloader -u cassandra -pw cassandra "$@"
+exec chpst -u vcap:vcap /var/vcap/packages/cassandra/bin/sstableloader -u cassandra -pw $CASS_PWD "$@"
 popd
 exit 0
 

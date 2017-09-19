@@ -7,7 +7,7 @@ NODE=''
 OPERATION=''
 PID=''
 USER="$(whoami)"
-
+export CASS_PWD="<%=properties.cassandra_seed.cass_pwd%>"
 
 backup_data() {
     check_process
@@ -158,13 +158,13 @@ check_status() {
 #    fi
 
 
-    ./cql-sh.sh "${NODE}" -u cassandra -p cassandra -e "${DROP_KEYSPACE_CQL}" > /dev/null 2>&1 \
-        && ./cql-sh.sh "${NODE}" -u cassandra -p cassandra -e "${CREATE_KEYSPACE_CQL}" > /dev/null 2>&1 \
-        && ./cql-sh.sh "${NODE}" -u cassandra -p cassandra -e "${DROP_TABLE_CQL}" > /dev/null 2>&1 \
-        && ./cql-sh.sh "${NODE}" -u cassandra -p cassandra  -e "${CREATE_TABLE_CQL}" > /dev/null 2>&1 \
-        && ./cql-sh.sh "${NODE}" -u cassandra -p cassandra -e "${INSERT_CQL}" > /dev/null 2>&1 \
-        && ./cql-sh.sh "${NODE}" -u cassandra -p cassandra -e "${SELECT_CQL}" > /dev/null 2>&1 \
-        && ./cql-sh.sh "${NODE}" -u cassandra -p cassandra  -e "${DROP_KEYSPACE_CQL}" > /dev/null 2>&1 \
+    ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD -e "${DROP_KEYSPACE_CQL}" > /dev/null 2>&1 \
+        && ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD -e "${CREATE_KEYSPACE_CQL}" > /dev/null 2>&1 \
+        && ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD -e "${DROP_TABLE_CQL}" > /dev/null 2>&1 \
+        && ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD  -e "${CREATE_TABLE_CQL}" > /dev/null 2>&1 \
+        && ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD -e "${INSERT_CQL}" > /dev/null 2>&1 \
+        && ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD -e "${SELECT_CQL}" > /dev/null 2>&1 \
+        && ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD  -e "${DROP_KEYSPACE_CQL}" > /dev/null 2>&1 \
         && sudo rm -rf "${CASSANDRA_DATA}/data/${TEST_KEYSPACE}"
     if [[ "$?" != 0 ]]; then
         out "Cassandra is not ok."
