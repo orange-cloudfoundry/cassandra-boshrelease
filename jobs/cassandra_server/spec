@@ -230,3 +230,6 @@ properties:
     description:
   cassandra_server.topology:
     description:
+  cassandra_server.cass_pwd:
+    default: cassandra
+

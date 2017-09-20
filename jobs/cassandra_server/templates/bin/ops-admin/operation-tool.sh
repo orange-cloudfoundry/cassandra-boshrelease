@@ -7,7 +7,7 @@ NODE=''
 OPERATION=''
 PID=''
 USER="$(whoami)"
-
+export CASS_PWD="<%=properties.cassandra_server.cass_pwd%>"
 
 backup_data() {
     check_process
@@ -27,7 +27,7 @@ backup_data() {
     local backup_data_package
     for keyspace in ${BACKUP_KEYSPACES[@]}; do
         #cd "${CASSANDRA_BIN}"
-        cd /var/vcap/jobs/cassandra_server/bin
+        cd /var/vcap/jobs/cassandra_seed/bin
         ./node-tool.sh clearsnapshot "${keyspace}"
         if [[ "$?" != 0 ]]; then
             err "Can not clear snapshot of keyspace \033[33m${keyspace}\033[0m."
@@ -40,7 +40,7 @@ backup_data() {
         fi
 
         keyspace_data_dir="${CASSANDRA_DATA}/${keyspace}"
-        #keyspace_data_dir="/var/vcap/store/cassandra_server/${CLUSTER_NAME}/data/${keyspace}"
+        #keyspace_data_dir="/var/vcap/store/cassandra_seed/${CLUSTER_NAME}/data/${keyspace}"
         cd "${keyspace_data_dir}"
         for table_data_dir in `ls -F | grep /$`; do
             cd "${table_data_dir}"
@@ -65,7 +65,7 @@ backup_data() {
         done
 
         #cd "${CASSANDRA_BIN}"
-        cd "/var/vcap/jobs/cassandra_server/bin"
+        cd "/var/vcap/jobs/cassandra_seed/bin"
         ./node-tool.sh clearsnapshot "${keyspace}"
         if [[ "$?" != 0 ]]; then
             err "Can not clear snapshot of keyspace \033[33m${keyspace}\033[0m."
@@ -110,7 +110,7 @@ check_status() {
     fi
 
     #cd "${CASSANDRA_BIN}"
-    cd "/var/vcap/jobs/cassandra_server/bin"
+    cd "/var/vcap/jobs/cassandra_seed/bin"
     local result
     #result="$(./node-tool.sh status |grep -v grep|grep 'UN|JN|DN|?N'| awk '{print $1,$2}')"
     result="$(./node-tool.sh status |grep -v grep|grep -E 'UN|LN|JN|MN'| awk '{print $1,$2}')"
@@ -158,13 +158,13 @@ check_status() {
 #    fi
 
 
-    ./cql-sh.sh "${NODE}" -u cassandra -p cassandra -e "${DROP_KEYSPACE_CQL}" > /dev/null 2>&1 \
-        && ./cql-sh.sh "${NODE}" -u cassandra -p cassandra -e "${CREATE_KEYSPACE_CQL}" > /dev/null 2>&1 \
-        && ./cql-sh.sh "${NODE}" -u cassandra -p cassandra -e "${DROP_TABLE_CQL}" > /dev/null 2>&1 \
-        && ./cql-sh.sh "${NODE}" -u cassandra -p cassandra  -e "${CREATE_TABLE_CQL}" > /dev/null 2>&1 \
-        && ./cql-sh.sh "${NODE}" -u cassandra -p cassandra -e "${INSERT_CQL}" > /dev/null 2>&1 \
-        && ./cql-sh.sh "${NODE}" -u cassandra -p cassandra -e "${SELECT_CQL}" > /dev/null 2>&1 \
-        && ./cql-sh.sh "${NODE}" -u cassandra -p cassandra  -e "${DROP_KEYSPACE_CQL}" > /dev/null 2>&1 \
+    ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD -e "${DROP_KEYSPACE_CQL}" > /dev/null 2>&1 \
+        && ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD -e "${CREATE_KEYSPACE_CQL}" > /dev/null 2>&1 \
+        && ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD -e "${DROP_TABLE_CQL}" > /dev/null 2>&1 \
+        && ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD  -e "${CREATE_TABLE_CQL}" > /dev/null 2>&1 \
+        && ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD -e "${INSERT_CQL}" > /dev/null 2>&1 \
+        && ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD -e "${SELECT_CQL}" > /dev/null 2>&1 \
+        && ./cql-sh.sh "${NODE}" -u cassandra -p $CASS_PWD  -e "${DROP_KEYSPACE_CQL}" > /dev/null 2>&1 \
         && sudo rm -rf "${CASSANDRA_DATA}/data/${TEST_KEYSPACE}"
     if [[ "$?" != 0 ]]; then
         out "Cassandra is not ok."
@@ -208,7 +208,7 @@ remove_node() {
     confirm_operation "${OPERATION}" "${NODE}"
 
     #cd "${CASSANDRA_BIN}"
-    cd "/var/vcap/jobs/cassandra_server/bin"
+    cd "/var/vcap/jobs/cassandra_seed/bin"
     ./node-tool.sh decommission
     if  [[ "$?" == 0 ]]; then
         out "Node ${NODE} is removed from ${CLUSTER_NAME}."

@@ -230,3 +230,6 @@ properties:
     description:
   cassandra_injector.topology:
     description:
+  cassandra_injector.cass_pwd:
+    default: cassandra
+
