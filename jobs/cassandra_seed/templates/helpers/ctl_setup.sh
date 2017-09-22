@@ -95,5 +95,7 @@ fi
 mkdir -p $JOB_DIR/tools/bin/graph
 chmod 777 $JOB_DIR/tools/bin/graph
 chmod +x  $JOB_DIR/tools/bin/cassandra-stress.sh
+mkdir -p $JOB_DIR/ssl
+
 
 mount -o remount ,exec,suid,nodev /tmp

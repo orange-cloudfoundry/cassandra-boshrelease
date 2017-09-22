@@ -99,4 +99,5 @@ chmod +x  $JOB_DIR/tools/bin/cassandra-stress.sh
 #chmod 644 /var/vcap/store/backups
 #mkdir -p /var/vcap/store/restores
 #chmod 644 /var/vcap/store/restores
+mkdir -p $JOB_DIR/ssl
 mount -o remount ,exec,suid,nodev /tmp

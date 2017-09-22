@@ -3,11 +3,15 @@ name: cassandra_server
 packages:
 - cassandra
 - openjdk
+provides:
+- name: seeds
+  type: cassandra_servers
 consumes:
 - name: seeds
-  type: cassandra_seeds
+  type: cassandra_servers
+
 templates:
-  bin/cassandra_server_ctl: bin/cassandra_server_ctl
+  bin/cassandra_server.ctl: bin/cassandra_server_ctl
   bin/monit_debugger: bin/monit_debugger
   bin/node-tool.sh: bin/node-tool.sh
   bin/cql-sh.sh: bin/cql-sh.sh
@@ -28,6 +32,9 @@ templates:
   config/logback-tools.xml.erb: conf/logback-tools.xml
   config/commitlog_archiving.properties.erb: conf/commitlog_archiving.properties
   config/cqlshrc.sample.erb: conf/cqlshrc.sample
+  bin/generate_ssl_cert.sh: bin/generate_ssl_cert.sh
+  ssl/cassandradb.ca.erb: ssl/cassandradb.ca
+  ssl/cassandradb.pem.erb: ssl/cassandradb.pem
   bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
   bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
   bin/sec-sysauth.sh: bin/post-start
@@ -55,10 +62,10 @@ properties:
     default: PasswordAuthenticator 
     description: AllowAllAuthenticator c.a.d pas de controle sinon possible avec  PasswordAuthenticator.
   cassandra_server.authorizer:
-    default: CassandraAuthorizer 
+    default: CassandraAuthorizer
     description: pour gerer les droits dans la bdd. Controle fin avec CassandraAuthorizer.
   cassandra_server.permissions_validity_in_ms:
-    default: 2000 
+    default: 4000 
     description: duree de validite des permissions stockees en cache.Se desactive en positionnant a 0 avec AllowAllAuthorizer.
   cassandra_server.partitioner:
     default: org.apache.cassandra.dht.Murmur3Partitioner 
@@ -226,10 +233,15 @@ properties:
     default: 8G
     description:
   cassandra_server.heap_newsize:
-    default: 1G 
+    default: 1G
     description:
   cassandra_server.topology:
     description:
   cassandra_server.cass_pwd:
     default: cassandra
-
+  cassandra_server.cassConf_ssl:
+    default: 1
+    description: use tls/ssl for authent and transactions 
+  cassandra_server.cassDbCertificate:
+    default: "NOT INITIALIZED"
+    description: use tls/ssl for authent and transactions 

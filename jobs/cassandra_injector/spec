@@ -3,11 +3,15 @@ name: cassandra_injector
 packages:
 - cassandra
 - openjdk
+provides:
+- name: seeds
+  type: cassandra_injectors
 consumes:
 - name: seeds
-  type: cassandra_seeds
+  type: cassandra_injectors
+
 templates:
-  bin/cassandra_injector_ctl: bin/cassandra_injector_ctl
+  bin/cassandra_injector.ctl: bin/cassandra_injector_ctl
   bin/monit_debugger: bin/monit_debugger
   bin/node-tool.sh: bin/node-tool.sh
   bin/cql-sh.sh: bin/cql-sh.sh
@@ -28,6 +32,9 @@ templates:
   config/logback-tools.xml.erb: conf/logback-tools.xml
   config/commitlog_archiving.properties.erb: conf/commitlog_archiving.properties
   config/cqlshrc.sample.erb: conf/cqlshrc.sample
+  bin/generate_ssl_cert.sh: bin/generate_ssl_cert.sh
+  ssl/cassandradb.ca.erb: ssl/cassandradb.ca
+  ssl/cassandradb.pem.erb: ssl/cassandradb.pem
   bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
   bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
   bin/sec-sysauth.sh: bin/post-start
@@ -52,13 +59,13 @@ properties:
     default: 2
     description: nombre de thread pour gerer les hints. A augmenter si cluster multi datacenter.
   cassandra_injector.authenticator:
-    default: PasswordAuthenticator
+    default: PasswordAuthenticator 
     description: AllowAllAuthenticator c.a.d pas de controle sinon possible avec  PasswordAuthenticator.
   cassandra_injector.authorizer:
     default: CassandraAuthorizer
     description: pour gerer les droits dans la bdd. Controle fin avec CassandraAuthorizer.
   cassandra_injector.permissions_validity_in_ms:
-    default: 2000 
+    default: 4000 
     description: duree de validite des permissions stockees en cache.Se desactive en positionnant a 0 avec AllowAllAuthorizer.
   cassandra_injector.partitioner:
     default: org.apache.cassandra.dht.Murmur3Partitioner 
@@ -232,4 +239,9 @@ properties:
     description:
   cassandra_injector.cass_pwd:
     default: cassandra
-
+  cassandra_injector.cassConf_ssl:
+    default: 1
+    description: use tls/ssl for authent and transactions 
+  cassandra_injector.cassDbCertificate:
+    default: "NOT INITIALIZED"
+    description: use tls/ssl for authent and transactions 

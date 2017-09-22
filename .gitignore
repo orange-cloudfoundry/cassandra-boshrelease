@@ -26,3 +26,4 @@ manifest.yml.OLD
 manifest.yml.POblin
 bosh-release_cassandra39_ok_26072017
 manifest.yml.OK
+cred.yml
