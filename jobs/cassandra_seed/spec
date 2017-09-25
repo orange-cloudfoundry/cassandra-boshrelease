@@ -37,6 +37,7 @@ templates:
   ssl/cassandradb.pem.erb: ssl/cassandradb.pem
   bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
   bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
+  bin/creer_pem_cli_serv.sh: bin/creer_pem_cli_serv.sh
   bin/sec-sysauth.sh: bin/post-start
 
 properties:
@@ -239,8 +240,8 @@ properties:
     description:
   cassandra_seed.cass_pwd:
     default: cassandra
-  cassandra_seed.cassConf_ssl:
-    default: 1
+  cassandra_seed.cassandra_ssl_YN:
+    default: N
     description: use tls/ssl for authent and transactions 
   cassandra_seed.cassDbCertificate:
     default: "NOT INITIALIZED"

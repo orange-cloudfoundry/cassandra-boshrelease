@@ -20,4 +20,7 @@ if [[ "$?" == 1 ]]; then
 fi
 /var/vcap/packages/cassandra/bin/cqlsh `hostname -I` -e "alter keyspace system_auth WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '3'}  AND durable_writes = true" -u cassandra -p $CASS_PWD  2>&1>/dev/null
 /var/vcap/jobs/cassandra_seed/bin/./node-tool.sh repair system_auth
+#exit 0
+
+/var/vcap/jobs/cassandra_seed/bin/./creer_pem_cli_serv.sh
 exit 0

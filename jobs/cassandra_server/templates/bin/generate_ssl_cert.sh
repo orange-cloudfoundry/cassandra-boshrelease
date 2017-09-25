@@ -5,7 +5,7 @@ set -u # report the usage of uninitialized variables.
 
 #source `dirname $(readlink --canonicalize-existing $0)`/setenv
 
-#pushd `dirname $(readlink --canonicalize-existing $0)` >/dev/null
+pushd `dirname $(readlink --canonicalize-existing $0)` >/dev/null
 export CASSANDRA_SSL=/var/vcap/jobs/cassandra_server/ssl
 cd ${CASSANDRA_SSL}
 
@@ -35,5 +35,5 @@ then
 	rm *.req *.srl *.crt *.key .rnd
 fi
 
-# popd >/dev/null
+popd >/dev/null
 exit 0
