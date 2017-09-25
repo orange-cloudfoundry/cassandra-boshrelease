@@ -35,5 +35,5 @@ then
 	rm *.req *.srl *.crt *.key .rnd
 fi
 
-popd >/dev/null
+# popd >/dev/null
 exit 0

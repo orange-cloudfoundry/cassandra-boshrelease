@@ -27,7 +27,7 @@ then
 
 	openssl genrsa -out client.key 2048
 	openssl req -key client.key -new -out client.req -subj "/C=FR/ST=IDF/O=Cloud Foundry/CN=${node_current_ip}/emailAddress=user@domain.com"
-	openssl x509 -req -in client.req -CA cassandradb.ca -CAkey cassandra.pem -CAserial cassandradb.srl -out client.crt -days 3650
+	openssl x509 -req -in client.req -CA cassandradb.ca -CAkey cassandradb.pem -CAserial cassandradb.srl -out client.crt -days 3650
 	cat client.key client.crt > client.pem
 	#openssl verify -CAfile cassandradb.ca client.pem
 
@@ -35,5 +35,5 @@ then
 	rm *.req *.srl *.crt *.key .rnd
 fi
 
-popd >/dev/null
+# popd >/dev/null
 exit 0
