@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+#set -x
 # Setup env vars and folders for the ctl script
 # This helps keep the ctl script as readable
 # as possible
@@ -96,6 +96,18 @@ mkdir -p $JOB_DIR/tools/bin/graph
 chmod 777 $JOB_DIR/tools/bin/graph
 chmod +x  $JOB_DIR/tools/bin/cassandra-stress.sh
 mkdir -p $JOB_DIR/ssl
+chmod +x $JOB_DIR/config/certs/ssl_env.ctl
+chmod +x $JOB_DIR/config/certs/gen_keystore_client.sh
 
+if [[ -d ${JOB_DIR}/config/certs/newcerts ]]
+then
+ rm -rf $JOB_DIR/config/certs/newcerts/
+ mkdir -p $JOB_DIR/config/certs/newcerts
+else 
+ mkdir -p $JOB_DIR/config/certs/newcerts
+fi
+
+chown vcap:vcap ${JOB_DIR}/config/certs/newcerts
+chown vcap:vcap ${JOB_DIR}/config/certs/
 
 mount -o remount ,exec,suid,nodev /tmp

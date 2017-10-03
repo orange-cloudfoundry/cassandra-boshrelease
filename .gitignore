@@ -28,3 +28,8 @@ bosh-release_cassandra39_ok_26072017
 manifest.yml.OK
 cred.yml
 manifest.yml.OK
+creds.yml
+manifest.yml.TEST
+manifest.yml.TEST2
+manifest.yml.TEST3OK
+
