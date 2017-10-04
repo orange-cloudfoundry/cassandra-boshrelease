@@ -2,7 +2,7 @@
 #set -x
 set -e # exit immediately if a simple command exits with a non-zero status.
 set -u # report the usage of uninitialized variables.
-cd /var/vcap/jobs/cassandra_injector/config/certs/
+cd /var/vcap/jobs/cassandra_server/config/certs/
 export JAVA_HOME=/var/vcap/packages/openjdk
 export PATH=$PATH:$JAVA_HOME/bin:.
 
