@@ -69,18 +69,18 @@ request_scheduler: <%=properties.cassandra_injector.request_scheduler%>
 internode_compression: <%=properties.cassandra_injector.internode_compression%>
 inter_dc_tcp_nodelay: <%=properties.cassandra_injector.inter_dc_tcp_nodelay%>
 server_encryption_options:
- internode_encryption: <%=properties.cassandra_injector.server_encryption_options.internode_encryption%>
- keystore: /var/vcap/jobs/cassandra_injector/config/certs/<%=spec.ip%>_cassandra.keystore
- keystore_password: <%=properties.cassandra_injector.cass_KSP%>
- truststore: /var/vcap/jobs/cassandra_injector/config/certs/<%=spec.ip%>_cassandra.truststore
- truststore_password: <%=properties.cassandra_injector.cass_KSP%>
+ internode_encryption: <%=properties.cassandra_server.server_encryption_options.internode_encryption%>
+ keystore: /var/vcap/jobs/cassandra_server/config/certs/<%=spec.ip%>_cassandra.keystore
+ keystore_password: <%=properties.cassandra_server.cass_KSP%>
+ truststore: /var/vcap/jobs/cassandra_server/config/certs/<%=spec.ip%>_cassandra.truststore
+ truststore_password: <%=properties.cassandra_server.cass_KSP%>
  protocol: TLS
 client_encryption_options:
- enabled: <%=properties.cassandra_injector.client_encryption_options.enabled%>
+ enabled: <%=properties.cassandra_server.client_encryption_options.enabled%>
 ##   optional: true
- keystore: /var/vcap/jobs/cassandra_injector/config/certs/<%=spec.ip%>_cassandra.keystore
- keystore_password: <%=properties.cassandra_injector.cass_KSP%>
- truststore: /var/vcap/jobs/cassandra_injector/config/certs/<%=spec.ip%>_cassandra.keystore
- truststore_password: <%=properties.cassandra_injector.cass_KSP%>
- require_client_auth: <%=properties.cassandra_injector.client_encryption_options.require_client_auth%>
+ keystore: /var/vcap/jobs/cassandra_server/config/certs/<%=spec.ip%>_cassandra.keystore
+ keystore_password: <%=properties.cassandra_server.cass_KSP%>
+ truststore: /var/vcap/jobs/cassandra_server/config/certs/<%=spec.ip%>_cassandra.truststore
+ truststore_password: <%=properties.cassandra_server.cass_KSP%>
+ require_client_auth: <%=properties.cassandra_server.client_encryption_options.require_client_auth%>
  protocol: TLS

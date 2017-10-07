@@ -76,11 +76,11 @@ server_encryption_options:
  truststore_password: <%=properties.cassandra_server.cass_KSP%>
  protocol: TLS
 client_encryption_options:
- enabled: false
+ enabled: <%=properties.cassandra_server.client_encryption_options.enabled%>
 ##  optional: <%=properties.cassandra_server.client_encryption_options.optional%>
  keystore: /var/vcap/jobs/cassandra_server/config/certs/<%=spec.ip%>_cassandra.keystore
  keystore_password: <%=properties.cassandra_server.cass_KSP%>
- truststore: /var/vcap/jobs/cassandra_server/config/certs/<%=spec.ip%>_cassandra.keystore
+ truststore: /var/vcap/jobs/cassandra_server/config/certs/<%=spec.ip%>_cassandra.truststore
  truststore_password: <%=properties.cassandra_server.cass_KSP%>
  require_client_auth: <%=properties.cassandra_server.client_encryption_options.require_client_auth%>
  protocol: TLS
