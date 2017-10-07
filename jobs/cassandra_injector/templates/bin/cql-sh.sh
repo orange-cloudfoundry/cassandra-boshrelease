@@ -13,7 +13,18 @@ export PATH=$PATH:/var/vcap/packages/openjdk/bin:$CASSANDRA_BIN:$CASSANDRA_CONF
 
 ## export CASSANDRA_CONF=/var/vcap/jobs/cassandra_server/conf
 
-pushd /var/vcap/packages/cassandra/bin
-exec chpst -u vcap:vcap /var/vcap/packages/cassandra/bin/cqlsh "$@"
-popd
-exit 0
+export CLIENT_SSL=<%=properties.cassandra_injector.client_encryption_options.enabled%>
+
+if [[ ${CLIENT_SSL} == "true" ]]
+then
+ pushd /var/vcap/packages/cassandra/bin
+ exec chpst -u vcap:vcap /var/vcap/packages/cassandra/bin/cqlsh --cqlshrc "/var/vcap/jobs/cassandra_injector/root/.cassandra/cqlshrc" "$@" --ssl
+ popd
+ exit 0
+else
+ pushd /var/vcap/packages/cassandra/bin
+ exec chpst -u vcap:vcap /var/vcap/packages/cassandra/bin/cqlsh "$@"
+ popd
+ exit 0
+fi
+

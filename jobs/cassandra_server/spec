@@ -28,7 +28,6 @@ templates:
   config/logback.xml.erb: conf/logback.xml
   config/logback-tools.xml.erb: conf/logback-tools.xml
   config/commitlog_archiving.properties.erb: conf/commitlog_archiving.properties
-  config/cqlshrc.sample.erb: conf/cqlshrc.sample
 #  bin/generate_ssl_cert.sh: bin/generate_ssl_cert.sh
 #  ssl/cassandradb.ca.erb: ssl/cassandradb.ca
 #  ssl/cassandradb.pem.erb: ssl/cassandradb.pem
@@ -38,6 +37,7 @@ templates:
 #  ssl2/ssl_env.ctl.erb: config/certs/ssl_env.ctl
 #  ssl2/gen_keystore_client.sh: config/certs/gen_keystore_client.sh
 #  ssl2/gen_ca_cert.conf: config/certs/gen_ca_cert.conf
+  config/cqlshrc.erb: /root/.cassandra/cqlshrc
   ssl3/ssl_env.ctl.erb: config/certs/ssl_env.ctl
   ssl3/gen_keystore_client.sh: config/certs/gen_keystore_client.sh
   bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
@@ -257,3 +257,15 @@ properties:
   cassandra_server.cass_KSP:
     default:
     description: cassandra ssl keystore passwd
+  cassandra_server.validate_ssl_TF:
+    default: false
+    description: cassandra ssl validate true or false
+  cassandra_server.server_encryption_options.internode_encryption:
+    default: false
+    description: cassandra ssl entre noeuds true or false
+  cassandra_server.client_encryption_options.enabled:
+    default: false
+    description: cassandra ssl entre client et server true or false
+  cassandra_server.client_encryption_options.require_client_auth:
+    default: false
+    description: cassandra ssl entre client et server et authentifi

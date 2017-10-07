@@ -69,7 +69,7 @@ request_scheduler: <%=properties.cassandra_server.request_scheduler%>
 internode_compression: <%=properties.cassandra_server.internode_compression%>
 inter_dc_tcp_nodelay: <%=properties.cassandra_server.inter_dc_tcp_nodelay%>
 server_encryption_options:
- internode_encryption: none
+ internode_encryption: <%=properties.cassandra_server.server_encryption_options.internode_encryption%>
  keystore: /var/vcap/jobs/cassandra_server/config/certs/<%=spec.ip%>_cassandra.keystore
  keystore_password: <%=properties.cassandra_server.cass_KSP%>
  truststore: /var/vcap/jobs/cassandra_server/config/certs/<%=spec.ip%>_cassandra.truststore
@@ -77,10 +77,10 @@ server_encryption_options:
  protocol: TLS
 client_encryption_options:
  enabled: false
- optional: true
+##  optional: <%=properties.cassandra_server.client_encryption_options.optional%>
  keystore: /var/vcap/jobs/cassandra_server/config/certs/<%=spec.ip%>_cassandra.keystore
  keystore_password: <%=properties.cassandra_server.cass_KSP%>
  truststore: /var/vcap/jobs/cassandra_server/config/certs/<%=spec.ip%>_cassandra.keystore
  truststore_password: <%=properties.cassandra_server.cass_KSP%>
- require_client_auth: true
+ require_client_auth: <%=properties.cassandra_server.client_encryption_options.require_client_auth%>
  protocol: TLS

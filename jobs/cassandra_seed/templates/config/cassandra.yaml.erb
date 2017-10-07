@@ -66,21 +66,20 @@ dynamic_snitch_update_interval_in_ms: <%=properties.cassandra_seed.dynamic_snitc
 dynamic_snitch_reset_interval_in_ms: <%=properties.cassandra_seed.dynamic_snitch_reset_interval_in_ms%>
 dynamic_snitch_badness_threshold: <%=properties.cassandra_seed.dynamic_snitch_badness_threshold%>
 request_scheduler: <%=properties.cassandra_seed.request_scheduler%>
-internode_compression: <%=properties.cassandra_seed.internode_compression%>
 inter_dc_tcp_nodelay: <%=properties.cassandra_seed.inter_dc_tcp_nodelay%>
 server_encryption_options:
- internode_encryption: none
+ internode_encryption: <%=properties.cassandra_seed.server_encryption_options.internode_encryption%>
  keystore: /var/vcap/jobs/cassandra_seed/config/certs/<%=spec.ip%>_cassandra.keystore
  keystore_password: <%=properties.cassandra_seed.cass_KSP%>
  truststore: /var/vcap/jobs/cassandra_seed/config/certs/<%=spec.ip%>_cassandra.truststore
  truststore_password: <%=properties.cassandra_seed.cass_KSP%>
  protocol: TLS
 client_encryption_options:
- enabled: false
- optional: true
+ enabled: <%=properties.cassandra_seed.client_encryption_options.enabled%>
+##  optional: <%=properties.cassandra_seed.client_encryption_options.optional%>
  keystore: /var/vcap/jobs/cassandra_seed/config/certs/<%=spec.ip%>_cassandra.keystore
  keystore_password: <%=properties.cassandra_seed.cass_KSP%>
  truststore: /var/vcap/jobs/cassandra_seed/config/certs/<%=spec.ip%>_cassandra.keystore
  truststore_password: <%=properties.cassandra_seed.cass_KSP%>
- require_client_auth: true
+ require_client_auth: <%=properties.cassandra_seed.client_encryption_options.require_client_auth%>
  protocol: TLS
