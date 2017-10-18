@@ -187,10 +187,10 @@ cd /var/vcap/packages/cassandra_server/bin (or cd /var/vcap/packages/cassandra_s
 ./nodetool clearsnapshot  
 ```
 
-##Future Enhancements
+## Future Enhancements
 
-## You can now run any arguments with all the binaries below (nodetool, cassandra-stress) 
-## and also cql-sh with all kind of possible arguments
+You can now run any arguments with all the binaries below (nodetool,
+cassandra-stress) and also cql-sh with all kind of possible arguments.
 
 ```sh
 cd /var/vcap/packages/cassandra_server/bin # (or cd /var/vcap/packages/cassandra_seed/bin or cd /var/vcap/packages/cassandra_injector repectively if you are ou a cassandra server, seed or injector node)
