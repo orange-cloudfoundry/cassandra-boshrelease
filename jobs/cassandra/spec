@@ -41,9 +41,9 @@ templates:
   config/logback-tools.xml.erb: conf/logback-tools.xml
   config/commitlog_archiving.properties.erb: conf/commitlog_archiving.properties
 #  bin/generate_ssl_cert.sh: bin/generate_ssl_cert.sh
-#  ssl2/cert: config/certs/node.crt
-#  ssl2/cert_ca: config/certs/ca.crt
-#  ssl2/cert_private_key: config/certs/node.key
+  ssl2/cert: config/certs/node.crt
+  ssl2/cert_ca: config/certs/ca.crt
+  ssl2/cert_private_key: config/certs/node.key
 #  ssl2/ssl_env.ctl.erb: config/certs/ssl_env.ctl
 #  ssl2/gen_keystore_client.sh: config/certs/gen_keystore_client.sh
 #  ssl2/gen_ca_cert.conf: config/certs/gen_ca_cert.conf
