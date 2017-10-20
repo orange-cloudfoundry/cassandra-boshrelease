@@ -21,24 +21,24 @@ export STOREPASS="<%= p('keystore_password', '') %>"
 export KEYPASS=$STOREPASS
 export PASSWORD=$KEYPASS
 
-
+export JOB_DIR=/var/vcap/jobs/cassandra_seed
 
 openssl pkcs12 -export \
-    -in "$JOB/config/certs/node.crt" \
-    -inkey "$JOB/config/certs/node.key" \
+    -in "$JOB_DIR/config/certs/node.crt" \
+    -inkey "$JOB_DIR/config/certs/node.key" \
     -name "${HOST_NAME}_${CLUSTER_NAME}_CLUSTER" \
     \
-    -CAfile "$JOB/config/certs/ca.crt" \
+    -CAfile "$JOB_DIR/config/certs/ca.crt" \
     -caname /internalCA \
     \
-    -out "$JOB/config/keystore.p12" \
+    -out "$JOB_DIR/config/certs/keystore.p12" \
     -passout "pass:$PASSWORD"
 
 
 
 
 keytool -importkeystore \
-    -srckeystore "$JOB/config/keystore.p12" \
+    -srckeystore "$JOB_DIR/config/certs/keystore.p12" \
     -srcstoretype PKCS12 \
     -srcstorepass "$PASSWORD" \
     -alias "${HOST_NAME}_${CLUSTER_NAME}_CLUSTER" \
