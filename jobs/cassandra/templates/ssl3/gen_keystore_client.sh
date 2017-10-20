@@ -48,6 +48,16 @@ keytool -importkeystore \
     -destkeystore "$KEY_STORE"
 
 
+keytool -import -v \
+    -trustcacerts \
+    -alias /internalCA \
+    -file "$JOB_DIR/config/certs/ca.crt" \
+    -keystore "$TRUST_STORE" \
+    -storepass "$PASSWORD" \
+    -keypass "$PASSWORD" \
+    -noprompt
+
+
 exit 0
 
 
