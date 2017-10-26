@@ -5,3 +5,4 @@ dependencies:
 files:
 - openjdk/**/*
 - cassandra/apache-cassandra-3.9-bin.tar.gz
+- cassandra/apache-cassandra-3.11.1-bin.tar.gz
