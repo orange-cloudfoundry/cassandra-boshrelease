@@ -43,6 +43,7 @@ templates:
   bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
   bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
   bin/creer_pem_cli_serv.sh: bin/creer_pem_cli_serv.sh
+  bin/cassandra_upgrade.sh: bin/cassandra_upgrade.sh
   bin/sec-sysauth.sh: bin/post-start
 
 properties:

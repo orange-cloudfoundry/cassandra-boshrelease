@@ -7,4 +7,4 @@ check process cassandra_server
 
 check file FLAG_UPGRADE_CASSANDRA with path /var/vcap/store/
   group vcap
-  if request "/var/vcap/store/FLAG_UPGRADE_CASSANDRA" then exec "/var/vcap/jobs/cassandra_server/bin/cassandra_upgrade.sh"
+  if not exist then exec "/bin/bash -c ' mode non Upgrade > /dev/null'" else if succeeded then exec "/var/vcap/jobs/cassandra_server/bin/cassandra_upgrade.sh"
