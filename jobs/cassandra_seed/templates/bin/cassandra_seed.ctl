@@ -16,10 +16,17 @@ export CASSANDRA_CONF=/var/vcap/jobs/cassandra_seed/conf
 export JAVA_HOME=/var/vcap/packages/openjdk
 export PATH=$PATH:/var/vcap/packages/openjdk/bin
 
+export CASS_UPG=<%=properties.cassandra_seed.cass_upgrade_TF%>
 
 case $1 in
 
   start)
+
+    if [[ ${CASS_UPG} == "true" ]]
+    then
+       touch /var/vcap/store/FLAG_UPGRADE_CASSANDRA >>$LOG_DIR/cassandra.stdout.log 2>>$LOG_DIR/cassandra.stderr.log
+    fi
+
     pid_guard $PIDFILE $JOB_NAME
 
     exec chpst -u vcap:vcap $CASSANDRA_BIN/cassandra -p $PIDFILE \

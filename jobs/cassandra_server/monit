@@ -3,3 +3,8 @@ check process cassandra_server
   start program "/var/vcap/jobs/cassandra_server/bin/monit_debugger cassandra_server_ctl '/var/vcap/jobs/cassandra_server/bin/cassandra_server_ctl start'"
   stop program "/var/vcap/jobs/cassandra_server/bin/monit_debugger cassandra_server_ctl '/var/vcap/jobs/cassandra_server/bin/cassandra_server_ctl stop'"
   group vcap
+  depends on FLAG_UPGRADE_CASSANDRA
+
+check file FLAG_UPGRADE_CASSANDRA with path /var/vcap/store/
+  group vcap
+  if request "/var/vcap/store/FLAG_UPGRADE_CASSANDRA" then exec "/var/vcap/jobs/cassandra_server/bin/cassandra_upgrade.sh"

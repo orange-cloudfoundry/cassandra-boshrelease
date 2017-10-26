@@ -273,3 +273,9 @@ properties:
   cassandra_seed.client_encryption_options.require_client_auth:
     default: false
     description: cassandra ssl entre client et server et authentifi 
+  cassandra_seed.cass_version:
+    default: 3.9
+    description: cassandra version to install
+  cassandra_seed.cass_upgrade_TF:
+    default: false
+    description: cassandra version upgrade
