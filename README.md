@@ -1,22 +1,49 @@
-# Cassandra CF Service
+# <p style="text-align:center">Cassandra Bosh Release</p>
+
+> > ** THIS RELEASE IS STILL WIP AND SHOULD NOT BE USE IN PRODUCTION **
+
+## Table of contents
+
+* [Introduction](#introduction)
+* [Components](#components)
+* [How to deploy](#how_to_deploy)
+* [Configuring CF to use Cassandra service](#configuring_cf_to_use_cassandra_service)
+* [Upgrades](#upgrades)
+* [Future enhancements](#future_enhancements)
 
 ## Introduction
 
-This page describes the architecture of Cassandra service for CloudFoundry
-using the new Service Broker API version 2.
+This page describes the architecture of Cassandra service for CloudFoundry using the new Service Broker API version 2.
 
 ## Components
 
-### Casssandra Broker
+### Casssandra Broker (broker job)
 
-The cassandra broker implements the 5 REST endpoints required by Cloud Foundry
-to write V2 services. Cassandra Broker is divided into 3 components.
+The cassandra broker implements the 5 REST endpoints required by Cloud Foundry to write V2 services : 
+* Catalog management in order to register the broker to the platform
+* Provisioning in order to create resource in the cassandra server
+* Deprovisioning in order to release resource previously allocated
+* Binding (credentials type) in order to provide application with a set of information required to use the allocated service
+* Unbinding in order to delete credentials resources previously allocated
+  
+Cassandra Broker uses the Cassandra DataStax driver to connect to running cassandra cluster and gives order to the backend by using CQL statements
 
-* The Broker code itself that implements the 5 REST endpoints
-* Cassandra Admin Service which uses Cassandra DataStax client to connect to
-  runnning cassandra cluster and create/deletes keyspace
-* H2 Database which saves service related meta deta (For eg. service id,
-  credentials, # of services)
+Current implementation is stateless which means no database (no requirement) 
+
+### Casssandra Broker Smoke Tests (broker-smoke-tests job)
+
+The cassandra broker smoke test acts as an end user developper who wants to host its application in a cloud foundry.
+
+For that, it relies on a sample cassandra application : https://github.com/JCL38-ORANGE/cf-cassandra-example-app
+
+The following steps are performed by the smoke tests job : 
+* Authentication on Cloud Foundry by targeting org and space (cf auth and cf target)
+* Deployment of the sample cassandra application (cf push)
+* Provisioning of the service (cf create-service)
+* Binding of the service (cf bind-service)
+* Restaging of the sample cassandra application (cf restage)
+* Table creation in the cassandra cluster (HTTP POST command to the sample cassandra application)
+* Table deletion in the cassandra cluster (HTTP DELETE command to the sample cassandra application)
 
 ### Cassandra Server
 
@@ -27,8 +54,8 @@ running Cassandra Cluster for further consumption.
 
 ## How to deploy
 
-We use BOSH to deploy Cassandra Broker and Cassandra Nodes (Running Cassandra
-server). Both Broker and Cassandra are intergrated with monit which will
+We use BOSH to deploy Cassandra Broker (and smoke tests) and Cassandra Nodes (Running Cassandra
+server). Both Broker and Cassandra are integrated with monit which will
 restart broker and Cassandra Process in case of VM is restarted or process in
 crashed.
 
@@ -39,35 +66,41 @@ crashed.
 
 ## Configuring CF to use Cassandra service
 
-### Authentication
-
-According to [Managing Service Brokers](https://docs.pivotal.io/pivotalcf/services/managing-service-brokers.html)
-brokers should use HTTP basic authentication to authenticate clients. The
-`cf create-service-broker` command expects the credentials for the cloud
-controller to authenticate itself to the broker. This is set in the broker in
-the `config-context.xml` file, the values in p4 for testing are
-admin/password.
-
-Use `cf add-service-broker` command to add the cassandra broker for consumption.
-
-```bash
-cf create-service-broker
-name> anyName
-URL> http://<IP of broker deployed via bosh>:8080
-It will prompt for username and password use admin/password
-```
-
-After the broker is added to CF the service plan needs to be made public. You
-can read here on how to make service plans public. See
-[Access Control](http://docs.pivotal.io/pivotalcf/services/access-control.html)
-for more information.
-
 ### Available Plans
 
-There are 2 Plans available for Cassandra.
+For the moment, only 1 default plan available for shared Cassandra.
 
-* Developer - This plan deletes the cassandra keySpace when service is deleted
-* Production - This plan won't delete any data even if service is deleted
+### Broker registration
+
+The broker uses HTTP basic authentication to authenticate clients. The `cf create-service-broker` command expects the credentials for the cloud
+controller to authenticate itself to the broker. 
+
+```bash
+cf create-service-broker p-cassandra-broker <user> <password> <url> 
+cf enable-service-access cassandra
+```
+
+### Service provisioning
+
+```bash
+cf create-service cassandra default cassandra-instance
+```
+
+### Service binding
+
+```bash
+cf bind-service cassandra-example-app cassandra-instance
+```
+### Service unbinding
+
+```bash
+cf unbind-service cassandra-example-app cassandra-instance
+```
+### Service deprovisioning
+
+```bash
+cf delete-service cassandra-instance
+```
 
 ## Cassandra Cluster Layout
 
@@ -141,7 +174,7 @@ store in persistent directory `/var/vcap/store/cassandra_server`.
 There are 4 places that have log files related to cassandra.
 
 * Cassandra Broker - The logs can be found at
-  `/var/vcap/sys/log/cassandra_broker`. This will basically log all the
+  `/var/vcap/sys/log/broker`. This will basically log all the
   service broker code about creation/deletion of service/keyspaces etc.
 * Cassandra Server - The logs can be found at
   `/var/vcap/sys/log/cassandra_server`. This will basically log the cassandra
@@ -176,7 +209,7 @@ To run cassandra-cli run this command:
 "JAVA_HOME=/var/vcap/packages/java/jre1.7.0_55 CASSANDRA_CONF=/var/vcap/jobs/cassandra_server/conf ./cassandra-cli"
 ```
 
-## Cleanup/ Removing snapshot
+### Cleanup/ Removing snapshot
 
 When a keyspace is deleted/dropped cassandra takes a snapshot of the keyspace
 for security/backup purpose. if you wish to remove the snapshot you will have
