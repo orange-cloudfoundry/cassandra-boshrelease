@@ -108,3 +108,8 @@ chown vcap:vcap ${JOB_DIR}/config/certs/newcerts
 chown vcap:vcap ${JOB_DIR}/config/certs/
 
 mount -o remount ,exec,suid,nodev /tmp
+
+# touch /var/vcap/store/FLAG_NO_UPGRADE_CASSANDRA
+touch /var/vcap/jobs/cassandra_injector/FLAG_NO_UPGRADE_CASSANDRA
+chmod 644 /var/vcap/jobs/cassandra_injector/FLAG_NO_UPGRADE_CASSANDRA
+

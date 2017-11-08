@@ -7,11 +7,11 @@ set -u # report the usage of uninitialized variables
 export HOME=/var/vcap
 #export CASS_VERS=<%=properties.cassandra_seed.cass_version%>
 
-tar -zxf cassandra/apache-cassandra-3.9-bin.tar.gz
-cp -a apache-cassandra-3.9/* $BOSH_INSTALL_TARGET
+# tar -zxf cassandra/apache-cassandra-3.9-bin.tar.gz
+# cp -a apache-cassandra-3.9/* $BOSH_INSTALL_TARGET
 
-# tar -zxf cassandra/apache-cassandra-3.11.1-bin.tar.gz
-# cp -a apache-cassandra-3.11.1/* $BOSH_INSTALL_TARGET
+tar -zxf cassandra/apache-cassandra-3.11.1-bin.tar.gz
+cp -a apache-cassandra-3.11.1/* $BOSH_INSTALL_TARGET
 
 # tar -zxf cassandra/apache-cassandra-${CASS_VERS}-bin.tar.gz
 # cp -a apache-cassandra-${CASS_VERS}/* $BOSH_INSTALL_TARGET

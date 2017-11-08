@@ -3,8 +3,8 @@ check process cassandra_server
   start program "/var/vcap/jobs/cassandra_server/bin/monit_debugger cassandra_server_ctl '/var/vcap/jobs/cassandra_server/bin/cassandra_server_ctl start'"
   stop program "/var/vcap/jobs/cassandra_server/bin/monit_debugger cassandra_server_ctl '/var/vcap/jobs/cassandra_server/bin/cassandra_server_ctl stop'"
   group vcap
-  depends on FLAG_UPGRADE_CASSANDRA
+#  depends on FLAG_NO_UPGRADE_CASSANDRA
 
-check file FLAG_UPGRADE_CASSANDRA with path /var/vcap/store/
-  group vcap
-  if not exist then exec "/bin/bash -c ' mode non Upgrade > /dev/null'" else if succeeded then exec "/var/vcap/jobs/cassandra_server/bin/cassandra_upgrade.sh"
+#check file FLAG_NO_UPGRADE_CASSANDRA with path /var/vcap/jobs/cassandra_server/
+#  group vcap
+#  if not exist then unmonitor else if succeeded then exec "/bin/bash -c ' mode non Upgrade NORMAL > /dev/null'"
