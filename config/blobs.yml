@@ -1,12 +1,11 @@
----
 cassandra/apache-cassandra-3.9-bin.tar.gz:
   size: 36719829
   object_id: 429bd84d-8522-43a0-85f5-1c54e3848911
   sha: 8f3d37880827284964bc353a94a69fd256d62b06
-cf-cassandra-example-app/cf-cassandra-example-app.tgz:
-  size: 7019
-  object_id: faf380e6-f432-41bd-5ba3-17ac88ac759d
-  sha: 3effa671bf7e4983ac8f59fb693654c132b4eab8
+cassandra/apache-cassandra-3.11.1-bin.tar.gz:
+  size: 38104148
+  object_id: 39b635ae-8713-4803-ac29-ec7515af2643
+  sha: 454f4fd60aeed97b0ed80afebe5c08620d8ddf04
 cf-cli/cf-cli_6.30.0_linux_x86-64.tgz:
   size: 5909858
   object_id: 2c11f0bd-87f0-4e5b-79c1-f4b22254abf3
@@ -15,7 +14,3 @@ openjdk/openjdk.tar.gz:
   size: 126476497
   object_id: a74df715-20cc-4c89-8020-74a4a9e32fd9
   sha: 9fc65908420c92047346e5bcc66fee0aad422c5e
-cassandra/apache-cassandra-3.11.1-bin.tar.gz:
-  object_id: 39b635ae-8713-4803-ac29-ec7515af2643
-  sha: 454f4fd60aeed97b0ed80afebe5c08620d8ddf04
-  size: 38104148

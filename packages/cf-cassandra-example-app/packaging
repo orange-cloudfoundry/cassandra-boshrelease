@@ -10,7 +10,6 @@ export HOME=/var/vcap
 
 #Assuming there is a directory cf-cassandra-example-app (from spec file)
 cd cf-cassandra-example-app
-tar xzf cf-cassandra-example-app.tgz
 
 #The tgz content is copied to ${BOSH_INSTALL_TARGET} under the sub-directory cf-cassandra-example-app (from spec file)
 cp -a * ${BOSH_INSTALL_TARGET}/.
