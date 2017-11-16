@@ -28,6 +28,9 @@ while ! nc -z "$cass_ip" "$cass_port"; do
 	fi
 	sleep 1
 done
+echo "INFO: reached Cassandra on '$cass_ip:$cass_port' after '$attempts' attemps." \
+	 "Waiting 10 more seconds for the service to be available." >&2
+sleep 10
 
 if ${CLIENT_SSL} == "true"
 then
