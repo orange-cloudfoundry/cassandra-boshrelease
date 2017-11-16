@@ -57,6 +57,4 @@ keytool -importkeystore -srckeystore "$KEY_STORE" -destkeystore "$PKS_KEY_STORE"
 openssl pkcs12 -in "$PKS_KEY_STORE" -nokeys -out "${HOST_NAME}_${CLUSTER_NAME}_CLIENT.cer.pem" -passin pass:"$PASSWORD"
 openssl pkcs12 -in "$PKS_KEY_STORE" -nodes -nocerts -out "${HOST_NAME}_${CLUSTER_NAME}_CLIENT.key.pem" -passin pass:"$PASSWORD"
 
-
 exit 0
-

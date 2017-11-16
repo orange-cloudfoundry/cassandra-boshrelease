@@ -47,7 +47,6 @@ templates:
   bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
   bin/creer_pem_cli_serv.sh: bin/creer_pem_cli_serv.sh
   bin/sec-sysauth.sh: bin/post-start
-  
 
 properties:
   cassandra_seed.cluster_name:

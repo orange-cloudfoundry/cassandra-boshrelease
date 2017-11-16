@@ -37,7 +37,7 @@ templates:
 #  ssl2/ssl_env.ctl.erb: config/certs/ssl_env.ctl
 #  ssl2/gen_keystore_client.sh: config/certs/gen_keystore_client.sh
 #  ssl2/gen_ca_cert.conf: config/certs/gen_ca_cert.conf
-  config/cqlshrc.erb: /root/.cassandra/cqlshrc
+  config/cqlshrc.erb: root/.cassandra/cqlshrc
   ssl3/ssl_env.ctl.erb: config/certs/ssl_env.ctl
   ssl3/gen_keystore_client.sh: config/certs/gen_keystore_client.sh
   bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
@@ -252,7 +252,7 @@ properties:
     default: "NOT INITIALIZED"
     description: use tls/ssl for authent and transactions 
   cassandra_server.cert:
-    type: certficate
+    type: certificate
     description: cluster certificate
   cassandra_server.cass_KSP:
     default:

@@ -245,14 +245,14 @@ properties:
     description:
   cassandra_injector.cass_pwd:
     default: cassandra
-  cassandra_injector.cass_ssl_YN:
+  cassandra_injector.cassandra_ssl_YN:
     default: N
     description: use tls/ssl for authent and transactions 
   cassandra_injector.cassDbCertificate:
     default: "NOT INITIALIZED"
     description: use tls/ssl for authent and transactions 
   cassandra_injector.cert:
-    type: certficate
+    type: certificate
     description: cluster certificate
   cassandra_injector.cass_KSP:
     default:

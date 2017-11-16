@@ -54,4 +54,3 @@ fi
 
 /var/vcap/jobs/cassandra_server/bin/./creer_pem_cli_serv.sh
 exit 0
-

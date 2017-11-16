@@ -12,7 +12,6 @@ export SSL_YN=<%=properties.cassandra_seed.cassandra_ssl_YN%>
 if ${SSL_YN} == "Y" 
 then
  /var/vcap/jobs/cassandra_seed/config/certs/./ssl_env.ctl
-
 fi
 
 popd >/dev/null

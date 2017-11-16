@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#set -x
+
 # Setup env vars and folders for the ctl script
 # This helps keep the ctl script as readable
 # as possible

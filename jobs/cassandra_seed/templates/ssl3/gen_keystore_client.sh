@@ -51,14 +51,10 @@ keytool -export -alias "${HOST_NAME}_${CLUSTER_NAME}_CLIENT" -file "$CLIENT_PUBL
 keytool -importcert -v -trustcacerts -alias "${HOST_NAME}_${CLUSTER_NAME}_CLIENT" -file "$CLIENT_PUBLIC_CERT" -keystore "$TRUST_STORE" \
 -storepass "$PASSWORD" -keypass "$PASSWORD" -noprompt
 
-
-
 keytool -importkeystore -srckeystore "$KEY_STORE" -destkeystore "$PKS_KEY_STORE" -deststoretype PKCS12 \
 -srcstorepass "$PASSWORD" -deststorepass "$PASSWORD"
 
 openssl pkcs12 -in "$PKS_KEY_STORE" -nokeys -out "${HOST_NAME}_${CLUSTER_NAME}_CLIENT.cer.pem" -passin pass:"$PASSWORD"
 openssl pkcs12 -in "$PKS_KEY_STORE" -nodes -nocerts -out "${HOST_NAME}_${CLUSTER_NAME}_CLIENT.key.pem" -passin pass:"$PASSWORD"
 
-
 exit 0
-

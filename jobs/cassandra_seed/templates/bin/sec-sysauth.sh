@@ -13,6 +13,7 @@ export PATH=$PATH:/var/vcap/packages/openjdk/bin:$CASSANDRA_BIN:$CASSANDRA_CONF
 
 export CASS_PWD="<%=properties.cassandra_seed.cass_pwd%>"
 ## export CASSANDRA_CONF=/var/vcap/jobs/cassandra_seed/conf
+
 export CLIENT_SSL=<%=properties.cassandra_seed.client_encryption_options.enabled%>
 
 if ${CLIENT_SSL} == "true"
