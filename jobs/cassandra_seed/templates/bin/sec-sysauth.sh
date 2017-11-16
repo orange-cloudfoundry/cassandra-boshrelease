@@ -39,12 +39,14 @@ then
  /var/vcap/jobs/cassandra_seed/bin/./node-tool.sh repair system_auth
 #exit 0
 else
- /var/vcap/packages/cassandra/bin/cqlsh `hostname -I` -e "alter role cassandra with password = '$CASS_PWD' " -u cassandra -p cassandra 2>&1>/dev/null
- if [[ "$?" == 1 ]]; then
-  /var/vcap/packages/cassandra/bin/cqlsh `hostname -I` -e "alter role cassandra with password = '$CASS_PWD' " -u cassandra -p $CASS_PWD 2>&1>/dev/null
- fi
- /var/vcap/packages/cassandra/bin/cqlsh `hostname -I` -e "alter keyspace system_auth WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '3'}  AND durable_writes = true" -u cassandra -p $CASS_PWD  2>&1>/dev/null
- /var/vcap/jobs/cassandra_seed/bin/./node-tool.sh repair system_auth
+	echo "converging password, attempt 1: use default password" >&2
+    /var/vcap/packages/cassandra/bin/cqlsh `hostname -I` -e "alter role cassandra with password = '$CASS_PWD' " -u cassandra -p cassandra
+    if [[ "$?" == 1 ]]; then
+		echo "converging password, attempt 2: use new password" >&2
+        /var/vcap/packages/cassandra/bin/cqlsh `hostname -I` -e "alter role cassandra with password = '$CASS_PWD' " -u cassandra -p $CASS_PWD
+    fi
+    /var/vcap/packages/cassandra/bin/cqlsh `hostname -I` -e "alter keyspace system_auth WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '3'}  AND durable_writes = true" -u cassandra -p $CASS_PWD
+    /var/vcap/jobs/cassandra_seed/bin/./node-tool.sh repair system_auth
 fi
 
 /var/vcap/jobs/cassandra_seed/bin/./creer_pem_cli_serv.sh
