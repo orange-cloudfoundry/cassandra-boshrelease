@@ -11,7 +11,7 @@ consumes:
   type: cassandra_seeds
 
 templates:
-  bin/cassandra_seed.ctl: bin/cassandra_seed_ctl
+  bin/cassandra_seed_ctl: bin/cassandra_seed_ctl
   bin/monit_debugger: bin/monit_debugger
   bin/node-tool.sh: bin/node-tool.sh
   bin/cql-sh.sh: bin/cql-sh.sh

@@ -49,7 +49,6 @@ export TMP_DIR=/var/vcap/sys/tmp/$JOB_NAME
 export STORE_DIR=/var/vcap/store/$JOB_NAME
 export BACKUP_DATA_DIR=/var/vcap/store/backups
 export RESTORE_DATA_DIR=/var/vcap/store/restores
-#export CQLSH_DIR=/var/vcap/store/cqlhist
 
 for dir in $RUN_DIR $LOG_DIR $TMP_DIR $STORE_DIR $BACKUP_DATA_DIR $RESTORE_DATA_DIR 
 do
@@ -62,8 +61,6 @@ export TMPDIR=$TMP_DIR
 export C_INCLUDE_PATH=/var/vcap/packages/mysqlclient/include/mysql:/var/vcap/packages/sqlite/include:/var/vcap/packages/libpq/include
 export LIBRARY_PATH=/var/vcap/packages/mysqlclient/lib/mysql:/var/vcap/packages/sqlite/lib:/var/vcap/packages/libpq/lib
 
-#  pour test cqlsh history /root/.cassandra
-chmod 777 /root
 # consistent place for vendoring python libraries within package
 if [[ -d ${WEBAPP_DIR:-/xxxx} ]]
 then

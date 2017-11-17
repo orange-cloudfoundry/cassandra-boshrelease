@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+#set -x
 set -e # exit immediately if a simple command exits with a non-zero status.
 set -u # report the usage of uninitialized variables.
 cd /var/vcap/jobs/cassandra_server/config/certs/

@@ -91,14 +91,7 @@ then
 fi
 mkdir -p $JOB_DIR/tools/bin/graph
 chmod 777 $JOB_DIR/tools/bin/graph
-#echo ' verif creation rep graph : ' `ls -ltr $JOB_DIR/tools/bin/graph`
 chmod +x  $JOB_DIR/tools/bin/cassandra-stress.sh
-#echo ' verif cassandra-stress : ' `ls -ltr $JOB_DIR/tools/bin/cassandra-stress.sh`
-
-#mkdir -p /var/vcap/store/backups
-#chmod 644 /var/vcap/store/backups
-#mkdir -p /var/vcap/store/restores
-#chmod 644 /var/vcap/store/restores
 mkdir -p $JOB_DIR/ssl
 chmod +x $JOB_DIR/config/certs/ssl_env.ctl
 chmod +x $JOB_DIR/config/certs/gen_keystore_client.sh
