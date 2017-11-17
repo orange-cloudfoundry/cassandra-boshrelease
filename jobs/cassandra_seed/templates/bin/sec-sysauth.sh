@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -x
 #set -e # exit immediately if a simple command exits with a non-zero status.
 set -u # report the usage of uninitialized variables.
 
@@ -41,12 +42,12 @@ echo "attempt 1 exit status: '$failure'" >&2
 if [[ "$failure" == 1 ]]; then
     echo "converging password, attempt 2: use new password" >&2
     /var/vcap/packages/cassandra/bin/cqlsh --cqlshrc "/var/vcap/jobs/cassandra_seed/root/.cassandra/cqlshrc" \
-        -e "alter role cassandra with password = '$CASS_PWD' " -u cassandra -p $CASS_PWD
+        -e "alter role cassandra with password = '$CASS_PWD' " -u cassandra -p "$CASS_PWD"
     echo "attempt 2 exit status: '$?'" >&2
 fi
 
 /var/vcap/packages/cassandra/bin/cqlsh --cqlshrc "/var/vcap/jobs/cassandra_seed/root/.cassandra/cqlshrc" \
-    -e "alter keyspace system_auth WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '3'}  AND durable_writes = true" -u cassandra -p $CASS_PWD
+    -e "alter keyspace system_auth WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '3'}  AND durable_writes = true"
 
 /var/vcap/jobs/cassandra_seed/bin/node-tool.sh repair system_auth
 
