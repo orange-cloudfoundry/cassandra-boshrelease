@@ -11,9 +11,7 @@ export CASSANDRA_CONF=/var/vcap/jobs/cassandra_server/conf
 export JAVA_HOME=/var/vcap/packages/openjdk
 export PATH=$PATH:/var/vcap/packages/openjdk/bin
 
-export CASSANDRA_CONF=/var/vcap/jobs/cassandra_server/conf
-
 pushd /var/vcap/packages/cassandra/bin
-exec chpst -u vcap:vcap /var/vcap/packages/cassandra/bin/cassandra-cli
+exec chpst -u vcap:vcap /var/vcap/packages/cassandra/bin/cassandra-cli "$@"
 popd
 exit 0

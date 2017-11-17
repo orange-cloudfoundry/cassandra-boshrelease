@@ -33,7 +33,7 @@ case $1 in
 
     ;;
   *)
-    echo "Usage: cassandra_server.ctl {start|stop}"
+    echo "Usage: cassandra_server_ctl {start|stop}"
 
     ;;
 

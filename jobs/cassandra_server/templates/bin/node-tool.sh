@@ -11,8 +11,6 @@ export CASSANDRA_CONF=/var/vcap/jobs/cassandra_server/conf
 export JAVA_HOME=/var/vcap/packages/openjdk
 export PATH=$PATH:/var/vcap/packages/openjdk/bin
 
-export CASSANDRA_CONF=/var/vcap/jobs/cassandra_server/conf
-
 pushd /var/vcap/packages/cassandra/bin
 if [ $# -eq 0 ];
 then

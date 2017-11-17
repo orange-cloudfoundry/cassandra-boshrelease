@@ -12,12 +12,6 @@ export CASSANDRA_TOOL=/var/vcap/packages/cassandra/tools/bin
 export JAVA_HOME=/var/vcap/packages/openjdk
 export PATH=$PATH:/var/vcap/packages/openjdk/bin:$CASSANDRA_BIN:$CASSANDRA_CONF:$CASSANDRA_TOOL
 
-## export CASSANDRA_CONF=/var/vcap/jobs/cassandra_server/conf
-
-#exec chmod +x /var/vcap/packages/cassandra/tools/bin/cassandra-stress.sh
-#exec mkdir /var/vcap/packages/cassandra/tools/bin/graph
-#exec chmod 764 /var/vcap/packages/cassandra/tools/bin/graph
-
 pushd /var/vcap/packages/cassandra/tools/bin
 if [ $# -eq 0 ];
 then
