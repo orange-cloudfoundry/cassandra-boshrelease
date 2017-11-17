@@ -44,7 +44,11 @@ if [[ "$failure" == 1 ]]; then
     /var/vcap/packages/cassandra/bin/cqlsh --cqlshrc "/var/vcap/jobs/cassandra_seed/root/.cassandra/cqlshrc" \
         -e "alter role cassandra with password = '$CASS_PWD' " -u cassandra -p "$CASS_PWD"
     echo "attempt 2 exit status: '$?'" >&2
+else
+	echo "Waiting 5 secs for the cassandra password to effectively be changed" >&2
+	sleep 5
 fi
+
 
 /var/vcap/packages/cassandra/bin/cqlsh --cqlshrc "/var/vcap/jobs/cassandra_seed/root/.cassandra/cqlshrc" \
     -e "alter keyspace system_auth WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '3'}  AND durable_writes = true"
