@@ -44,14 +44,14 @@ sleep 30
 
 echo "INFO: setting first password" >&2
 $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
-    -e "alter role cassandra with password = '$CASS_PWD' " -u cassandra -p cassandra
+    -e "alter role cassandra with password = '$cass_pwd' " -u cassandra -p cassandra
 failure=$?
 echo "DEBUG: setting first password, exit status: '$failure'" >&2
 
 if [[ "$failure" != 0 ]]; then
     echo "INFO: verifying that the current password is the desired password" >&2
     $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
-        -e "alter role cassandra with password = '$CASS_PWD' "
+        -e "alter role cassandra with password = '$cass_pwd' "
     failure2=$?
     echo "DEBUG: verifying current password, exit status: '$failure2'" >&2
 	if [ "$failure2" != 0 ]; then
