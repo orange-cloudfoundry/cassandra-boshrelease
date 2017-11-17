@@ -19,7 +19,7 @@ export CASSANDRA_BIN=/var/vcap/packages/cassandra/bin
 export CASSANDRA_CONF=$job_dir/conf
 
 export JAVA_HOME=/var/vcap/packages/openjdk
-export PATH=$PATH:/var/vcap/packages/openjdk/bin:$CASSANDRA_BIN
+export PATH=$PATH:$JAVA_HOME/bin:$CASSANDRA_BIN
 
 cass_pwd=<%= esc(p('cassandra_seed.cass_pwd')) %>
 
