@@ -18,12 +18,7 @@ spring:
   data:
     cassandra:
       password: <%= p('cassandra_seed.admin_password') %>
-      contact-points: <%
-link('nodes').instances.each do |instance|
-    if instance.p('cassandra_seed.is_seed')
-        %><%= instance.address %>,<%
-    end
-end %>
-      single-contact-points: <%= link('nodes').instances[0].address %>
+      contact-points: <% link('seeds').instances.each do |instance| %><%= instance.address %>,<% end %>
+      single-contact-points: <%= link('seeds').instances[0].address %>
       username: cassandra
       port: 9042

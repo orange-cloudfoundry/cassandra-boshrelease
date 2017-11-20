@@ -24,7 +24,7 @@ commitlog_segment_size_in_mb:  <%=properties.cassandra_seed.commitlog_segment_si
 seed_provider:
     - class_name: org.apache.cassandra.locator.SimpleSeedProvider
       parameters:
-          - seeds: <% link('nodes').instances.each do |instance| if instance.p('cassandra_seed.is_seed') %><%= instance.address %>,<% end %><% end %>
+          - seeds: <% link('seeds').instances.each do |instance| %><%= instance.address %>,<% end %>
 concurrent_reads: <%=properties.cassandra_seed.concurrent_reads%>
 concurrent_writes: <%=properties.cassandra_seed.concurrent_writes%>
 file_cache_size_in_mb: <%=properties.cassandra_seed.file_cache_size_in_mb%>
