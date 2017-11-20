@@ -24,54 +24,59 @@ export PATH=$PATH:$JAVA_HOME/bin:$CASSANDRA_BIN
 cass_pwd=<%= esc(p('cassandra_server.cass_pwd')) %>
 
 
-max_attempts=60
+function log_err() {
+	echo "$(date +%F_%T):" "$@" >&2
+}
+
+
+max_attempts=120
 cass_ip=<%= esc(spec.ip) %>
 cass_port=<%= esc(p('cassandra_server.native_transport_port')) %>
 attempts=0
 while ! nc -z "$cass_ip" "$cass_port"; do
     attempts=$(($attempts + 1))
     if [[ $attempts -ge $max_attempts ]]; then
-        echo "ERROR: could not reach cassandra on IP '$cass_ip' and TCP port '$cass_port'" \
-			 "after '$max_attempts' attemps. Aborting." >&2
+        log_err "ERROR: could not reach cassandra on IP '$cass_ip' and TCP port '$cass_port'" \
+			 "after '$max_attempts' attemps. Aborting."
         exit 1
     fi
     sleep 1
 done
-echo "INFO: reached Cassandra on '$cass_ip:$cass_port' after '$attempts' attemps." \
-     "Waiting 30 more seconds for the service to be available." >&2
+log_err "INFO: reached Cassandra on '$cass_ip:$cass_port' after '$attempts' attemps." \
+     "Waiting 30 more seconds for the service to be available."
 sleep 30
 
 
-echo "INFO: setting first password" >&2
+log_err "INFO: setting first password"
 $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
     -e "alter role cassandra with password = '$cass_pwd' " -u cassandra -p cassandra
 failure=$?
-echo "DEBUG: setting first password, exit status: '$failure'" >&2
+log_err "DEBUG: setting first password, exit status: '$failure'"
 
 if [[ "$failure" != 0 ]]; then
-    echo "INFO: verifying that the current password is the desired password" >&2
+    log_err "INFO: verifying that the current password is the desired password"
     $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
         -e "alter role cassandra with password = '$cass_pwd' "
     failure2=$?
-    echo "DEBUG: verifying current password, exit status: '$failure2'" >&2
+    log_err "DEBUG: verifying current password, exit status: '$failure2'"
 	if [ "$failure2" != 0 ]; then
-		echo "ERROR: the password for user 'cassandra' is inconsistent. Aborting." >&2
+		log_err "ERROR: the password for user 'cassandra' is inconsistent. Aborting."
 		exit 1
 	fi
 else
-	echo "INFO: waiting 5 secs for the cassandra password to effectively be changed" >&2
+	log_err "INFO: waiting 5 secs for the cassandra password to effectively be changed"
 	sleep 5
 fi
 
 
-echo "INFO: setting replication strategy for cassandra password" >&2
+log_err "INFO: setting replication strategy for cassandra password"
 $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
      -e "alter keyspace system_auth WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '3'}  AND durable_writes = true"
 
-echo "INFO: propagating any new password with the enforced replication strategy" >&2
+log_err "INFO: propagating any new password with the enforced replication strategy"
 $job_dir/bin/node-tool.sh repair system_auth
 
-echo "INFO: creating SSL certificates" >&2
+log_err "INFO: creating SSL certificates"
 $job_dir/bin/creer_pem_cli_serv.sh
 
 exit 0
