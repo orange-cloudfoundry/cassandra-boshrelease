@@ -4,6 +4,8 @@ packages:
   - cassandra
   - openjdk
 provides:
+  - name: seeds
+    type: cassandra_seeds
   - name: nodes
     type: cassandra
     properties:
