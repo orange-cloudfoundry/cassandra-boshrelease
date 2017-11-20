@@ -1,14 +1,16 @@
 ---
 name: cassandra_seed
 packages:
-- cassandra
-- openjdk
+  - cassandra
+  - openjdk
 provides:
-- name: seeds
-  type: cassandra_seeds
+  - name: nodes
+    type: cassandra
+    properties:
+      - cassandra_seed.is_seed
 consumes:
-- name: seeds
-  type: cassandra_seeds
+  - name: nodes
+    type: cassandra
 
 templates:
   bin/cassandra_seed_ctl: bin/cassandra_seed_ctl
@@ -49,6 +51,9 @@ templates:
   bin/sec-sysauth.sh: bin/post-start
 
 properties:
+  cassandra_seed.is_seed:
+    default: false
+    description: Tells whether the current node is a seed node.
   cassandra_seed.cluster_name:
     default: testcluster
     description: The name of the cluster. This setting prevents nodes in one logical cluster from joining another. 
