@@ -291,7 +291,9 @@ properties:
 
   client_encryption.enabled:
     default: false
-    description: cassandra SSL/TLS entre client et server true or false
+    description: |
+      Enables or disables client-to-node encryption.
   client_encryption.require_client_auth:
     default: false
-    description: cassandra ssl entre client et server et authentifi 
+    description: |
+      Enables or disables certificate authentication.
