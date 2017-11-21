@@ -266,12 +266,12 @@ properties:
   validate_ssl_TF:
     default: false
     description: cassandra ssl validate true or false
-  server_encryption_options.internode_encryption:
+  server_encryption.internode_encryption:
     default: false
     description: cassandra ssl entre noeuds true or false
-  client_encryption_options.enabled:
+  client_encryption.enabled:
     default: false
     description: cassandra SSL/TLS entre client et server true or false
-  client_encryption_options.require_client_auth:
+  client_encryption.require_client_auth:
     default: false
     description: cassandra ssl entre client et server et authentifi 

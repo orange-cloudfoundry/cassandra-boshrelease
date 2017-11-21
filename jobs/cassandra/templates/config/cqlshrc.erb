@@ -7,7 +7,7 @@ password = <%= p("cass_pwd") %>
 [connection]
 hostname = <%=spec.ip%>
 port = <%= p('native_transport_port') %>
-ssl = <%= p("client_encryption_options.enabled") ? "Y" : "N" %>
+ssl = <%= p("client_encryption.enabled") ? "Y" : "N" %>
 request_timeout = 1800
 
 [ssl]
