@@ -1,5 +1,0 @@
-check process cassandra_seed
-  with pidfile /var/vcap/sys/run/cassandra_seed/cassandra_seed.pid
-  start program "/var/vcap/jobs/cassandra_seed/bin/monit_debugger cassandra_seed_ctl '/var/vcap/jobs/cassandra_seed/bin/cassandra_seed_ctl start'"
-  stop program "/var/vcap/jobs/cassandra_seed/bin/monit_debugger cassandra_seed_ctl '/var/vcap/jobs/cassandra_seed/bin/cassandra_seed_ctl stop'"
-  group vcap

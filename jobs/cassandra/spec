@@ -1,0 +1,274 @@
+---
+name: cassandra
+packages:
+  - cassandra
+  - openjdk
+provides:
+  - name: seeds
+    type: cassandra_seeds
+consumes:
+  - name: seeds
+    type: cassandra_seeds
+
+templates:
+  bin/cassandra_ctl: bin/cassandra_ctl
+  bin/monit_debugger: bin/monit_debugger
+  bin/node-tool.sh: bin/node-tool.sh
+  bin/cql-sh.sh: bin/cql-sh.sh
+  bin/sstable-loader.sh: bin/sstable-loader.sh
+  tools/bin/cassandra-stress.sh: tools/bin/cassandra-stress.sh
+  bin/cassandra-cli.sh: bin/cassandra-cli.sh
+  bin/clean-snapshot.sh: bin/clean-snapshot.sh 
+  data/properties.sh.erb: data/properties.sh
+  helpers/ctl_setup.sh: helpers/ctl_setup.sh
+  helpers/ctl_utils.sh: helpers/ctl_utils.sh
+  config/cassandra-jaas.config.erb: conf/cassandra-jaas.config
+  config/jvm.options.erb: conf/jvm.options
+  config/cassandra.yaml.erb: conf/cassandra.yaml
+  config/cassandra-env.sh.erb: conf/cassandra-env.sh
+  config/cassandra-rackdc.properties.erb: conf/cassandra-rackdc.properties
+  config/cassandra-topology.properties.erb: conf/cassandra-topology.properties
+  config/logback.xml.erb: conf/logback.xml
+  config/logback-tools.xml.erb: conf/logback-tools.xml
+  config/commitlog_archiving.properties.erb: conf/commitlog_archiving.properties
+#  bin/generate_ssl_cert.sh: bin/generate_ssl_cert.sh
+#  ssl/cassandradb.ca.erb: ssl/cassandradb.ca
+#  ssl/cassandradb.pem.erb: ssl/cassandradb.pem
+#  ssl2/cert: config/certs/node.crt
+#  ssl2/cert_ca: config/certs/ca.crt
+#  ssl2/cert_private_key: config/certs/node.key
+#  ssl2/ssl_env.ctl.erb: config/certs/ssl_env.ctl
+#  ssl2/gen_keystore_client.sh: config/certs/gen_keystore_client.sh
+#  ssl2/gen_ca_cert.conf: config/certs/gen_ca_cert.conf
+  config/cqlshrc.erb: root/.cassandra/cqlshrc
+  ssl3/ssl_env.ctl.erb: config/certs/ssl_env.ctl
+  ssl3/gen_keystore_client.sh: config/certs/gen_keystore_client.sh
+  bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
+  bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
+  bin/creer_pem_cli_serv.sh: bin/creer_pem_cli_serv.sh
+  bin/sec-sysauth.sh: bin/post-start
+
+properties:
+  cluster_name:
+    default: testcluster
+    description: The name of the cluster. This setting prevents nodes in one logical cluster from joining another. 
+  num_tokens:
+    default: 256
+    description: Defines the number of tokens randomly assigned to this node on the ring when using virtual nodes vnodes.
+  hinted_handoff_enabled:
+    default: true
+    description: Enable or disable hinted handoff To enable per data center add data center list For example hinted_handoff_enabled DC1DC2
+  max_hint_window_in_ms:
+    default: 10800000
+    description: en ms donc 3 heures.Maximum amount of time that hints are generates hints for an unresponsive node.
+  hinted_handoff_throttle_in_kb:
+    default: 1024 
+    description: taux de hint en Kbsec par thread. Il diminue proportionnellemnt au nombre de noeuds du cluster
+  max_hints_delivery_threads:
+    default: 2
+    description: nombre de thread pour gerer les hints. A augmenter si cluster multi datacenter.
+  authenticator:
+    default: PasswordAuthenticator 
+    description: AllowAllAuthenticator c.a.d pas de controle sinon possible avec  PasswordAuthenticator.
+  authorizer:
+    default: CassandraAuthorizer
+    description: pour gerer les droits dans la bdd. Controle fin avec CassandraAuthorizer.
+  permissions_validity_in_ms:
+    default: 4000 
+    description: duree de validite des permissions stockees en cache.Se desactive en positionnant a 0 avec AllowAllAuthorizer.
+  partitioner:
+    default: org.apache.cassandra.dht.Murmur3Partitioner 
+    description: par defaut Murmur3Partitioner. Existe aussi Randompartioner
+  persistent_directory:
+    default: /var/vcap/store/cassandra
+    description: point racine de l arborescence Cassandra pour stocker tous les fichiers data, commit log et saved_cache
+  disk_failure_policy:
+    default: stop 
+    description: que doit faire le noeud en cas de pb disque  die, stop, best_effort or ignore.
+  key_cache_size_in_mb:
+    default: 100
+    description: empty par defaut. Si vide alors Calculer comme min(5% Heap; 100Mb). Desactiver si = 0 .
+  key_cache_save_period:
+    default: 14400
+    description: en secondes, soit 4 heures par defaut, pour la conservation des cles en cache sur disque
+  row_cache_size_in_mb:
+    default: 0
+    description: 0 signifie desactive, c.a.d pas de stockages de ligne en cache.
+  row_cache_save_period:
+    default: 0
+    description: 0 signifie desactive. Sinon duree en secondes pour la conservation sur disque du cache de lignes.
+  commitlog_sync:
+    default: periodic 
+    description: periodic toutes les 10 sec flush cache fs (sync) du commit log vers disque. Acquitement instantannee. Sinon batch.
+  commitlog_sync_period_in_ms:
+    default: 2
+    description: temps d attente d autres ecritures par cassandra avant de faire un sync. Utiliser si option batch activee. Acquittement retarde au sync.
+  commitlog_segment_size_in_mb:
+    default: 32
+    description: 32 Mb peut etre reduit a 8 ou 16 pour reduire le nombre de SSTables present dans un fichier.
+  concurrent_reads:
+    default: 32
+    description: valeur recommandee 16 fois le nbr de drives; applicable aussi bien aux LVM qu aux disques RAIDs.
+  concurrent_writes:
+    default: 32 
+    description: valeur recommandee 8 fois le nbr de CPU
+  file_cache_size_in_mb:
+    default: 512
+    description: defaut = min 14 HEap; 512. C est la memoire totale utilisable pour la lecture des SST.
+  memtable_flush_writers:
+    default: 1
+    description: defaut = min('Nbr disks|nbr CPUs';2|8)
+  trickle_fsync:
+    default: false
+    description:
+  trickle_fsync_interval_in_kb:
+    default: 10240
+    description:
+  storage_port:
+    default: 7000
+    description:
+  ssl_storage_port:
+    default: 7001
+    description:
+  listen_address:
+    default: 
+    description:
+  start_native_transport:
+    default: true
+    description:
+  native_transport_port:
+    default: 9042
+    description:
+  native_transport_max_threads:
+    default: 128
+    description:
+  native_transport_max_frame_size_in_mb:
+    default: 256
+    description:
+  start_rpc:
+    default: true
+    description:
+  rpc_address:
+    default: localhost
+    description:
+  rpc_port:
+    default: 9160
+    description:
+  rpc_keepalive:
+    default: true
+    description:
+  rpc_server_type:
+    default: sync
+    description:
+  rpc_min_threads:
+    default: 16
+    description:
+  rpc_max_threads:
+    default: 2048
+    description:
+  thrift_framed_transport_size_in_mb:
+    default: 15
+    description:
+  incremental_backups:
+    default: false
+    description:
+  snapshot_before_compaction:
+    default: false
+    description:
+  auto_snapshot:
+    default: true
+    description:
+  tombstone_warn_threshold:
+    default: 1000
+    description:
+  tombstone_failure_threshold:
+    default: 100000
+    description:
+  column_index_size_in_kb:
+    default: 64
+    description:
+  concurrent_compactors:
+    default: 4
+    description:
+  read_request_timeout_in_ms:
+    default: 5000
+    description:
+  range_request_timeout_in_ms:
+    default: 10000
+    description:
+  write_request_timeout_in_ms:
+    default: 2000
+    description:
+  cas_contention_timeout_in_ms:
+    default: 1000
+    description:
+  truncate_request_timeout_in_ms:
+    default: 60000
+    description:
+  request_timeout_in_ms:
+    default: 10000
+    description:
+  cross_node_timeout:
+    default: false
+    description:
+  phi_convict_threshold:
+    default: 8
+    description:
+  endpoint_snitch:
+    default: PropertyFileSnitch
+    description:
+  dynamic_snitch_update_interval_in_ms:
+    default: 100
+    description:
+  dynamic_snitch_reset_interval_in_ms:
+    default: 600000
+    description:
+  dynamic_snitch_badness_threshold:
+    default: 0.1
+    description:
+  request_scheduler:
+    default: org.apache.cassandra.scheduler.NoScheduler
+    description:
+  request_scheduler_id:
+    default: 
+    description:
+  internode_compression:
+    default: none
+    description:
+  inter_dc_tcp_nodelay:
+    default: true
+    description:
+  max_heap_size:
+    default: 8G
+    description:
+  heap_newsize:
+    default: 1G
+    description:
+  topology:
+    description:
+  cass_pwd:
+    default: cassandra
+  cassandra_ssl_YN:
+    default: N
+    description: use tls/ssl for authent and transactions 
+  cassDbCertificate:
+    default: "NOT INITIALIZED"
+    description: use tls/ssl for authent and transactions 
+  cert:
+    type: certificate
+    description: cluster certificate
+  cass_KSP:
+    default: 
+    description: cassandra ssl keystore passwd
+  validate_ssl_TF:
+    default: false
+    description: cassandra ssl validate true or false
+  server_encryption_options.internode_encryption:
+    default: false
+    description: cassandra ssl entre noeuds true or false
+  client_encryption_options.enabled:
+    default: false
+    description: cassandra ssl entre client et server true or false
+  client_encryption_options.require_client_auth:
+    default: false
+    description: cassandra ssl entre client et server et authentifi 

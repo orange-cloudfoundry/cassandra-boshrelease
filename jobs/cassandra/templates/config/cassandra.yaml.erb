@@ -1,0 +1,86 @@
+cluster_name: <%=properties.cluster_name%>
+num_tokens: <%=properties.num_tokens%>
+hinted_handoff_enabled: <%=properties.hinted_handoff_enabled%>
+max_hint_window_in_ms: <%=properties.max_hint_window_in_ms%>
+hinted_handoff_throttle_in_kb: <%=properties.hinted_handoff_throttle_in_kb%>
+max_hints_delivery_threads: <%=properties.max_hints_delivery_threads%>
+authenticator: <%=properties.authenticator%>
+authorizer: <%=properties.authorizer%>
+permissions_validity_in_ms: <%=properties.permissions_validity_in_ms%>
+partitioner: <%=properties.partitioner%>
+data_file_directories:
+    - <%=properties.persistent_directory%>/<%=properties.cluster_name%>/data
+hints_directory: <%=properties.persistent_directory%>/<%=properties.cluster_name%>/hint
+commitlog_directory: <%=properties.persistent_directory%>/<%=properties.cluster_name%>/commitlog
+disk_failure_policy: <%=properties.disk_failure_policy%>
+key_cache_size_in_mb: <%=properties.key_cache_size_in_mb%>
+key_cache_save_period:  <%=properties.key_cache_save_period%>
+row_cache_size_in_mb: <%=properties.row_cache_size_in_mb%>
+row_cache_save_period: <%=properties.row_cache_save_period%>
+saved_caches_directory: <%=properties.persistent_directory%>/<%=properties.cluster_name%>/saved_caches
+commitlog_sync: <%=properties.commitlog_sync%>
+commitlog_sync_period_in_ms:  <%=properties.commitlog_sync_period_in_ms%>
+commitlog_segment_size_in_mb:  <%=properties.commitlog_segment_size_in_mb%>
+seed_provider:
+    - class_name: org.apache.cassandra.locator.SimpleSeedProvider
+      parameters:
+          - seeds: <% link('seeds').instances.each do |instance| %><%= instance.address %>,<% end %>
+concurrent_reads: <%=properties.concurrent_reads%>
+concurrent_writes: <%=properties.concurrent_writes%>
+file_cache_size_in_mb: <%=properties.file_cache_size_in_mb%>
+memtable_flush_writers: <%=properties.memtable_flush_writers%>
+trickle_fsync: <%=properties.trickle_fsync%>
+trickle_fsync_interval_in_kb: <%=properties.trickle_fsync_interval_in_kb%>
+storage_port: <%=properties.storage_port%>
+ssl_storage_port: <%=properties.ssl_storage_port%>
+listen_address: <%= spec.ip %>
+start_native_transport: <%=properties.start_native_transport%>
+native_transport_port: <%=properties.native_transport_port%>
+native_transport_max_threads: <%=properties.native_transport_max_threads%>
+native_transport_max_frame_size_in_mb: <%=properties.native_transport_max_frame_size_in_mb%>
+start_rpc: <%=properties.start_rpc%>
+rpc_address: <%=spec.ip%>
+rpc_port: <%=properties.rpc_port%>
+rpc_keepalive: <%=properties.rpc_keepalive%>
+rpc_server_type: <%=properties.rpc_server_type%>
+rpc_min_threads: <%=properties.rpc_min_threads%>
+rpc_max_threads: <%=properties.rpc_max_threads%>
+thrift_framed_transport_size_in_mb: <%=properties.thrift_framed_transport_size_in_mb%>
+incremental_backups: <%=properties.incremental_backups%>
+snapshot_before_compaction: <%=properties.snapshot_before_compaction%>
+auto_snapshot: <%=properties.auto_snapshot%>
+tombstone_warn_threshold: <%=properties.tombstone_warn_threshold%>
+tombstone_failure_threshold: <%=properties.tombstone_failure_threshold%>
+column_index_size_in_kb: <%=properties.column_index_size_in_kb%>
+concurrent_compactors: <%=properties.concurrent_compactors%>
+read_request_timeout_in_ms: <%=properties.read_request_timeout_in_ms%>
+range_request_timeout_in_ms: <%=properties.range_request_timeout_in_ms%>
+write_request_timeout_in_ms: <%=properties.write_request_timeout_in_ms%>
+cas_contention_timeout_in_ms: <%=properties.cas_contention_timeout_in_ms%>
+truncate_request_timeout_in_ms: <%=properties.truncate_request_timeout_in_ms%>
+request_timeout_in_ms: <%=properties.request_timeout_in_ms%>
+cross_node_timeout: <%=properties.cross_node_timeout%>
+phi_convict_threshold: <%=properties.phi_convict_threshold%>
+endpoint_snitch: <%=properties.endpoint_snitch%>
+dynamic_snitch_update_interval_in_ms: <%=properties.dynamic_snitch_update_interval_in_ms%>
+dynamic_snitch_reset_interval_in_ms: <%=properties.dynamic_snitch_reset_interval_in_ms%>
+dynamic_snitch_badness_threshold: <%=properties.dynamic_snitch_badness_threshold%>
+request_scheduler: <%=properties.request_scheduler%>
+internode_compression: <%=properties.internode_compression%>
+inter_dc_tcp_nodelay: <%=properties.inter_dc_tcp_nodelay%>
+server_encryption_options:
+ internode_encryption: <%=properties.server_encryption_options.internode_encryption%>
+ keystore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.keystore
+ keystore_password: <%=properties.cass_KSP%>
+ truststore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.truststore
+ truststore_password: <%=properties.cass_KSP%>
+ protocol: TLS
+client_encryption_options:
+ enabled: <%=properties.client_encryption_options.enabled%>
+##  optional: <%=properties.client_encryption_options.optional%>
+ keystore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.keystore
+ keystore_password: <%=properties.cass_KSP%>
+ truststore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.truststore
+ truststore_password: <%=properties.cass_KSP%>
+ require_client_auth: <%=properties.client_encryption_options.require_client_auth%>
+ protocol: TLS
