@@ -80,7 +80,7 @@ properties:
     default: org.apache.cassandra.dht.Murmur3Partitioner 
     description: par defaut Murmur3Partitioner. Existe aussi Randompartioner
   persistent_directory:
-    default: /var/vcap/store/cassandra_seed
+    default: /var/vcap/store/cassandra
     description: point racine de l arborescence Cassandra pour stocker tous les fichiers data, commit log et saved_cache
   disk_failure_policy:
     default: stop 
