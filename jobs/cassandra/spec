@@ -266,7 +266,8 @@ properties:
   validate_ssl_TF:
     default: false
     description: cassandra ssl validate true or false
-  server_encryption.internode_encryption:
+
+  internode_encryption_mode:
     default: none
     description: |
 
