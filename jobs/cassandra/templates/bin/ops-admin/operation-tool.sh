@@ -7,7 +7,7 @@ NODE=''
 OPERATION=''
 PID=''
 USER="$(whoami)"
-export CASS_PWD="<%=properties.cass_pwd%>"
+export CASS_PWD="<%= p("cass_pwd") %>"
 
 backup_data() {
     check_process

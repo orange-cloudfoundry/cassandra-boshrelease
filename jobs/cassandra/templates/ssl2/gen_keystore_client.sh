@@ -8,7 +8,7 @@ export PATH=$PATH:$JAVA_HOME/bin:.
 
 export HOST_NAME1=`hostname -I`
 export HOST_NAME=${HOST_NAME1//[[:space:]]}
-export STOREPASS="<%=properties.cass_KSP%>"
+export STOREPASS="<%= p("cass_KSP") %>"
 export KEYPASS=$STOREPASS
 keytool -genkeypair -keyalg RSA -alias ${HOST_NAME} -keystore ${HOST_NAME}.jks -storepass $STOREPASS -keypass $KEYPASS -validity 3650 -keysize 2048 -dname "CN=${HOST_NAME}, OU=TestCluster, O=Orange, L=Lyon, S=FR, C=FR"
 
