@@ -254,9 +254,6 @@ properties:
     description:
   cass_pwd:
     default: cassandra
-  cassandra_ssl_YN:
-    default: N
-    description: use tls/ssl for authent and transactions 
   cassDbCertificate:
     default: "NOT INITIALIZED"
     description: use tls/ssl for authent and transactions 
@@ -274,7 +271,7 @@ properties:
     description: cassandra ssl entre noeuds true or false
   client_encryption_options.enabled:
     default: false
-    description: cassandra ssl entre client et server true or false
+    description: cassandra SSL/TLS entre client et server true or false
   client_encryption_options.require_client_auth:
     default: false
     description: cassandra ssl entre client et server et authentifi 
