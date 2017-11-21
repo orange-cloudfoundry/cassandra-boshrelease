@@ -1,14 +1,20 @@
 ---
 name: cassandra
+
 packages:
   - cassandra
   - openjdk
+
 provides:
   - name: seeds
-    type: cassandra_seeds
+    type: cassandra
+    properties:
+      - cass_pwd
+      - native_transport_port
+
 consumes:
   - name: seeds
-    type: cassandra_seeds
+    type: cassandra
 
 templates:
   bin/cassandra_ctl: bin/cassandra_ctl

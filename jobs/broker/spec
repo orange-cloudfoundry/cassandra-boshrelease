@@ -1,12 +1,14 @@
 ---
 name: broker
+
 packages:
-- java-common
-- openjdk
-- cassandra-broker-pkg
+  - java-common
+  - openjdk
+  - cassandra-broker-pkg
+
 consumes:
-- name: seeds
-  type: cassandra_seeds
+  - name: seeds
+    type: cassandra
 
 templates:
   bin/ctl: bin/ctl
@@ -16,12 +18,10 @@ templates:
   helpers/ctl_utils.sh: helpers/ctl_utils.sh
   config/application.yml.erb: config/application.yml
   config/logback.xml.erb: config/logback.xml
+
 properties:
   broker.user:
     description: cassandra service broker user
     default: broker
   broker.password:
     description: cassandra service broker password
-    
-  cassandra_seed.admin_password:
-    description: cassandra admin password  
