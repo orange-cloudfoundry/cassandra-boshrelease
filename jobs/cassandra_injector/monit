@@ -1,5 +1,0 @@
-check process cassandra_injector
-  with pidfile /var/vcap/sys/run/cassandra_injector/cassandra_injector.pid
-  start program "/var/vcap/jobs/cassandra_injector/bin/monit_debugger cassandra_injector_ctl '/var/vcap/jobs/cassandra_injector/bin/cassandra_injector_ctl start'"
-  stop program "/var/vcap/jobs/cassandra_injector/bin/monit_debugger cassandra_injector_ctl '/var/vcap/jobs/cassandra_injector/bin/cassandra_injector_ctl stop'"
-  group vcap

@@ -24,7 +24,7 @@ commitlog_segment_size_in_mb:  <%=properties.cassandra_seed.commitlog_segment_si
 seed_provider:
     - class_name: org.apache.cassandra.locator.SimpleSeedProvider
       parameters:
-          - seeds: <% seeds = link('seeds') %><% seeds.instances.each do |instance| %><%= instance.address %>,<% end %>
+          - seeds: <% link('seeds').instances.each do |instance| %><%= instance.address %>,<% end %>
 concurrent_reads: <%=properties.cassandra_seed.concurrent_reads%>
 concurrent_writes: <%=properties.cassandra_seed.concurrent_writes%>
 file_cache_size_in_mb: <%=properties.cassandra_seed.file_cache_size_in_mb%>
@@ -66,6 +66,7 @@ dynamic_snitch_update_interval_in_ms: <%=properties.cassandra_seed.dynamic_snitc
 dynamic_snitch_reset_interval_in_ms: <%=properties.cassandra_seed.dynamic_snitch_reset_interval_in_ms%>
 dynamic_snitch_badness_threshold: <%=properties.cassandra_seed.dynamic_snitch_badness_threshold%>
 request_scheduler: <%=properties.cassandra_seed.request_scheduler%>
+internode_compression: <%=properties.cassandra_seed.internode_compression%>
 inter_dc_tcp_nodelay: <%=properties.cassandra_seed.inter_dc_tcp_nodelay%>
 server_encryption_options:
  internode_encryption: <%=properties.cassandra_seed.server_encryption_options.internode_encryption%>

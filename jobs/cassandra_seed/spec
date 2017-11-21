@@ -1,17 +1,17 @@
 ---
 name: cassandra_seed
 packages:
-- cassandra
-- openjdk
+  - cassandra
+  - openjdk
 provides:
-- name: seeds
-  type: cassandra_seeds
+  - name: seeds
+    type: cassandra_seeds
 consumes:
-- name: seeds
-  type: cassandra_seeds
+  - name: seeds
+    type: cassandra_seeds
 
 templates:
-  bin/cassandra_seed.ctl: bin/cassandra_seed_ctl
+  bin/cassandra_seed_ctl: bin/cassandra_seed_ctl
   bin/monit_debugger: bin/monit_debugger
   bin/node-tool.sh: bin/node-tool.sh
   bin/cql-sh.sh: bin/cql-sh.sh
