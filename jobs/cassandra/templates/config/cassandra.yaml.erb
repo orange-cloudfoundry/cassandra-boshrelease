@@ -77,7 +77,6 @@ server_encryption_options:
  protocol: TLS
 client_encryption_options:
  enabled: <%= p("client_encryption_options.enabled") %>
-##  optional: <%= p("client_encryption_options.optional") %>
  keystore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.keystore
  keystore_password: <%= p("cass_KSP") %>
  truststore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.truststore
