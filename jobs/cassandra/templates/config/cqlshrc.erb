@@ -6,7 +6,7 @@ password = <%=properties.cass_pwd%>
 
 [connection]
 hostname = <%=spec.ip%>
-port = 9042
+port = <%= p('native_transport_port') %>
 ssl = <%=properties.cassandra_ssl_YN%>
 request_timeout = 1800
 

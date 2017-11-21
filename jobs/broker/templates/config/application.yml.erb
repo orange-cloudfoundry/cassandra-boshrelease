@@ -17,8 +17,8 @@ spring:
     show-banner: true
   data:
     cassandra:
-      password: <%= p('cassandra_seed.admin_password') %>
+      password: <%= link('seeds').p('cass_pwd') %>
       contact-points: <% link('seeds').instances.each do |instance| %><%= instance.address %>,<% end %>
       single-contact-points: <%= link('seeds').instances[0].address %>
       username: cassandra
-      port: 9042
+      port: <%= link('seeds').p('native_transport_port') %>
