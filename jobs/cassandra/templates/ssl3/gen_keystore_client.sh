@@ -13,11 +13,11 @@ export HOST_NAME=${HOST_NAME1//[[:space:]]}
 export KEY_STORE="$KEY_STORE_PATH/${HOST_NAME}_cassandra.keystore"
 export PKS_KEY_STORE="$KEY_STORE_PATH/${HOST_NAME}_cassandra.pks12.keystore"
 export TRUST_STORE="$KEY_STORE_PATH/${HOST_NAME}_cassandra.truststore"
-export CLUSTER_NAME="<%=properties.cluster_name%>"
+export CLUSTER_NAME="<%= p("cluster_name") %>"
 export CLUSTER_PUBLIC_CERT="$KEY_STORE_PATH/${HOST_NAME}_CLUSTER_${CLUSTER_NAME}_PUBLIC.cer"
 export CLIENT_PUBLIC_CERT="$KEY_STORE_PATH/${HOST_NAME}_CLIENT_${CLUSTER_NAME}_PUBLIC.cer"
 
-export STOREPASS="<%=properties.cass_KSP%>"
+export STOREPASS="<%= p("cass_KSP") %>"
 export KEYPASS=$STOREPASS
 export PASSWORD=$KEYPASS
 
