@@ -23,7 +23,7 @@ then
  exit 0
 else 
  pushd /var/vcap/packages/cassandra/bin
- exec chpst -u vcap:vcap /var/vcap/packages/cassandra/bin/cqlsh "$@"
+ exec chpst -u vcap:vcap /var/vcap/packages/cassandra/bin/cqlsh --cqlshrc "/var/vcap/jobs/cassandra_seed/root/.cassandra/cqlshrc" "$@"
  popd
  exit 0
 fi
