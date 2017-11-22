@@ -7,10 +7,9 @@ pushd `dirname $(readlink --canonicalize-existing $0)` >/dev/null
 export CASSANDRA_SSL=/var/vcap/jobs/cassandra/config/certs
 cd ${CASSANDRA_SSL}
 
-export SSL_YN=<%= p("cassandra_ssl_YN") %>
+encryption=<%= p("client_encryption.enabled") %>
 
-if ${SSL_YN} == "Y" 
-then
+if [ "$encryption" == true ]; then
  /var/vcap/jobs/cassandra/config/certs/./ssl_env.ctl
 fi
 

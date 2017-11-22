@@ -254,9 +254,6 @@ properties:
     description:
   cass_pwd:
     default: cassandra
-  cassandra_ssl_YN:
-    default: N
-    description: use tls/ssl for authent and transactions 
   cassDbCertificate:
     default: "NOT INITIALIZED"
     description: use tls/ssl for authent and transactions 
@@ -269,12 +266,34 @@ properties:
   validate_ssl_TF:
     default: false
     description: cassandra ssl validate true or false
-  server_encryption_options.internode_encryption:
+
+  internode_encryption_mode:
+    default: none
+    description: |
+
+      Enables or disables encryption of inter-node communication using
+      the TLS_RSA_WITH_AES_128_CBC_SHA cipher suite for
+      authentication, key exchange, and encryption of data
+      transfers. Use the DHE/ECDHE ciphers, such as
+      TLS_DHE_RSA_WITH_AES_128_CBC_SHA if running in (Federal
+      Information Processing Standard) FIPS 140 compliant
+      mode. Available inter-node options:
+
+      * 'all': Encrypt all inter-node communications.
+
+      * 'none': No encryption.
+
+      * 'dc': Encrypt the traffic between the datacenters (server only).
+
+      * 'rack': Encrypt the traffic between the racks (server only).
+
+      See: <https://docs.datastax.com/en/cassandra/3.0/cassandra/configuration/configCassandra_yaml.html#configCassandra_yaml__ul_gbd_cns_1k>
+
+  client_encryption.enabled:
     default: false
-    description: cassandra ssl entre noeuds true or false
-  client_encryption_options.enabled:
+    description: |
+      Enables or disables client-to-node encryption.
+  client_encryption.require_client_auth:
     default: false
-    description: cassandra ssl entre client et server true or false
-  client_encryption_options.require_client_auth:
-    default: false
-    description: cassandra ssl entre client et server et authentifi 
+    description: |
+      Enables or disables certificate authentication.
