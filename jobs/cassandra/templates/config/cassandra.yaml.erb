@@ -69,7 +69,7 @@ request_scheduler: <%= p("request_scheduler") %>
 internode_compression: <%= p("internode_compression") %>
 inter_dc_tcp_nodelay: <%= p("inter_dc_tcp_nodelay") %>
 server_encryption_options:
- internode_encryption: <%= p("server_encryption.internode_encryption") %>
+ internode_encryption: <%= p("internode_encryption_mode") %>
  keystore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.keystore
  keystore_password: <%= p("cass_KSP") %>
  truststore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.truststore
