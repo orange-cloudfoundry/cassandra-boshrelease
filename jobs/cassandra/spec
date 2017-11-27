@@ -53,6 +53,7 @@ templates:
   bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
   bin/creer_pem_cli_serv.sh: bin/creer_pem_cli_serv.sh
   bin/sec-sysauth.sh: bin/post-start
+  config/jmx_exporter.yml: conf/jmx_exporter.yml
 
 properties:
   cluster_name:
@@ -297,3 +298,10 @@ properties:
     default: false
     description: |
       Enables or disables certificate authentication.
+  jmx_exporter_enabled:
+    default: true
+    description: scrape and expose mBeans of a JMX target
+  jmx_exporter_port:
+    default: 9001
+    description: Port on which to expose metrics and web interface
+
