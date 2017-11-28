@@ -9,3 +9,4 @@ export HOME=/var/vcap
 tar -zxf cassandra/apache-cassandra-3.9-bin.tar.gz
 cp -a apache-cassandra-3.9/* $BOSH_INSTALL_TARGET
 
+cp $BOSH_COMPILE_TARGET/jmx_exporter/jmx_prometheus_javaagent-*.jar $BOSH_INSTALL_TARGET/lib

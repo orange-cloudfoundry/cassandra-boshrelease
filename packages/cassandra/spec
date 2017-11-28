@@ -5,3 +5,4 @@ dependencies:
 files:
 - openjdk/**/*
 - cassandra/apache-cassandra-3.9-bin.tar.gz
+- jmx_exporter/jmx_prometheus_javaagent-0.1.0.jar
