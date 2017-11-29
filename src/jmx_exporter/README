@@ -1,4 +1,4 @@
-
-curl -L -o jobs/cassandra/templates/config/jmx_exporter.yml https://raw.githubusercontent.com/prometheus/jmx_exporter/master/example_configs/cassandra.yml sous jobs/cassandra/templates/config
-
+# jmx_exporter confugration for cassandra
+curl -L -o jobs/cassandra/templates/config/jmx_exporter.yml https://raw.githubusercontent.com/prometheus/jmx_exporter/master/example_configs/cassandra.yml
+# jmx_export jar
 wget https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.1.0/jmx_prometheus_javaagent-0.1.0.jar
