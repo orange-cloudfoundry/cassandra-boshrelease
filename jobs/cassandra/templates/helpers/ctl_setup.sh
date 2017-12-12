@@ -82,7 +82,7 @@ done
 PIDFILE=$RUN_DIR/$output_label.pid
 
 echo '$PATH' $PATH
-/sbin/swapoff -a
+/sbin/swapoff -a || true # fails in Bosh-Lite
 echo 'verify swap deactivate : ' `swapon -s`
 
 if [[ -d ${JOB_DIR}/tools/bin/graph ]]
@@ -107,4 +107,4 @@ fi
 chown vcap:vcap ${JOB_DIR}/config/certs/newcerts
 chown vcap:vcap ${JOB_DIR}/config/certs/
 
-mount -o remount ,exec,suid,nodev /tmp
+mount -o remount ,exec,suid,nodev /tmp || true # fails with 'mount: you must specify the filesystem type' in Bosh-Lite
