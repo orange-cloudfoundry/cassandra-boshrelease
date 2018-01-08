@@ -74,7 +74,7 @@ $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
      -e "alter keyspace system_auth WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '3'}  AND durable_writes = true"
 
 log_err "INFO: propagating any new password with the enforced replication strategy"
-$job_dir/bin/node-tool.sh repair system_auth
+$job_dir/bin/nodetool repair system_auth
 
 log_err "INFO: creating SSL certificates"
 $job_dir/bin/creer_pem_cli_serv.sh
