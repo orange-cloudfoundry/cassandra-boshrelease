@@ -142,6 +142,22 @@ are available in directory `config/`.
 The Data center layout is configurable and can be configured via deployment
 manifest file via the Topology section mentioned above.
 
+## Backups
+
+The SHIELD v8 `cassandra` plugin is designed to help you backup your Cassandra
+cluster, one keyspace at a time.
+
+This SHIELD plugin relies on some `nodetool` and `sstableloader` wrapper
+scripts that will run the regular `nodetool` and `sstableloader` utilities
+without requiring any environment variable to be provided (like JAVA_HOME or
+CASSANDRA_CONF). Here in this BOSH release, these scripts are provided in
+`/var/vcap/cassandra/job/bin`. Please ensure that this directory is added to
+the SHIELD v8 `env.path` configuration property.
+
+As a result of the backup strategy implemented by the SHIELD plugin, extra
+space is required on the persistent disk. As a rule of the thumb, you should
+provide twice the persistent storage required for your data.
+
 ## Upgrades
 
 Upgrading Cassandra with a new Cassandra version or with some changes in the
