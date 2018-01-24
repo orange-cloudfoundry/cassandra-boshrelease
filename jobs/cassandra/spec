@@ -137,9 +137,6 @@ properties:
   ssl_storage_port:
     default: 7001
     description:
-  listen_address:
-    default: 
-    description:
   start_native_transport:
     default: true
     description:
