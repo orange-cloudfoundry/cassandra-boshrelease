@@ -54,6 +54,8 @@ templates:
   bin/creer_pem_cli_serv.sh: bin/creer_pem_cli_serv.sh
   bin/post-start.sh: bin/post-start
   config/jmx_exporter.yml: conf/jmx_exporter.yml
+  bin/nodetool: bin/nodetool
+  bin/sstableloader: bin/sstableloader
   
 properties:
   cluster_name:
