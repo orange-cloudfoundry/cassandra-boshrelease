@@ -2,6 +2,7 @@
 name: cassandra-admin-tools
 
 templates:
+  bin/pre-start.sh: bin/pre-start
   bin/node-tool.sh: bin/node-tool.sh
   bin/cql-sh.sh: bin/cql-sh.sh
   bin/sstable-loader.sh: bin/sstable-loader.sh
@@ -11,7 +12,9 @@ templates:
   bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
   bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
 
-packages: []
+packages:
+  - cassandra
+  - openjdk
 
 consumes:
   - name: seeds
