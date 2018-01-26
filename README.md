@@ -1,6 +1,4 @@
-# <p style="text-align:center">Cassandra Bosh Release</p>
-
-> > ** THIS RELEASE IS STILL WIP AND SHOULD NOT BE USE IN PRODUCTION **
+# Cassandra BOSH release
 
 ## Table of contents
 
