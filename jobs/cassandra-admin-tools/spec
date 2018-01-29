@@ -7,7 +7,6 @@ templates:
   bin/cql-sh.sh: bin/cql-sh.sh
   bin/sstable-loader.sh: bin/sstable-loader.sh
   tools/bin/cassandra-stress.sh: tools/bin/cassandra-stress.sh
-  bin/cassandra-cli.sh: bin/cassandra-cli.sh
   bin/clean-snapshot.sh: bin/clean-snapshot.sh
   bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
   bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
