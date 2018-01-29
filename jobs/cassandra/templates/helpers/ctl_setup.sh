@@ -85,13 +85,6 @@ echo '$PATH' $PATH
 /sbin/swapoff -a
 echo 'verify swap deactivate : ' `swapon -s`
 
-if [[ -d ${JOB_DIR}/tools/bin/graph ]]
-then
- rm -rf $JOB_DIR/tools/bin/graph
-fi
-mkdir -p $JOB_DIR/tools/bin/graph
-chmod 777 $JOB_DIR/tools/bin/graph
-chmod +x  $JOB_DIR/tools/bin/cassandra-stress.sh
 mkdir -p $JOB_DIR/ssl
 chmod +x $JOB_DIR/config/certs/ssl_env.ctl
 chmod +x $JOB_DIR/config/certs/gen_keystore_client.sh

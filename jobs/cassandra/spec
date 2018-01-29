@@ -19,12 +19,6 @@ consumes:
 templates:
   bin/cassandra_ctl: bin/cassandra_ctl
   bin/monit_debugger: bin/monit_debugger
-  bin/node-tool.sh: bin/node-tool.sh
-  bin/cql-sh.sh: bin/cql-sh.sh
-  bin/sstable-loader.sh: bin/sstable-loader.sh
-  tools/bin/cassandra-stress.sh: tools/bin/cassandra-stress.sh
-  bin/cassandra-cli.sh: bin/cassandra-cli.sh
-  bin/clean-snapshot.sh: bin/clean-snapshot.sh 
   data/properties.sh.erb: data/properties.sh
   helpers/ctl_setup.sh: helpers/ctl_setup.sh
   helpers/ctl_utils.sh: helpers/ctl_utils.sh
@@ -49,8 +43,6 @@ templates:
   config/cqlshrc.erb: root/.cassandra/cqlshrc
   ssl3/ssl_env.ctl.erb: config/certs/ssl_env.ctl
   ssl3/gen_keystore_client.sh: config/certs/gen_keystore_client.sh
-  bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
-  bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
   bin/creer_pem_cli_serv.sh: bin/creer_pem_cli_serv.sh
   bin/post-start.sh: bin/post-start
   config/jmx_exporter.yml: conf/jmx_exporter.yml

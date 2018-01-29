@@ -1,0 +1,22 @@
+---
+name: cassandra-admin-tools
+
+templates:
+  bin/pre-start.sh: bin/pre-start
+  bin/node-tool.sh: bin/node-tool.sh
+  bin/cql-sh.sh: bin/cql-sh.sh
+  bin/sstable-loader.sh: bin/sstable-loader.sh
+  tools/bin/cassandra-stress.sh: tools/bin/cassandra-stress.sh
+  bin/clean-snapshot.sh: bin/clean-snapshot.sh
+  bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
+  bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
+
+packages:
+  - cassandra
+  - openjdk
+
+consumes:
+  - name: seeds
+    type: cassandra
+
+properties: {}

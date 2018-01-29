@@ -7,7 +7,7 @@ NODE=''
 OPERATION=''
 PID=''
 USER="$(whoami)"
-export CASS_PWD="<%= p("cass_pwd") %>"
+export CASS_PWD="<%= link('seeds').p('cass_pwd') %>"
 
 backup_data() {
     check_process
@@ -27,7 +27,7 @@ backup_data() {
     local backup_data_package
     for keyspace in ${BACKUP_KEYSPACES[@]}; do
         #cd "${CASSANDRA_BIN}"
-        cd /var/vcap/jobs/cassandra/bin
+        cd /var/vcap/jobs/cassandra-admin-tools/bin
         ./node-tool.sh clearsnapshot "${keyspace}"
         if [[ "$?" != 0 ]]; then
             err "Can not clear snapshot of keyspace \033[33m${keyspace}\033[0m."
@@ -65,7 +65,7 @@ backup_data() {
         done
 
         #cd "${CASSANDRA_BIN}"
-        cd "/var/vcap/jobs/cassandra/bin"
+        cd "/var/vcap/jobs/cassandra-admin-tools/bin"
         ./node-tool.sh clearsnapshot "${keyspace}"
         if [[ "$?" != 0 ]]; then
             err "Can not clear snapshot of keyspace \033[33m${keyspace}\033[0m."
@@ -110,7 +110,7 @@ check_status() {
     fi
 
     #cd "${CASSANDRA_BIN}"
-    cd "/var/vcap/jobs/cassandra/bin"
+    cd "/var/vcap/jobs/cassandra-admin-tools/bin"
     local result
     #result="$(./node-tool.sh status |grep -v grep|grep 'UN|JN|DN|?N'| awk '{print $1,$2}')"
     result="$(./node-tool.sh status |grep -v grep|grep -E 'UN|LN|JN|MN'| awk '{print $1,$2}')"
@@ -208,7 +208,7 @@ remove_node() {
     confirm_operation "${OPERATION}" "${NODE}"
 
     #cd "${CASSANDRA_BIN}"
-    cd "/var/vcap/jobs/cassandra/bin"
+    cd "/var/vcap/jobs/cassandra-admin-tools/bin"
     ./node-tool.sh decommission
     if  [[ "$?" == 0 ]]; then
         out "Node ${NODE} is removed from ${CLUSTER_NAME}."

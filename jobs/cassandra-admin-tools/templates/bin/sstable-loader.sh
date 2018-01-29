@@ -11,8 +11,7 @@ export CASSANDRA_TOOL=/var/vcap/packages/cassandra/tools/bin
 
 export JAVA_HOME=/var/vcap/packages/openjdk
 export PATH=$PATH:/var/vcap/packages/openjdk/bin:$CASSANDRA_BIN:$CASSANDRA_CONF:$CASSANDRA_TOOL
-export CASS_PWD="<%= p("cass_pwd") %>"
-## export CASSANDRA_CONF=/var/vcap/jobs/cassandra/conf
+export CASS_PWD="<%= link('seeds').p('cass_pwd') %>"
 
 pushd /var/vcap/packages/cassandra/tools/bin
 if [ $# -eq 0 ];
