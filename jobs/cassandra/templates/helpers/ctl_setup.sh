@@ -82,8 +82,6 @@ done
 PIDFILE=$RUN_DIR/$output_label.pid
 
 echo '$PATH' $PATH
-/sbin/swapoff -a
-echo 'verify swap deactivate : ' `swapon -s`
 
 mkdir -p $JOB_DIR/ssl
 chmod +x $JOB_DIR/config/certs/ssl_env.ctl
