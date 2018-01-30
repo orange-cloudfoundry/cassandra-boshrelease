@@ -8,7 +8,7 @@
     azs: [ z1, z2 ]
     jobs:
       - name: broker
-        release: cassandra39-services
+        release: &cassandra_release cassandra39-services
         consumes:
           seeds: { from: cassandra_seeds_list }
         properties:
@@ -19,8 +19,99 @@
     vm_type: default
     networks: [ name: default ]
 
+- path: /instance_groups/-
+  type: replace
+  value:
+    name: cassandra-smoke-tests
+    instances: 1
+    lifecycle: errand
+    azs: [ z1 ]
+    jobs:
+      - name: broker-smoke-tests
+        release: *cassandra_release
+        properties:
+          cf:
+            api:
+              url: ((cf_api_url))
+            admin:
+              username: ((cf_admin_username))
+              password: ((cf_admin_password))
+            skip:
+              ssl:
+                validation: ((cf_skip_ssl_validation))
+            org: service-sandbox
+            space: cassandra-smoke-tests
+            cassandra:
+              appdomain: ((cf_app_domain))
+              servicename: cassandra
+              serviceplan: default
+              serviceinstancename: cassandra-instance
+    stemcell: trusty
+    vm_type: default
+    networks: [ name: default ]
+
+
 - path: /variables/-
   type: replace
   value:
     name: cassandra_broker_password
     type: password
+
+
+
+- path: /releases/-
+  type: replace
+  value:
+    name: broker-registrar
+    version: latest
+
+- path: /instance_groups/-
+  type: replace
+  value:
+    name: broker-registrar-vm
+    instances: 1
+    azs: [ z1 ]
+    lifecycle: errand
+    jobs:
+      - name: broker-registrar
+        release: broker-registrar
+        consumes: &consumed_links
+          servicebroker:
+            # Note: the cassandra broker doesn't provide this link yet, so we revert
+            # back to manual linking
+            instances:
+              - 0.cassandra-brokers.default.cassandra.bosh # Provided by a Bosh DNS alias
+            properties:
+              external_host: ((cassandra_domain))
+              port: 8080
+              ssl_enabled: false
+              name: cassandra-broker
+              username: cassandra-broker
+              password: ((cassandra_broker_password))
+          cf-admin-user:
+            from: cf-admin-user
+            deployment: ((cf_deployment_name))
+        properties: &additional_properties
+          cf:
+            skip_ssl_validation: ((cf_skip_ssl_validation)) # not provided by the 'cf-admin-user' link
+    stemcell: trusty
+    vm_type: minimal
+    networks:
+      - name: ((network_name))
+
+- path: /instance_groups/-
+  type: replace
+  value:
+    name: broker-deregistrar-vm
+    instances: 1
+    azs: [ z1 ]
+    lifecycle: errand
+    jobs:
+      - name: broker-deregistrar
+        release: broker-registrar
+        consumes: *consumed_links
+        properties: *additional_properties
+    stemcell: trusty
+    vm_type: minimal
+    networks:
+      - name: ((network_name))

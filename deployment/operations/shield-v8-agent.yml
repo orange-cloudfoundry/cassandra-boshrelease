@@ -20,7 +20,7 @@
       core:
         # You'll usually want this to be the certificate from your shield
         # deployment, in which case you can target it with:
-        # ((/<bosh-director-name>/<shield-deplyment-name>/shield-ca.certificate))
+        # ((/<bosh-director-name>/<shield-deployment-name>/shield-ca.certificate))
         ca: ((shield-ca.certificate))
       targets:
         system-keyspace:
@@ -32,6 +32,22 @@
             cassandra_keyspace: system
             cassandra_bindir: /var/vcap/jobs/cassandra/bin
             cassandra_datadir: /var/vcap/store/cassandra/cluster/data
+      jobs:
+        example-sys-ks_hourly2fs:
+          name: (deployment)/(name)-(index)/system/hourly2fs
+          schedule: hourly
+          target: (deployment)/(name)-(index)/system-keyspace
+          store: test-fs-store
+          retention: week
+      stores:
+        name: test-fs-store
+        plugin: fs
+        config:
+          base_dir: /var/vcap/store/shield-backups
+      schedules:
+        hourly: hourly at 30
+      retention-policies:
+        week: 7d
 
 - path: /instance_groups/name=cassandra-servers/jobs/name=shield-agent?
   type: replace

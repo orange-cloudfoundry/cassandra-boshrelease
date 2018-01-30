@@ -26,12 +26,21 @@
             cassandra_bindir: /var/vcap/jobs/cassandra/bin
             cassandra_datadir: /var/vcap/store/cassandra/cluster/data
       jobs:
-        sys-ks_hourly2fs:
-          name: (deployment)/(name)-(index)/system-keyspace
-          schedule: hourly-30
+        example-sys-ks_hourly2fs:
+          name: (deployment)/(name)-(index)/system/hourly2fs
+          schedule: hourly
           target: (deployment)/(name)-(index)/system-keyspace
           store: test-fs-store
           retention: week
+      stores:
+        name: test-fs-store
+        plugin: fs
+        config:
+          base_dir: /var/vcap/store/shield-backups
+      schedules:
+        hourly: hourly at 30
+      retention-policies:
+        week: 7d
 
 - path: /instance_groups/name=cassandra-servers/jobs/name=shield-agent?
   type: replace
