@@ -1,0 +1,47 @@
+---
+
+- path: /releases/name=shield?
+  type: replace
+  value:
+    name: shield
+    version: latest
+
+- path: /instance_groups/name=cassandra-seeds/jobs/-
+  type: replace
+  value: &shield_agent_job
+    name: shield-agent
+    release: shield
+    consumes:
+      shield: { from: shield, deployment: shield }
+    properties:
+      name: cassandra
+      shield-url: https://((shield_domain))
+      require-shield-core: false
+      core:
+        # You'll usually want this to be the certificate from your shield
+        # deployment, in which case you can target it with:
+        # ((/<bosh-director-name>/<shield-deplyment-name>/shield-ca.certificate))
+        ca: ((shield-ca.certificate))
+      targets:
+        system-keyspace:
+          name: (deployment)/(name)-(index)/system-keyspace
+          plugin: cassandra
+          config:
+            cassandra_host: (ip)
+            cassandra_password: ((cassandra_admin_password))
+            cassandra_keyspace: system
+            cassandra_bindir: /var/vcap/jobs/cassandra/bin
+            cassandra_datadir: /var/vcap/store/cassandra/cluster/data
+
+- path: /instance_groups/name=cassandra-servers/jobs/name=shield-agent?
+  type: replace
+  value: *shield_agent_job
+
+- path: /variables/-
+  type: replace
+  value:
+    name: shield-ca
+    type: certificate
+    options:
+      is_ca: true
+      common_name: shieldca

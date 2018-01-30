@@ -1,0 +1,26 @@
+---
+
+- path: /instance_groups/-
+  type: replace
+  value:
+    name: cassandra-brokers
+    instances: 1
+    azs: [ z1, z2 ]
+    jobs:
+      - name: broker
+        release: cassandra39-services
+        consumes:
+          seeds: { from: cassandra_seeds_list }
+        properties:
+          broker:
+            user: cassandra-broker
+            password: ((cassandra_broker_password))
+    stemcell: trusty
+    vm_type: default
+    networks: [ name: default ]
+
+- path: /variables/-
+  type: replace
+  value:
+    name: cassandra_broker_password
+    type: password

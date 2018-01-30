@@ -1,0 +1,13 @@
+---
+
+- path: /instance_groups/name=cassandra-seeds/jobs/-
+  type: replace
+  value: &cassandra_admin_tools_job
+    name: cassandra-admin-tools
+    release: cassandra39-services
+    consumes:
+      seeds: { from: cassandra_seeds_list }
+
+- path: /instance_groups/name=cassandra-servers/jobs/-
+  type: replace
+  value: *cassandra_admin_tools_job

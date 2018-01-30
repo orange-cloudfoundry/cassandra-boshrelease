@@ -1,0 +1,117 @@
+---
+name: cassandra
+
+instance_groups:
+  - name: cassandra-seeds
+    instances: 3
+    azs: [ z1, z2, z3 ]
+    jobs:
+      - name: cassandra
+        release: *cassandra_release
+        provides:
+          seeds: { as: &cassandra_seeds_link cassandra_seeds_list }
+        consumes:
+          seeds: { from: *cassandra_seeds_link }
+        properties: &cassandra_properties
+          cluster_name: &cassandra_cluster_name cluster
+          num_tokens: 256
+          internode_encryption_mode: none
+          client_encryption:
+            enabled: false
+            require_client_auth: false
+          max_heap_size: 6G
+          heap_newsize: 800M
+          cass_pwd: ((cassandra_admin_password))
+          validate_ssl_TF: false
+          cassDbCertificate:
+            ca: ((cassandra_certificate_seeds.ca))
+            private_key: ((cassandra_certificate_seeds.private_key))
+            certificate: ((cassandra_certificate_seeds.certificate))
+          cert:
+            ca: ((cassandra_certificate_seeds))
+            private_key: ((cassandra_certificate_seeds.private_key))
+            certificate: ((cassandra_certificate_seeds.certificate))
+          cass_KSP: ((cassandra_key_store_pass))
+          cass_version: 3.11.1
+          cass_upgrade_TF: false
+          topology:
+            # Don't bother these values, as they are not used yet, but ketp
+            # here for future improments on the Cassandra BOSH Release.
+            - 10.165.0.92=DC1:RAC1
+            - 10.165.0.93=DC1:RAC1
+            - 10.165.0.94=DC1:RAC1
+            - 10.165.0.95=DC1:RAC1
+    stemcell: *trusty_stemcell
+    vm_type: &cassandra_vm_type default
+    persistent_disk_type: &cassandra_persistent_disk_type 5GB
+    env:
+      persistent_disk_fs: xfs
+      bosh: { swap_size: 0 }
+    networks: [ name: default ]
+
+  - name: cassandra-servers
+    instances: 0
+    azs: [ z1, z2, z3 ]
+    jobs:
+      - name: cassandra
+        release: *cassandra_release
+        consumes:
+          seeds: { from: *cassandra_seeds_link }
+        properties: *cassandra_properties
+    stemcell: *trusty_stemcell
+    vm_type: *cassandra_vm_type
+    persistent_disk_type: *cassandra_persistent_disk_type
+    env:
+      persistent_disk_fs: xfs
+      bosh: { swap_size: 0 }
+    networks: [ name: default ]
+
+variables:
+  - name: cassandra_admin_password
+    type: password
+  - name: /internalCA
+    type: certificate
+    options:
+      is_ca: true
+      common_name: internalCA
+  - name: cassandra_certificate_seeds
+    type: certificate
+    options:
+      ca: /internalCA
+      common_name: <%= seed.instance.address %>
+      alternative_names: 
+        - "*.cassandra-seeds.default.cassandra.bosh"
+      extended_key_usage: [ client_auth, server_auth ]
+  - name: cassandra_certificate_servers
+    type: certificate
+    options:
+      ca: /internalCA
+      common_name: <%= cluster.instance.address %>
+      alternative_names: 
+        - "*.cassandra-servers.default.cassandra.bosh"
+      extended_key_usage: [ client_auth, server_auth ]
+  - name: cassandra_key_store_pass  
+    type: password
+
+
+update:
+  serial: true # instance groups to be deployed sequentially.
+
+  canaries: 1
+  canary_watch_time: 30000-240000
+
+  # We don't support values >= 2 for 'max_in_flight'. Indeed there can
+  # be a race condition in post-start when 2 repair-table are executed
+  # in parallel.
+  max_in_flight: 1
+  update_watch_time: 30000-240000
+
+
+releases:
+  - name: &cassandra_release cassandra39-services
+    version: latest
+
+stemcells:
+  - alias: &trusty_stemcell trusty
+    os: ubuntu-trusty
+    version: latest
