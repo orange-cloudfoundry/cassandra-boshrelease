@@ -128,6 +128,11 @@ to properly work. They are even not recommended in production, as they can
 provide a larger attack surface to intruders.
 
 
+### `bosh-lite.yml`
+
+This operation file implements the necessary settings for deploying in Bosh-Lite.
+
+
 ## BOSH 1.0 manifests
 
 Example BOSH 1.0 manifests can be found in th `manifests/` subdirectory. These
