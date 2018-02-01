@@ -22,6 +22,9 @@
         # deployment, in which case you can target it with:
         # ((/<bosh-director-name>/<shield-deployment-name>/shield-ca.certificate))
         ca: ((shield-ca.certificate))
+      env:
+        path:
+          - /var/vcap/cassandra/job/bin
       targets:
         system-keyspace:
           name: (deployment)/(name)-(index)/system-keyspace

@@ -64,11 +64,6 @@ are not ready-to-use manifests. They are meant to be examples only.
 The SHIELD v7 and v8 `cassandra` plugins are designed to help you backup your
 Cassandra cluster, one keyspace at a time.
 
-Please ensure that the `/var/vcap/cassandra/job/bin` directory is added to the
-SHIELD v8 `env.path` configuration property. Indeed, this SHIELD plugin relies
-on some `nodetool` and `sstableloader` wrapper scripts that are provided in
-that directory.
-
 As a result of the backup strategy implemented by the SHIELD plugin, extra
 space is required on the persistent disk. As a rule of the thumb, you should
 provide twice the persistent storage required for your data.
