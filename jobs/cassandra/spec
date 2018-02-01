@@ -17,6 +17,7 @@ consumes:
     type: cassandra
 
 templates:
+  bin/pre-start.sh: bin/pre-start
   bin/cassandra_ctl: bin/cassandra_ctl
   bin/monit_debugger: bin/monit_debugger
   data/properties.sh.erb: data/properties.sh
@@ -259,6 +260,18 @@ properties:
     default: false
     description: cassandra ssl validate true or false
 
+  disable_linux_swap:
+    description: |
+      Suppress Linux swap on pre-start, in order to ensure good
+      performances for Cassandra.
+
+      This is a workaround for IaaS where the property
+      'env.bosh.swap_size' set to 0 does not properly suppress Linux
+      swap.
+
+      In Bosh-Lite, you need to set this to 'false', as the 'swapoff'
+      command cannot be invoked within Garden containers.
+    default: true
   internode_encryption_mode:
     default: none
     description: |
