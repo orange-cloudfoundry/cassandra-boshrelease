@@ -69,6 +69,11 @@ space is required on the persistent disk. As a rule of the thumb, you should
 provide twice the persistent storage required for your data.
 
 
+## Cassandra admin tools
+
+These tools can be installed on Cassandra nodes by an optional Bosh Job, that
+you can opt in with the `admin-tools.yml` operations file.
+
 ### Running Nodetool/CQL-sh/Cassandra-Stress
 
 If you are SSH'ed into the cassandra VM and need to run the standard `cqlsh`,
