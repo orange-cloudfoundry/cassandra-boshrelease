@@ -48,12 +48,14 @@ bosh -d cassandra run-errand broker-registrar
 ```
 
 
-## BOSH 2.0 deployment manifests
+## Deployment manifests
+
+### BOSH 2.0 manifests
 
 See the documentation in the  [`deployment`](./deployment) directory.
 
 
-## BOSH 1.0 manifests
+### BOSH 1.0 manifests
 
 Example BOSH 1.0 manifests can be found in th `manifests/` subdirectory. These
 are not ready-to-use manifests. They are meant to be examples only.
