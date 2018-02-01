@@ -10,6 +10,26 @@ service broker deployment & registration, and integration with the
 [SHIELD](https://shieldproject.io/) backup solution (v7 and v8).
 
 
+## Usage
+
+Provided that you have a working Bosh director and that it is properly
+targeted by your Bosh CLI:
+
+```bash
+git clone https://github.com/orange-cloudfoundry/cassandra-cf-service-boshrelease.git cassandra-boshrelease
+cd cassandra-boshrelease
+
+bosh create-release
+bosh upload-release
+
+>> depl-state.yml
+chmod 600 depl-state.yml
+
+bosh -d cassandra deploy deployment/cassandra.yml \
+    -o deployment/operations/admin-tools.yml \
+    --vars-store depl-state.yml
+```
+
 ## Base deployment
 
 The `cassandat.yml` base manifests describes a classical deployment with 3
