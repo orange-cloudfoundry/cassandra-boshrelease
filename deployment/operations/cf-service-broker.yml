@@ -8,7 +8,7 @@
     azs: [ z1, z2 ]
     jobs:
       - name: broker
-        release: &cassandra_release cassandra39-services
+        release: &cassandra_release cassandra
         consumes:
           seeds: { from: cassandra_seeds_list }
         properties:

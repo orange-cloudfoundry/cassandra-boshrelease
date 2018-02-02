@@ -108,7 +108,7 @@ update:
 
 
 releases:
-  - name: &cassandra_release cassandra39-services
+  - name: &cassandra_release cassandra
     version: latest
 
 stemcells:

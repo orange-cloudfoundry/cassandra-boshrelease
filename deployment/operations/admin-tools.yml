@@ -4,7 +4,7 @@
   type: replace
   value: &admin_tools_job
     name: cassandra-admin-tools
-    release: cassandra39-services
+    release: cassandra
     consumes:
       seeds: { from: cassandra_seeds_list }
 
