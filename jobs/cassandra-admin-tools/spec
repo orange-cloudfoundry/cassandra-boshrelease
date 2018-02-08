@@ -10,6 +10,7 @@ templates:
   bin/clean-snapshot.sh: bin/clean-snapshot.sh
   bin/ops-admin/operation-tool.sh: bin/ops-admin/operation-tool.sh
   bin/ops-admin/cassandra.conf: bin/ops-admin/cassandra.conf
+  config/cqlshrc.erb: root/.cassandra/cqlshrc
 
 packages:
   - cassandra

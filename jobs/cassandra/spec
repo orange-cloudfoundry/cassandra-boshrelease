@@ -11,6 +11,9 @@ provides:
     properties:
       - cass_pwd
       - native_transport_port
+      - client_encryption.enabled
+      - validate_ssl_TF
+      - cluster_name
 
 consumes:
   - name: seeds

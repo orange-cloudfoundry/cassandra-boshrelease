@@ -10,3 +10,7 @@ fi
 mkdir -p $JOB_DIR/tools/bin/graph
 chmod 777 $JOB_DIR/tools/bin/graph
 chmod +x  $JOB_DIR/tools/bin/cassandra-stress.sh
+
+
+chgrp vcap $JOB_DIR/root/.cassandra/cqlshrc
+chmod 640 $JOB_DIR/root/.cassandra/cqlshrc

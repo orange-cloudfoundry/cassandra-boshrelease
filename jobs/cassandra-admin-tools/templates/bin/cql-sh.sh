@@ -8,5 +8,5 @@ export LANG=en_US.UTF-8
 exec chpst -u vcap:vcap \
     env HOME=/home/vcap \
         /var/vcap/packages/cassandra/bin/cqlsh \
-            --cqlshrc /var/vcap/jobs/cassandra/root/.cassandra/cqlshrc \
+            --cqlshrc /var/vcap/jobs/cassandra-admin-tools/root/.cassandra/cqlshrc \
             "$@"

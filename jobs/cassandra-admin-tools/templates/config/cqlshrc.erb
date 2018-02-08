@@ -1,0 +1,23 @@
+[authentication]
+username = cassandra
+password = <%= link("seeds").p("cass_pwd") %>
+;;keyspace =
+
+
+[connection]
+hostname = <%= spec.ip %>
+port = <%= link("seeds").p("native_transport_port") %>
+ssl = <%= link("seeds").p("client_encryption.enabled") %>
+request_timeout = 1800
+
+[ssl]
+certfile = /var/vcap/jobs/cassandra/config/certs/<%= spec.ip %>_<%= link("seeds").p("cluster_name") %>_CLIENT.cer.pem
+validate = <%= link("seeds").p("validate_ssl_TF") %>
+userkey = /var/vcap/jobs/cassandra/config/certs/<%= spec.ip %>_<%= link("seeds").p("cluster_name") %>_CLIENT.key.pem
+usercert = /var/vcap/jobs/cassandra/config/certs/<%= spec.ip %>_<%= link("seeds").p("cluster_name") %>_CLIENT.cer.pem
+
+;; Optional section, overrides default certfile in [ssl] section, if present
+; [certfiles]
+; 192.168.1.3 = ~/keys/cassandra01.cert
+; 192.168.1.4 = ~/keys/cassandra02.cert
+
