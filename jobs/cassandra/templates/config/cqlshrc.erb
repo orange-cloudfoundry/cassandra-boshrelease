@@ -1,23 +1,15 @@
 [authentication]
 username = cassandra
 password = <%= p("cass_pwd") %>
-;;keyspace = 
-
 
 [connection]
-hostname = <%=spec.ip%>
+hostname = <%= spec.ip %>
 port = <%= p('native_transport_port') %>
 ssl = <%= p("client_encryption.enabled") %>
 request_timeout = 1800
 
 [ssl]
-certfile = /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_<%= p("cluster_name") %>_CLIENT.cer.pem
+certfile = /var/vcap/jobs/cassandra/config/certs/<%= spec.ip %>_<%= p("cluster_name") %>_CLIENT.cer.pem
 validate = <%= p("validate_ssl_TF") %>
-userkey = /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_<%= p("cluster_name") %>_CLIENT.key.pem
-usercert = /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_<%= p("cluster_name") %>_CLIENT.cer.pem
-
-;; Optional section, overrides default certfile in [ssl] section, if present
-; [certfiles]
-; 192.168.1.3 = ~/keys/cassandra01.cert
-; 192.168.1.4 = ~/keys/cassandra02.cert
-
+userkey = /var/vcap/jobs/cassandra/config/certs/<%= spec.ip %>_<%= p("cluster_name") %>_CLIENT.key.pem
+usercert = /var/vcap/jobs/cassandra/config/certs/<%= spec.ip %>_<%= p("cluster_name") %>_CLIENT.cer.pem
