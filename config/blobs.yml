@@ -1,7 +1,3 @@
-cassandra/apache-cassandra-3.9-bin.tar.gz:
-  size: 36719829
-  object_id: 429bd84d-8522-43a0-85f5-1c54e3848911
-  sha: 8f3d37880827284964bc353a94a69fd256d62b06
 cassandra/apache-cassandra-3.11.1-bin.tar.gz:
   size: 38104148
   object_id: 39b635ae-8713-4803-ac29-ec7515af2643
