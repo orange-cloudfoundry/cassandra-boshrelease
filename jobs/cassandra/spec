@@ -6,7 +6,7 @@ packages:
   - openjdk
 
 provides:
-  - name: seeds
+  - name: cassandra
     type: cassandra
     properties:
       - cass_pwd

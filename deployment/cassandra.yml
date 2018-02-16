@@ -9,7 +9,7 @@ instance_groups:
       - name: cassandra
         release: *cassandra_release
         provides:
-          seeds: { as: &cassandra_seeds_link cassandra_seeds_list }
+          cassandra: { as: &cassandra_seeds_link cassandra_seeds_list }
         consumes:
           seeds: { from: *cassandra_seeds_link }
         properties: &cassandra_properties
