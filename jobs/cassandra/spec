@@ -21,6 +21,7 @@ consumes:
 
 templates:
   bin/pre-start.sh: bin/pre-start
+  bpm.yml: config/bpm.yml
   bin/cassandra_ctl: bin/cassandra_ctl
   bin/monit_debugger: bin/monit_debugger
   data/properties.sh.erb: data/properties.sh
@@ -54,6 +55,10 @@ templates:
   bin/sstableloader: bin/sstableloader
   
 properties:
+  bpm.enabled:
+    description: |
+      [Experimental] activate use of BPM (Bosh Process Manager).
+    default: false
   cluster_name:
     default: testcluster
     description: The name of the cluster. This setting prevents nodes in one logical cluster from joining another. 

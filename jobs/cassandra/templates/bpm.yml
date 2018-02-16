@@ -1,0 +1,20 @@
+---
+processes:
+  - name: cassandra
+    hooks:
+      pre_start: /var/vcap/jobs/cassandra/bpm-prestart
+    executable: /var/vcap/packages/cassandra/bin/cassandra
+    args: [ -f ]
+    env:
+      CASSANDRA_CONF: /var/vcap/jobs/cassandra/conf
+      JAVA_HOME: /var/vcap/packages/openjdk
+      # HOME: /var/vcap/data/cassandra/home
+    limits:
+      open_files: 131072
+      processes: 32768
+    ephemeral_disk: true
+    persistent_disk: true
+    additional_volumes:
+      - path: /var/vcap/data/cassandra/jna-tmp
+        writable: true
+        executions: true

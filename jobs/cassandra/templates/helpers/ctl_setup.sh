@@ -50,7 +50,9 @@ export STORE_DIR=/var/vcap/store/$JOB_NAME
 export BACKUP_DATA_DIR=/var/vcap/store/backups
 export RESTORE_DATA_DIR=/var/vcap/store/restores
 
-for dir in $RUN_DIR $LOG_DIR $TMP_DIR $STORE_DIR $BACKUP_DATA_DIR $RESTORE_DATA_DIR 
+for dir in $RUN_DIR $LOG_DIR $TMP_DIR $STORE_DIR \
+    $BACKUP_DATA_DIR $RESTORE_DATA_DIR \
+    /var/vcap/data/cassandra/jna-tmp
 do
   mkdir -p ${dir}
   chown vcap:vcap ${dir}
@@ -98,4 +100,8 @@ fi
 chown vcap:vcap ${JOB_DIR}/config/certs/newcerts
 chown vcap:vcap ${JOB_DIR}/config/certs/
 
-mount -o remount ,exec,suid,nodev /tmp
+# # Note: we need to that an 'exec' mount on /tmp to circumvent this error:
+# #
+# # ERROR 18:45:30 Failed to link the C library against JNA. Native methods will be unavailable.
+# # java.lang.UnsatisfiedLinkError: /tmp/jna-3613596/jna304748597861339671.tmp: /tmp/jna-3613596/jna304748597861339671.tmp: failed to map segment from shared object: Operation not permitted
+# mount -o remount,exec,suid,nodev /tmp

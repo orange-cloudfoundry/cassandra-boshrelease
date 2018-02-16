@@ -1,0 +1,27 @@
+---
+
+- path: /releases/name=bpm?
+  type: replace
+  value:
+    name: bpm
+    version: "0.2.0"
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.2.0
+    sha1: f2bd126b17b3591160f501d88d79ccf0aba1ae54
+
+- path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties/bpm?/enabled
+  type: replace
+  value: &bpm_enabled true
+
+- path: /instance_groups/name=cassandra-seeds/jobs/name=bpm?
+  type: replace
+  value: &bpm_job
+    name: bpm
+    release: bpm
+
+- path: /instance_groups/name=cassandra-servers/jobs/name=cassandra/properties/bpm?/enabled
+  type: replace
+  value: *bpm_enabled
+
+- path: /instance_groups/name=cassandra-servers/jobs/name=bpm?
+  type: replace
+  value: *bpm_job

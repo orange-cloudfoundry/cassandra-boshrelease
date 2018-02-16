@@ -1,5 +1,11 @@
 check process cassandra
+<% if p("bpm.enabled") -%>
+  with pidfile /var/vcap/sys/run/bpm/cassandra/cassandra.pid
+  start program "/var/vcap/jobs/bpm/bin/bpm start cassandra"
+  stop program "/var/vcap/jobs/bpm/bin/bpm stop cassandra"
+<% else -%>
   with pidfile /var/vcap/sys/run/cassandra/cassandra.pid
   start program "/var/vcap/jobs/cassandra/bin/monit_debugger cassandra_ctl '/var/vcap/jobs/cassandra/bin/cassandra_ctl start'"
   stop program "/var/vcap/jobs/cassandra/bin/monit_debugger cassandra_ctl '/var/vcap/jobs/cassandra/bin/cassandra_ctl stop'"
+<% end -%>
   group vcap

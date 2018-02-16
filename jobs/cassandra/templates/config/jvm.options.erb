@@ -240,7 +240,7 @@
 -XX:GCLogFileSize=10M
 
 ### set java.io.tempdir see http://stackoverflow.com/questions/34059020/jna-link-issue-while-starting-cassandra-rhel-6-5
--Djava.io.tmpdir=/var/vcap/sys/tmp/cassandra
+-Djava.io.tmpdir=/var/vcap/data/cassandra/jna-tmp
 <% if p('jmx_exporter_enabled') %>
 -javaagent:/var/vcap/packages/cassandra/lib/jmx_prometheus_javaagent-0.1.0.jar=<%= p('jmx_exporter_port') %>:/var/vcap/jobs/cassandra/conf/jmx_exporter.yml
 <% end %>
