@@ -1,0 +1,36 @@
+<%-
+servers_array = []
+link('cassandra_servers_list').instances.each do |instance|
+        servers_array << "#{instance.address}"
+  end
+
+seeds_array = []
+link('cassandra_seeds_list').instances.each do |instance|
+        seeds_array << "#{instance.address}"
+  end
+
+ #servers_string = ''
+# link('cassandra_servers_list').instances.each do |instance|
+#  servers_string = "#{servers_string}#{instance.address},"    
+ # end
+  #servers_string = servers_string[0..2]
+
+ #seeds_string = ''
+ #link('cassandra_seeds_list').instances.each do |instance|
+  #seeds_string = "#{seeds_string}#{instance.address},"    
+  #end
+  #seeds_string = seeds_string[0..2]
+
+  -%>
+{
+  "timeout_scale":                     <%= p('timeout_scale') %>,
+  "cluster_name":                     "<%= link('cassandra_seeds_list').p('cluster_name') %>",  
+  "cassandra_password":         "<%= link('cassandra_seeds_list').p('cass_pwd') %>",
+  "cassandra_native_transport_port":  "<%= link('cassandra_seeds_list').p('native_transport_port') %>", 
+  "cassandra_seeds":                   <%= seeds_array.to_json %>,   
+  "cassandra_servers":                 <%= servers_array.to_json %>,
+  "client_encryption.enabled" :   	   <%= link('cassandra_seeds_list').p('client_encryption.enabled') %>, 
+  "validate_ssl_TF":              	   <%= link('cassandra_seeds_list').p('validate_ssl_TF') %>, 
+  "key_space_replication_factor":      <%= link('cassandra_seeds_list').p('system_auth_keyspace_replication_factor') %>  
+}
+
