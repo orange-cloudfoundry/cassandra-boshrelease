@@ -88,7 +88,7 @@ instance_groups:
           cassandra_servers_list: { from: *cassandra_servers_link  }   
         release: *cassandra_release
         properties:
-          cassandra_test_suite: ["crud"]
+          cassandra_test_suites: [crud]
     vm_type: small
     stemcell: trusty
     networks: 

@@ -10,14 +10,12 @@ consumes:
   - name: cassandra_servers_list
     type: cassandra
 
-
-
 templates:
   config.json.erb: config.json
   errand.sh.erb: bin/run
 
 properties:
-  cassandra_test_suite:
+  cassandra_test_suites:
     description: Test suites to run (["CRUD"] or ["replicaset_and_failover"])
     default: ["CRUD"] 
 
