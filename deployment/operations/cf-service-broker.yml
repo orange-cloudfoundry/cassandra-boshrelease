@@ -75,7 +75,7 @@
     jobs:
       - name: broker-registrar
         release: broker-registrar
-        consumes: &consumed_links
+        consumes: &broker_registrar_consumed_links
           servicebroker:
             # Note: the cassandra broker doesn't provide this link yet, so we revert
             # back to manual linking
@@ -90,14 +90,13 @@
               password: ((cassandra_broker_password))
           cf-admin-user:
             from: cf-admin-user
-            deployment: ((cf_deployment_name))
-        properties: &additional_properties
+            deployment: cf
+        properties: &broker_registrar_additional_properties
           cf:
             skip_ssl_validation: ((cf_skip_ssl_validation)) # not provided by the 'cf-admin-user' link
     stemcell: trusty
     vm_type: minimal
-    networks:
-      - name: ((network_name))
+    networks: [ name: default ]
 
 - path: /instance_groups/-
   type: replace
@@ -109,9 +108,8 @@
     jobs:
       - name: broker-deregistrar
         release: broker-registrar
-        consumes: *consumed_links
-        properties: *additional_properties
+        consumes: *broker_registrar_consumed_links
+        properties: *broker_registrar_additional_properties
     stemcell: trusty
     vm_type: minimal
-    networks:
-      - name: ((network_name))
+    networks: [ name: default ]
