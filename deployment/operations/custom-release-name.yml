@@ -1,0 +1,31 @@
+---
+
+- path: /releases/name=cassandra
+  type: replace
+  value: ((cassandra_release))
+
+- path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/release
+  type: replace
+  value: ((cassandra_release))
+
+- path: /instance_groups/name=cassandra-servers/jobs/name=cassandra/release
+  type: replace
+  value: ((cassandra_release))
+
+
+# Admin tools
+
+- path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra-admin-tools/release
+  type: replace
+  value: ((cassandra_release))
+
+
+# Service brokers
+
+- path: /instance_groups/name=cassandra-brokers/jobs/name=broker/release
+  type: replace
+  value: ((cassandra_release))
+
+- path: /instance_groups/name=cassandra-smoke-tests/jobs/name=broker-smoke-tests/release
+  type: replace
+  value: ((cassandra_release))
