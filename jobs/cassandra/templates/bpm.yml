@@ -17,4 +17,4 @@ processes:
     additional_volumes:
       - path: /var/vcap/data/cassandra/jna-tmp
         writable: true
-        executions: true
+        allow_executions: true
