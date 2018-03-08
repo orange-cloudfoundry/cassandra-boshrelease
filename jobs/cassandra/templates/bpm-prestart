@@ -2,4 +2,6 @@
 
 mkdir -p /var/vcap/data/cassandra/home
 
+# Set 'max_map_count' as recommended.
+# See: <https://docs.datastax.com/en/dse/5.1/dse-dev/datastax_enterprise/config/configRecommendedSettings.html>
 sysctl -w vm.max_map_count=1048575

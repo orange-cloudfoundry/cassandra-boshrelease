@@ -10,6 +10,8 @@ processes:
       JAVA_HOME: /var/vcap/packages/openjdk
       # HOME: /var/vcap/data/cassandra/home
     limits:
+      # Set limits as recommended
+      # See: <https://docs.datastax.com/en/dse/5.1/dse-dev/datastax_enterprise/config/configRecommendedSettings.html>
       open_files: 131072
       processes: 32768
     ephemeral_disk: true
