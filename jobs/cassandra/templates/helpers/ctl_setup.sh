@@ -99,9 +99,3 @@ fi
 
 chown vcap:vcap ${JOB_DIR}/config/certs/newcerts
 chown vcap:vcap ${JOB_DIR}/config/certs/
-
-# # Note: we need to that an 'exec' mount on /tmp to circumvent this error:
-# #
-# # ERROR 18:45:30 Failed to link the C library against JNA. Native methods will be unavailable.
-# # java.lang.UnsatisfiedLinkError: /tmp/jna-3613596/jna304748597861339671.tmp: /tmp/jna-3613596/jna304748597861339671.tmp: failed to map segment from shared object: Operation not permitted
-# mount -o remount,exec,suid,nodev /tmp
