@@ -58,7 +58,8 @@ templates:
 properties:
   bpm.enabled:
     description: |
-      [Experimental] activate use of BPM (Bosh Process Manager).
+      Switch to BPM (Bosh Process Manager) for running Cassandra. This brings
+      the benefit of improved security measures at runtime.
     default: false
   cluster_name:
     default: testcluster
