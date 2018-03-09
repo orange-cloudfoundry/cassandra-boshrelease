@@ -62,86 +62,231 @@ properties:
       the benefit of improved security measures at runtime.
     default: false
   cluster_name:
-    default: testcluster
-    description: The name of the cluster. This setting prevents nodes in one logical cluster from joining another. 
+    description: |
+      The name of the cluster. This is mainly used to prevent machines in one
+      logical cluster from joining another.
+    default: testcluster # 'Test Cluster'
   num_tokens:
+    description: |
+      Defines the number of tokens randomly assigned to each node of the
+      instance group. The more tokens, relative to nodes of other instance
+      groups, the larger the proportion of data that this node will store.
+
+      When defining different instance groups for a single Cassandra cluster,
+      each with varying hardware capabilities, then the number of tokens
+      assigned to nodes of must be relative to their hardware capabilities.
     default: 256
-    description: Defines the number of tokens randomly assigned to this node on the ring when using virtual nodes vnodes.
   hinted_handoff_enabled:
+    description: |
+      Enables or disables hinted handoff. To enable per datacenter, add a list
+      of datacenters. For example: 'hinted_handoff_enabled: DC1,DC2'. A hint
+      indicates that the write needs to be replayed to an unavailable node.
+      Cassandra writes the hint to a hints file on the coordinator node.
+
+      See: <http://wiki.apache.org/cassandra/HintedHandoff>
+      See: <https://www.datastax.com/dev/blog/modern-hinted-handoff>
     default: true
-    description: Enable or disable hinted handoff To enable per data center add data center list For example hinted_handoff_enabled DC1DC2
+    example: DC1,DC2
   max_hint_window_in_ms:
-    default: 10800000
-    description: en ms donc 3 heures.Maximum amount of time that hints are generates hints for an unresponsive node.
+    description: |
+      Maximum amount of time (in milliseconds) during which Cassandra
+      generates hints for an unresponsive node. After this interval, Cassandra
+      does not generate any new hints for the node until it is back up and
+      responsive. If the node goes down again, Cassandra starts a new
+      interval.
+    default: 10800000 # 3 hours
   hinted_handoff_throttle_in_kb:
-    default: 1024 
-    description: taux de hint en Kbsec par thread. Il diminue proportionnellemnt au nombre de noeuds du cluster
+    description: |
+      Maximum amount of traffic per delivery thread in kilobytes per second.
+      This rate reduces proportionally to the number of nodes in the cluster.
+      For example, if there are two nodes in the cluster, each delivery thread
+      uses the maximum rate. If there are three, each node throttles to half
+      of the maximum, since the two nodes are expected to deliver hints
+      simultaneously.
+    default: 1024
   max_hints_delivery_threads:
+    description: |
+      Number of threads Cassandra uses to deliver hints. In multiple data-
+      center deployments, consider increasing this number because cross data-
+      center handoff is generally slower.
     default: 2
-    description: nombre de thread pour gerer les hints. A augmenter si cluster multi datacenter.
   authenticator:
+    description: |
+      The authentication backend. It implements IAuthenticator for identifying
+      users. Available authenticators:
+
+      - AllowAllAuthenticator:
+        Disables authentication; Cassandra performs no checks.
+
+      - PasswordAuthenticator:
+        Authenticates users with user names and hashed passwords stored in the
+        'system_auth.roles' table. Leaving the default replication factor of 1
+        set for the 'system_auth' keyspace results in denial of access to the
+        cluster if the single replica of the keyspace goes down.
     default: PasswordAuthenticator 
-    description: AllowAllAuthenticator c.a.d pas de controle sinon possible avec  PasswordAuthenticator.
   authorizer:
+    description: |
+      The authorization backend. It implements IAuthenticator to limit access
+      and provide permissions. Available authorizers:
+
+      - AllowAllAuthorizer:
+        Disables authorization: Cassandra allows any action to any user.
+
+      - CassandraAuthorizer:
+        Stores permissions in 'system_auth.permissions' table. Setting
+        'system_auth_keyspace_replication_factor' to 1 results in denial of
+        access to the cluster if the single replica of the keyspace goes down.
     default: CassandraAuthorizer
-    description: pour gerer les droits dans la bdd. Controle fin avec CassandraAuthorizer.
   permissions_validity_in_ms:
+    description: |
+      How many milliseconds permissions in cache remain valid. Depending on
+      the authorizer, such as 'CassandraAuthorizer', fetching permissions can
+      be resource intensive. This setting is disabled when set to 0 or when
+      'authorizer' is set to 'AllowAllAuthorizer'.
     default: 4000 
-    description: duree de validite des permissions stockees en cache.Se desactive en positionnant a 0 avec AllowAllAuthorizer.
   partitioner:
+    description: |
+      Sets the class that distributes rows (by partition key) across all nodes
+      in the cluster. Any IPartitioner may be used, including your own as long
+      as it is in the class path. For new clusters use the default
+      partitioner.
+
+      Cassandra provides the following partitioners for backwards compatibility:
+      - RandomPartitioner
+      - ByteOrderedPartitioner (deprecated)
+      - OrderPreservingPartitioner (deprecated)
     default: org.apache.cassandra.dht.Murmur3Partitioner 
-    description: par defaut Murmur3Partitioner. Existe aussi Randompartioner
   persistent_directory:
     default: /var/vcap/store/cassandra
     description: point racine de l arborescence Cassandra pour stocker tous les fichiers data, commit log et saved_cache
   disk_failure_policy:
+    description: |
+      Sets how Cassandra responds to disk failure. Recommend settings: 'stop'
+      or 'best_effort'. Valid values:
+
+      - die:
+        Shut down gossip and Thrift and kill the JVM for any file system
+        errors or single SSTable errors, so the node can be replaced.
+
+      - stop_paranoid:
+        Shut down gossip and Thrift even for single SSTable errors.
+
+      - stop:
+        Shut down gossip and Thrift, leaving the node effectively dead, but
+        available for inspection using JMX.
+
+      - best_effort:
+        Stop using the failed disk and respond to requests based on the
+        remaining available SSTables. This allows obsolete data at consistency
+        level of ONE.
+
+      - ignore:
+        Ignore fatal errors and lets the requests fail; all file system errors
+        are logged but otherwise ignored. Cassandra acts as in versions prior
+        to 1.2.
     default: stop 
-    description: que doit faire le noeud en cas de pb disque  die, stop, best_effort or ignore.
   key_cache_size_in_mb:
+    description: |
+      A global cache setting for the maximum size of the key cache in memory
+      (for all tables). If an empty string or a 'null' value is set, the cache
+      is set to the smaller of 5% of the available heap (when heap size is
+      above 2GB), or 100MB. To disable set to 0.
     default: 100
-    description: empty par defaut. Si vide alors Calculer comme min(5% Heap; 100Mb). Desactiver si = 0 .
   key_cache_save_period:
-    default: 14400
-    description: en secondes, soit 4 heures par defaut, pour la conservation des cles en cache sur disque
+    description: |
+      Duration in seconds that keys are kept in cache. Saved caches greatly
+      improve cold-start speeds and have relatively little effect on I/O.
+    default: 14400 # 4 hours
   row_cache_size_in_mb:
+    description: |
+      Maximum size of the row cache in memory. The row cache can save more
+      time than 'key_cache_size_in_mb', but it is space-intensive because it
+      contains the entire row. Use the row cache only for hot rows or static
+      rows. If you reduce the size, you may not get you hottest keys loaded on
+      start up.
     default: 0
-    description: 0 signifie desactive, c.a.d pas de stockages de ligne en cache.
   row_cache_save_period:
+    description: |
+      The number of seconds that rows are kept in cache. This setting has
+      limited use as described in 'row_cache_size_in_mb'.
     default: 0
-    description: 0 signifie desactive. Sinon duree en secondes pour la conservation sur disque du cache de lignes.
   commitlog_sync:
-    default: periodic 
-    description: periodic toutes les 10 sec flush cache fs (sync) du commit log vers disque. Acquitement instantannee. Sinon batch.
+    description: |
+
+      The method that Cassandra uses to acknowledge writes in milliseconds:
+
+      - periodic: (Default: 10000 milliseconds [10 seconds])
+        With 'commitlog_sync_period_in_ms', controls how often the commit log
+        is synchronized to disk. Periodic syncs are acknowledged immediately.
+
+      - batch: (Default: disabled)
+        Used with 'commitlog_sync_batch_window_in_ms' (Default: 2 ms), which
+        is the maximum length of time that queries may be batched together.
+    default: periodic
   commitlog_sync_period_in_ms:
     default: 2
     description: temps d attente d autres ecritures par cassandra avant de faire un sync. Utiliser si option batch activee. Acquittement retarde au sync.
   commitlog_segment_size_in_mb:
+    description: |
+      The size of an individual commitlog file segment. A commitlog segment
+      may be archived, deleted, or recycled after all its data has been
+      flushed to SSTables. This data can potentially include commitlog
+      segments from every table in the system. The default size is usually
+      suitable for most commitlog archiving, but if you want a finer
+      granularity, 8 or 16 MB is reasonable.
+
+      See also: <https://docs.datastax.com/en/cassandra/latest/cassandra/configuration/configLogArchive.html>
     default: 32
-    description: 32 Mb peut etre reduit a 8 ou 16 pour reduire le nombre de SSTables present dans un fichier.
   concurrent_reads:
+    description: |
+      Workloads with more data than can fit in memory encounter a bottleneck
+      in fetching data from disk during reads. Setting 'concurrent_reads' to
+      (16 × number_of_drives) allows operations to queue low enough in the
+      stack so that the OS and drives can reorder them. The default setting
+      applies to both logical volume managed (LVM) and RAID drives.
     default: 32
-    description: valeur recommandee 16 fois le nbr de drives; applicable aussi bien aux LVM qu aux disques RAIDs.
   concurrent_writes:
-    default: 32 
-    description: valeur recommandee 8 fois le nbr de CPU
+    description: |
+      Writes in Cassandra are rarely I/O bound, so the ideal number of
+      concurrent writes depends on the number of CPU cores on the node. The
+      recommended value is 8 × number_of_cpu_cores.
+    default: 32
   file_cache_size_in_mb:
+    description: |
+      Total memory to use for SSTable-reading buffers. Defaults to the smaller
+      of 1/4 of heap (when heap is less than 2GB) or 512MB.
     default: 512
-    description: defaut = min 14 HEap; 512. C est la memoire totale utilisable pour la lecture des SST.
   memtable_flush_writers:
+    description: |
+      The number of memtable flush writer threads. These threads are blocked
+      by disk I/O, and each one holds a memtable in memory while blocked. If
+      your data directories are backed by SSDs, increase this setting to the
+      number of cores.
+
+      (Default: Smaller of number of disks or number of cores with a minimum
+      of 2 and a maximum of 8)
     default: 1
-    description: defaut = min('Nbr disks|nbr CPUs';2|8)
   trickle_fsync:
+    description: |
+      When set to 'true', causes fsync to force the operating system to flush
+      the dirty buffers at the set interval 'trickle_fsync_interval_in_kb'.
+      Enable this parameter to prevent sudden dirty buffer flushing from
+      impacting read latencies. Recommended for use with SSDs, but not with
+      HDDs.
     default: false
-    description:
   trickle_fsync_interval_in_kb:
-    default: 10240
-    description:
+    description: |
+      The size of the fsync in kilobytes.
+    default: 10240 # 10MB
   storage_port:
+    description: |
+      The port for inter-node communication.
     default: 7000
-    description:
   ssl_storage_port:
+    description: |
+      The SSL port for encrypted communication. Unused when
+      'internode_encryption_mode' is set to 'none'.
     default: 7001
-    description:
   start_native_transport:
     default: true
     description:
