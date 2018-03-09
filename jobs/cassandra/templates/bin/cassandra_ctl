@@ -3,7 +3,11 @@
 set -e # exit immediately if a simple command exits with a non-zero status.
 set -u # report the usage of uninitialized variables.
 
+# Set limits as recommended
+# See: <https://docs.datastax.com/en/dse/5.1/dse-dev/datastax_enterprise/config/configRecommendedSettings.html>
 ulimit -n 131072
+ulimit -u 32768
+sysctl -w vm.max_map_count=1048575
 
 # Setup env vars and folders for the webapp_ctl script
 source /var/vcap/jobs/cassandra/helpers/ctl_setup.sh 'cassandra'

@@ -239,8 +239,15 @@
 -XX:NumberOfGCLogFiles=10
 -XX:GCLogFileSize=10M
 
-### set java.io.tempdir see http://stackoverflow.com/questions/34059020/jna-link-issue-while-starting-cassandra-rhel-6-5
--Djava.io.tmpdir=/var/vcap/sys/tmp/cassandra
+# Set 'java.io.tempdir' to prevent the following error due to /tmp being
+# mounted as 'noexec' in BOSH Stemcells.
+#
+#     ERROR 18:45:30 Failed to link the C library against JNA. Native methods will be unavailable.
+#     java.lang.UnsatisfiedLinkError: /tmp/jna-3613596/jna304748597861339671.tmp: /tmp/jna-3613596/jna304748597861339671.tmp: failed to map segment from shared object: Operation not permitted
+#
+# See also: <https://stackoverflow.com/a/34063341>
+-Djava.io.tmpdir=/var/vcap/data/cassandra/jna-tmp
+
 <% if p('jmx_exporter_enabled') %>
 -javaagent:/var/vcap/packages/cassandra/lib/jmx_prometheus_javaagent-0.1.0.jar=<%= p('jmx_exporter_port') %>:/var/vcap/jobs/cassandra/conf/jmx_exporter.yml
 <% end %>

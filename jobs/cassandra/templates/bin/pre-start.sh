@@ -11,3 +11,7 @@ echo "Deactivated Linux swap"
 
 # cqlshrc is only accessed by the 'root' user from the 'post-start' script
 chmod 600 /var/vcap/jobs/cassandra/root/.cassandra/cqlshrc
+
+
+# This is the only way to have this pre-start script be executable
+chmod +x /var/vcap/jobs/cassandra/bpm-prestart

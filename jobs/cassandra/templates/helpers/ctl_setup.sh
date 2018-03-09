@@ -50,7 +50,9 @@ export STORE_DIR=/var/vcap/store/$JOB_NAME
 export BACKUP_DATA_DIR=/var/vcap/store/backups
 export RESTORE_DATA_DIR=/var/vcap/store/restores
 
-for dir in $RUN_DIR $LOG_DIR $TMP_DIR $STORE_DIR $BACKUP_DATA_DIR $RESTORE_DATA_DIR 
+for dir in $RUN_DIR $LOG_DIR $TMP_DIR $STORE_DIR \
+    $BACKUP_DATA_DIR $RESTORE_DATA_DIR \
+    /var/vcap/data/cassandra/jna-tmp
 do
   mkdir -p ${dir}
   chown vcap:vcap ${dir}
@@ -97,5 +99,3 @@ fi
 
 chown vcap:vcap ${JOB_DIR}/config/certs/newcerts
 chown vcap:vcap ${JOB_DIR}/config/certs/
-
-mount -o remount ,exec,suid,nodev /tmp
