@@ -596,7 +596,7 @@ ssl_storage_port: <%= p("ssl_storage_port") %>
 #
 # Setting listen_address to 0.0.0.0 is always wrong.
 #
-listen_address: localhost
+listen_address: <%= spec.ip %>
 
 # Set listen_address OR listen_interface, not both. Interfaces must correspond
 # to a single address, IP aliasing is not supported.
@@ -627,10 +627,10 @@ listen_address: localhost
 # Whether to start the native transport server.
 # Please note that the address on which the native transport is bound is the
 # same as the rpc_address. The port however is different and specified below.
-start_native_transport: true
+start_native_transport: <%= p("start_native_transport") %>
 # port for the CQL native transport to listen for clients on
 # For security reasons, you should not expose this port to the internet.  Firewall it if needed.
-native_transport_port: 9042
+native_transport_port: <%= p("native_transport_port") %>
 # Enabling native transport encryption in client_encryption_options allows you to either use
 # encryption for the standard port or to use a dedicated, additional port along with the unencrypted
 # standard native_transport_port.
@@ -643,12 +643,12 @@ native_transport_port: 9042
 # This is similar to rpc_max_threads though the default differs slightly (and
 # there is no native_transport_min_threads, idle threads will always be stopped
 # after 30 seconds).
-# native_transport_max_threads: 128
+native_transport_max_threads: <%= p("native_transport_max_threads") %>
 #
 # The maximum size of allowed frame. Frame (requests) larger than this will
 # be rejected as invalid. The default is 256MB. If you're changing this parameter,
 # you may want to adjust max_value_size_in_mb accordingly. This should be positive and less than 2048.
-# native_transport_max_frame_size_in_mb: 256
+native_transport_max_frame_size_in_mb: <%= p("native_transport_max_frame_size_in_mb") %>
 
 # The maximum number of concurrent client connections.
 # The default is -1, which means unlimited.
@@ -659,7 +659,7 @@ native_transport_port: 9042
 # native_transport_max_concurrent_connections_per_ip: -1
 
 # Whether to start the thrift rpc server.
-start_rpc: false
+start_rpc: <%= p("start_rpc") %>
 
 # The address or interface to bind the Thrift RPC service and native transport
 # server to.
@@ -673,7 +673,7 @@ start_rpc: false
 # set broadcast_rpc_address to a value other than 0.0.0.0.
 #
 # For security reasons, you should not expose this port to the internet.  Firewall it if needed.
-rpc_address: localhost
+rpc_address: <%= spec.ip %>
 
 # Set rpc_address OR rpc_interface, not both. Interfaces must correspond
 # to a single address, IP aliasing is not supported.
@@ -686,7 +686,7 @@ rpc_address: localhost
 # rpc_interface_prefer_ipv6: false
 
 # port for Thrift to listen for clients on
-rpc_port: 9160
+rpc_port: <%= p("rpc_port") %>
 
 # RPC address to broadcast to drivers and other Cassandra nodes. This cannot
 # be set to 0.0.0.0. If left blank, this will be set to the value of
@@ -695,7 +695,7 @@ rpc_port: 9160
 # broadcast_rpc_address: 1.2.3.4
 
 # enable or disable keepalive on rpc/native connections
-rpc_keepalive: true
+rpc_keepalive: <%= p("rpc_keepalive") %>
 
 # Cassandra provides two out-of-the-box options for the RPC Server:
 #
@@ -717,7 +717,7 @@ rpc_keepalive: true
 #
 # Alternatively,  can provide your own RPC server by providing the fully-qualified class name
 # of an o.a.c.t.TServerFactory that can create an instance of it.
-rpc_server_type: sync
+rpc_server_type: <%= p("rpc_server_type") %>
 
 # Uncomment rpc_min|max_thread to set request pool size limits.
 #
@@ -729,8 +729,8 @@ rpc_server_type: sync
 # encouraged to set a maximum that makes sense for you in production, but do keep in mind that
 # rpc_max_threads represents the maximum number of client requests this server may execute concurrently.
 #
-# rpc_min_threads: 16
-# rpc_max_threads: 2048
+rpc_min_threads: <%= p("rpc_min_threads") %>
+rpc_max_threads: <%= p("rpc_max_threads") %>
 
 # uncomment to set socket buffer sizes on rpc connections
 # rpc_send_buff_size_in_bytes:
@@ -753,25 +753,25 @@ rpc_server_type: sync
 # internode_recv_buff_size_in_bytes:
 
 # Frame size for thrift (maximum message length).
-thrift_framed_transport_size_in_mb: 15
+thrift_framed_transport_size_in_mb: <%= p("thrift_framed_transport_size_in_mb") %>
 
 # Set to true to have Cassandra create a hard link to each sstable
 # flushed or streamed locally in a backups/ subdirectory of the
 # keyspace data.  Removing these links is the operator's
 # responsibility.
-incremental_backups: false
+incremental_backups: <%= p("incremental_backups") %>
 
 # Whether or not to take a snapshot before each compaction.  Be
 # careful using this option, since Cassandra won't clean up the
 # snapshots for you.  Mostly useful if you're paranoid when there
 # is a data format change.
-snapshot_before_compaction: false
+snapshot_before_compaction: <%= p("snapshot_before_compaction") %>
 
 # Whether or not a snapshot is taken of the data before keyspace truncation
 # or dropping of column families. The STRONGLY advised default of true 
 # should be used to provide data safety. If you set this flag to false, you will
 # lose data on truncation or drop.
-auto_snapshot: true
+auto_snapshot: <%= p("auto_snapshot") %>
 
 # Granularity of the collation index of rows within a partition.
 # Increase if your rows are large, or if you have a very large
@@ -783,7 +783,7 @@ auto_snapshot: true
 # - but, Cassandra will keep the collation index in memory for hot
 #   rows (as part of the key cache), so a larger granularity means
 #   you can cache more hot rows
-column_index_size_in_kb: 64
+column_index_size_in_kb: <%= p("column_index_size_in_kb") %>
 
 # Per sstable indexed key cache entries (the collation index in memory
 # mentioned above) exceeding this size will not be held on heap.
@@ -808,7 +808,7 @@ column_index_cache_size_in_kb: 2
 # 
 # If your data directories are backed by SSD, you should increase this
 # to the number of cores.
-#concurrent_compactors: 1
+concurrent_compactors: <%= p("concurrent_compactors") %>
 
 # Throttles compaction to the given total throughput across the entire
 # system. The faster you insert data, the faster you need to compact in
@@ -839,22 +839,22 @@ sstable_preemptive_open_interval_in_mb: 50
 # inter_dc_stream_throughput_outbound_megabits_per_sec: 200
 
 # How long the coordinator should wait for read operations to complete
-read_request_timeout_in_ms: 5000
+read_request_timeout_in_ms: <%= p("read_request_timeout_in_ms") %>
 # How long the coordinator should wait for seq or index scans to complete
-range_request_timeout_in_ms: 10000
+range_request_timeout_in_ms: <%= p("range_request_timeout_in_ms") %>
 # How long the coordinator should wait for writes to complete
-write_request_timeout_in_ms: 2000
+write_request_timeout_in_ms: <%= p("write_request_timeout_in_ms") %>
 # How long the coordinator should wait for counter writes to complete
 counter_write_request_timeout_in_ms: 5000
 # How long a coordinator should continue to retry a CAS operation
 # that contends with other proposals for the same row
-cas_contention_timeout_in_ms: 1000
+cas_contention_timeout_in_ms: <%= p("cas_contention_timeout_in_ms") %>
 # How long the coordinator should wait for truncates to complete
 # (This can be much longer, because unless auto_snapshot is disabled
 # we need to flush first so we can snapshot before removing the data.)
-truncate_request_timeout_in_ms: 60000
+truncate_request_timeout_in_ms: <%= p("truncate_request_timeout_in_ms") %>
 # The default timeout for other, miscellaneous operations
-request_timeout_in_ms: 10000
+request_timeout_in_ms: <%= p("request_timeout_in_ms") %>
 
 # How long before a node logs slow queries. Select queries that take longer than
 # this timeout to execute, will generate an aggregated log message, so that slow queries
@@ -869,7 +869,7 @@ slow_query_log_timeout_in_ms: 500
 #
 # Warning: before enabling this property make sure to ntp is installed
 # and the times are synchronized between the nodes.
-cross_node_timeout: false
+cross_node_timeout: <%= p("cross_node_timeout") %>
 
 # Set keep-alive period for streaming
 # This node will send a keep-alive message periodically with this period.
@@ -881,7 +881,7 @@ cross_node_timeout: false
 
 # phi value that must be reached for a host to be marked down.
 # most users should never need to adjust this.
-# phi_convict_threshold: 8
+phi_convict_threshold: <%= p("phi_convict_threshold") %>
 
 # endpoint_snitch -- Set this to a class that implements
 # IEndpointSnitch.  The snitch has two functions:
@@ -946,14 +946,14 @@ cross_node_timeout: false
 #
 # You can use a custom Snitch by setting this to the full class name
 # of the snitch, which will be assumed to be on your classpath.
-endpoint_snitch: SimpleSnitch
+endpoint_snitch: <%= p("endpoint_snitch") %>
 
 # controls how often to perform the more expensive part of host score
 # calculation
-dynamic_snitch_update_interval_in_ms: 100 
+dynamic_snitch_update_interval_in_ms: <%= p("dynamic_snitch_update_interval_in_ms") %>
 # controls how often to reset all host scores, allowing a bad host to
 # possibly recover
-dynamic_snitch_reset_interval_in_ms: 600000
+dynamic_snitch_reset_interval_in_ms: <%= p("dynamic_snitch_reset_interval_in_ms") %>
 # if set greater than zero and read_repair_chance is < 1.0, this will allow
 # 'pinning' of replicas to hosts in order to increase cache capacity.
 # The badness threshold will control how much worse the pinned host has to be
@@ -961,7 +961,7 @@ dynamic_snitch_reset_interval_in_ms: 600000
 # expressed as a double which represents a percentage.  Thus, a value of
 # 0.2 means Cassandra would continue to prefer the static snitch values
 # until the pinned host was 20% worse than the fastest.
-dynamic_snitch_badness_threshold: 0.1
+dynamic_snitch_badness_threshold: <%= p("dynamic_snitch_badness_threshold") %>
 
 # request_scheduler -- Set this to a class that implements
 # RequestScheduler, which will schedule incoming client requests
@@ -974,7 +974,7 @@ dynamic_snitch_badness_threshold: 0.1
 # client requests to a node with a separate queue for each
 # request_scheduler_id. The scheduler is further customized by
 # request_scheduler_options as described below.
-request_scheduler: org.apache.cassandra.scheduler.NoScheduler
+request_scheduler: <%= p("request_scheduler") %>
 
 # Scheduler Options vary based on the type of scheduler
 #
@@ -1029,11 +1029,12 @@ request_scheduler: org.apache.cassandra.scheduler.NoScheduler
 # http://download.oracle.com/javase/6/docs/technotes/guides/security/jsse/JSSERefGuide.html#CreateKeystore
 #
 server_encryption_options:
-    internode_encryption: none
-    keystore: conf/.keystore
-    keystore_password: cassandra
-    truststore: conf/.truststore
-    truststore_password: cassandra
+    internode_encryption: <%= p("internode_encryption_mode") %>
+    keystore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.keystore
+    keystore_password: <%= p("cass_KSP") %>
+    truststore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.truststore
+    truststore_password: <%= p("cass_KSP") %>
+    protocol: TLS
     # More advanced defaults below:
     # protocol: TLS
     # algorithm: SunX509
@@ -1044,17 +1045,19 @@ server_encryption_options:
 
 # enable or disable client/server encryption.
 client_encryption_options:
-    enabled: false
+    enabled: <%= p("client_encryption.enabled") %>
     # If enabled and optional is set to true encrypted and unencrypted connections are handled.
     optional: false
-    keystore: conf/.keystore
-    keystore_password: cassandra
-    # require_client_auth: false
+    keystore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.keystore
+    keystore_password: <%= p("cass_KSP") %>
+
+    require_client_auth: <%= p("client_encryption.require_client_auth") %>
     # Set trustore and truststore_password if require_client_auth is true
-    # truststore: conf/.truststore
-    # truststore_password: cassandra
+    truststore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.truststore
+    truststore_password: <%= p("cass_KSP") %>
+
     # More advanced defaults below:
-    # protocol: TLS
+    protocol: TLS
     # algorithm: SunX509
     # store_type: JKS
     # cipher_suites: [TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA]
@@ -1071,13 +1074,13 @@ client_encryption_options:
 #
 # none
 #   nothing is compressed.
-internode_compression: dc
+internode_compression: <%= p("internode_compression") %>
 
 # Enable or disable tcp_nodelay for inter-dc communication.
 # Disabling it will result in larger (but fewer) network packets being sent,
 # reducing overhead from the TCP protocol itself, at the cost of increasing
 # latency if you block for cross-datacenter responses.
-inter_dc_tcp_nodelay: false
+inter_dc_tcp_nodelay: <%= p("inter_dc_tcp_nodelay") %>
 
 # TTL for different trace types used during logging of the repair process.
 tracetype_query_ttl: 86400
@@ -1148,8 +1151,8 @@ transparent_data_encryption_options:
 # Adjust the thresholds here if you understand the dangers and want to
 # scan more tombstones anyway.  These thresholds may also be adjusted at runtime
 # using the StorageService mbean.
-tombstone_warn_threshold: 1000
-tombstone_failure_threshold: 100000
+tombstone_warn_threshold: <%= p("tombstone_warn_threshold") %>
+tombstone_failure_threshold: <%= p("tombstone_failure_threshold") %>
 
 # Log WARN on any multiple-partition batch size exceeding this value. 5kb per batch by default.
 # Caution should be taken on increasing the size of this threshold as it can lead to node instability.
@@ -1231,54 +1234,3 @@ back_pressure_strategy:
 # An interval of 0 disables any wait time, which is the behavior of former Cassandra versions.
 #
 # otc_backlog_expiration_interval_ms: 200
-
-listen_address: <%= spec.ip %>
-start_native_transport: <%= p("start_native_transport") %>
-native_transport_port: <%= p("native_transport_port") %>
-native_transport_max_threads: <%= p("native_transport_max_threads") %>
-native_transport_max_frame_size_in_mb: <%= p("native_transport_max_frame_size_in_mb") %>
-start_rpc: <%= p("start_rpc") %>
-rpc_address: <%=spec.ip%>
-rpc_port: <%= p("rpc_port") %>
-rpc_keepalive: <%= p("rpc_keepalive") %>
-rpc_server_type: <%= p("rpc_server_type") %>
-rpc_min_threads: <%= p("rpc_min_threads") %>
-rpc_max_threads: <%= p("rpc_max_threads") %>
-thrift_framed_transport_size_in_mb: <%= p("thrift_framed_transport_size_in_mb") %>
-incremental_backups: <%= p("incremental_backups") %>
-snapshot_before_compaction: <%= p("snapshot_before_compaction") %>
-auto_snapshot: <%= p("auto_snapshot") %>
-tombstone_warn_threshold: <%= p("tombstone_warn_threshold") %>
-tombstone_failure_threshold: <%= p("tombstone_failure_threshold") %>
-column_index_size_in_kb: <%= p("column_index_size_in_kb") %>
-concurrent_compactors: <%= p("concurrent_compactors") %>
-read_request_timeout_in_ms: <%= p("read_request_timeout_in_ms") %>
-range_request_timeout_in_ms: <%= p("range_request_timeout_in_ms") %>
-write_request_timeout_in_ms: <%= p("write_request_timeout_in_ms") %>
-cas_contention_timeout_in_ms: <%= p("cas_contention_timeout_in_ms") %>
-truncate_request_timeout_in_ms: <%= p("truncate_request_timeout_in_ms") %>
-request_timeout_in_ms: <%= p("request_timeout_in_ms") %>
-cross_node_timeout: <%= p("cross_node_timeout") %>
-phi_convict_threshold: <%= p("phi_convict_threshold") %>
-endpoint_snitch: <%= p("endpoint_snitch") %>
-dynamic_snitch_update_interval_in_ms: <%= p("dynamic_snitch_update_interval_in_ms") %>
-dynamic_snitch_reset_interval_in_ms: <%= p("dynamic_snitch_reset_interval_in_ms") %>
-dynamic_snitch_badness_threshold: <%= p("dynamic_snitch_badness_threshold") %>
-request_scheduler: <%= p("request_scheduler") %>
-internode_compression: <%= p("internode_compression") %>
-inter_dc_tcp_nodelay: <%= p("inter_dc_tcp_nodelay") %>
-server_encryption_options:
-  internode_encryption: <%= p("internode_encryption_mode") %>
-  keystore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.keystore
-  keystore_password: <%= p("cass_KSP") %>
-  truststore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.truststore
-  truststore_password: <%= p("cass_KSP") %>
-  protocol: TLS
-client_encryption_options:
-  enabled: <%= p("client_encryption.enabled") %>
-  keystore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.keystore
-  keystore_password: <%= p("cass_KSP") %>
-  truststore: /var/vcap/jobs/cassandra/config/certs/<%=spec.ip%>_cassandra.truststore
-  truststore_password: <%= p("cass_KSP") %>
-  require_client_auth: <%= p("client_encryption.require_client_auth") %>
-  protocol: TLS
