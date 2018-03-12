@@ -684,20 +684,25 @@ properties:
     description: |
       The total amount of memory dedicated to the Java heap.
 
-      The default max heap size is based on the following calculation:
+      When both 'max_heap_size' and 'heap_newsize' are set to an empty string
+      value (""), then the default max heap size is based on the following
+      calculation:
 
-        max(min(1/2 ram, 1024MB), min(1/4 ram, 8GB))
+        max(min(1/2 ram, 1GB), min(1/4 ram, 8GB))
 
       Which can be described by this algorithm:
         1. calculate 1/2 ram and cap to 1024MB
         2. calculate 1/4 ram and cap to 8192MB
         3. pick the max
-    default: 8G
+    default: "" # max(min(1/2 ram, 1GB), min(1/4 ram, 8GB))
+    example: 8G
   heap_newsize:
     description: |
       Size of the young generation.
 
-      The default young generation size is computed as folows:
+      When both 'max_heap_size' and 'heap_newsize' are set to an empty string
+      value (""), then the default young generation size is computed as
+      folows:
 
         min(max_sensible_per_modern_cpu_core * num_cores, 1/4 * heap size)
 
@@ -712,7 +717,8 @@ properties:
       The main trade-off for the young generation is that the larger it is,
       the longer GC pause times will be. The shorter it is, the more expensive
       GC will be (usually).
-    default: 1G
+    default: "" # min(max_sensible_per_modern_cpu_core * num_cores, 1/4 * heap size)
+    example: 1G
   cass_pwd:
     default: cassandra
   validate_ssl_TF:
