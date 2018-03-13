@@ -3,4 +3,4 @@
 	url = https://github.com/orange-cloudfoundry/cf-cassandra-example-app.git
 [submodule "src/github.com/orange-cloudfoundry/cassandra-acceptance-tests"]
 	path = src/github.com/orange-cloudfoundry/cassandra-acceptance-tests
-	url = https://github.com/ddieng-orange/cassandra-acceptance-tests.git
+	url = https://github.com/orange-cloudfoundry/cassandra-acceptance-tests.git
