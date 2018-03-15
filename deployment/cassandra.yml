@@ -3,7 +3,7 @@ name: cassandra
 
 instance_groups:
   - name: cassandra-seeds
-    instances: &cassandra_seeds_count 3
+    instances: 3
     azs: [ z1, z2, z3 ]
     jobs:
       - name: cassandra
@@ -13,7 +13,6 @@ instance_groups:
         consumes:
           seeds: { from: *cassandra_seeds_link }
         properties: &cassandra_properties
-          system_auth_keyspace_replication_factor: *cassandra_seeds_count
           cluster_name: &cassandra_cluster_name cluster
           num_tokens: 256
           internode_encryption_mode: none
