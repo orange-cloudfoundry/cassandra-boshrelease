@@ -20,6 +20,7 @@ export CASSANDRA_CONF=/var/vcap/jobs/cassandra/conf
 export JAVA_HOME=/var/vcap/packages/openjdk
 export PATH=$PATH:/var/vcap/packages/openjdk/bin
 
+export CASSANDRA_HEAPDUMP_DIR=/var/vcap/data/cassandra
 
 case $1 in
 

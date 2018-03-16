@@ -9,6 +9,7 @@ processes:
       CASSANDRA_CONF: /var/vcap/jobs/cassandra/conf
       JAVA_HOME: /var/vcap/packages/openjdk
       # HOME: /var/vcap/data/cassandra/home
+      CASSANDRA_HEAPDUMP_DIR: /var/vcap/data/cassandra
     limits:
       # Set limits as recommended
       # See: <https://docs.datastax.com/en/dse/5.1/dse-dev/datastax_enterprise/config/configRecommendedSettings.html>
