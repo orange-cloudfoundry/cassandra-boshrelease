@@ -17,7 +17,7 @@ export CLUSTER_NAME="<%= p("cluster_name") %>"
 export CLUSTER_PUBLIC_CERT="$KEY_STORE_PATH/${HOST_NAME}_CLUSTER_${CLUSTER_NAME}_PUBLIC.cer"
 export CLIENT_PUBLIC_CERT="$KEY_STORE_PATH/${HOST_NAME}_CLIENT_${CLUSTER_NAME}_PUBLIC.cer"
 
-export STOREPASS="<%= p("cass_KSP") %>"
+export STOREPASS="<%= p("keystore_password") %>"
 export KEYPASS=$STOREPASS
 export PASSWORD=$KEYPASS
 
