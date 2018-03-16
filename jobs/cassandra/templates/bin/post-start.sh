@@ -21,7 +21,7 @@ export CASSANDRA_CONF=$job_dir/conf
 export JAVA_HOME=/var/vcap/packages/openjdk
 export PATH=$PATH:$JAVA_HOME/bin:$CASSANDRA_BIN
 
-cass_pwd=<%= esc(p('cass_pwd')) %>
+cass_pwd=<%= esc(p('cassandra_password')) %>
 
 
 function log_err() {

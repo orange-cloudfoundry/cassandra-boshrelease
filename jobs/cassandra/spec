@@ -9,7 +9,7 @@ provides:
   - name: cassandra
     type: cassandra
     properties:
-      - cass_pwd
+      - cassandra_password
       - native_transport_port
       - client_encryption.enabled
       - validate_ssl_TF
@@ -719,7 +719,16 @@ properties:
       GC will be (usually).
     default: "" # min(max_sensible_per_modern_cpu_core * num_cores, 1/4 * heap size)
     example: 1G
-  cass_pwd:
+  cassandra_password:
+    description: |
+      This is the password for the default 'cassandra' admin user.
+
+      By default, the Cassandra daemon uses 'cassandra' as the password for
+      this user and this value is hardcoded in Cassandra code, so we
+      shamelessly use this as the default here.
+
+      For security reasons, you are highly recommended to use a strong
+      password here for production systems.
     default: cassandra
   validate_ssl_TF:
     description: |

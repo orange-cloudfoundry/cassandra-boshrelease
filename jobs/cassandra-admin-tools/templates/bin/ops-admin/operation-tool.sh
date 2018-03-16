@@ -7,7 +7,7 @@ NODE=''
 OPERATION=''
 PID=''
 USER="$(whoami)"
-export CASS_PWD="<%= link('seeds').p('cass_pwd') %>"
+export CASS_PWD="<%= link('seeds').p('cassandra_password') %>"
 
 backup_data() {
     check_process
