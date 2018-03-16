@@ -38,8 +38,6 @@ templates:
   config/logback-tools.xml.erb: conf/logback-tools.xml
   config/commitlog_archiving.properties.erb: conf/commitlog_archiving.properties
 #  bin/generate_ssl_cert.sh: bin/generate_ssl_cert.sh
-#  ssl/cassandradb.ca.erb: ssl/cassandradb.ca
-#  ssl/cassandradb.pem.erb: ssl/cassandradb.pem
 #  ssl2/cert: config/certs/node.crt
 #  ssl2/cert_ca: config/certs/ca.crt
 #  ssl2/cert_private_key: config/certs/node.key
@@ -635,18 +633,6 @@ properties:
     description: |
       Password for the keystore that is used to to store server and client
       encryption certificates and keys.
-  cassDbCertificate:
-    type: certificate
-    description: |
-      use tls/ssl for authent and transactions.
-
-      Structured certificate as can be provided by CredHub.
-
-      Injected in:
-      - .ca: ssl/cassandradb.ca.erb (deprecated)
-      - .certificate and .private_key: cassandradb.pem.erb (deprecated)
-
-    default: "NOT INITIALIZED"
   cert:
     type: certificate
     description: |
