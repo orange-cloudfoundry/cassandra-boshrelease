@@ -137,13 +137,34 @@ properties:
         'system_auth_keyspace_replication_factor' to 1 results in denial of
         access to the cluster if the single replica of the keyspace goes down.
     default: CassandraAuthorizer
+  roles_validity_in_ms:
+    description: |
+      Fetching permissions can be an expensive operation depending on the
+      authorizer, so this setting allows flexibility. Validity period for
+      roles cache; set to '0' to disable. Granted roles are cached for
+      authenticated sessions in 'AuthenticatedUser' and after the period
+      specified here, become eligible for (async) reload. Disabled
+      automatically for 'AllowAllAuthenticator'.
+    default: 2000
   permissions_validity_in_ms:
     description: |
       How many milliseconds permissions in cache remain valid. Depending on
       the authorizer, such as 'CassandraAuthorizer', fetching permissions can
       be resource intensive. This setting is disabled when set to 0 or when
       'authorizer' is set to 'AllowAllAuthorizer'.
-    default: 4000
+    default: 2000
+  credentials_validity_in_ms:
+    description: |
+      How many milliseconds credentials in the cache remain valid. This cache
+      is tightly coupled to the provided 'PasswordAuthenticator'
+      implementation of 'IAuthenticator'. If another 'IAuthenticator'
+      implementation is configured, Cassandra does not use this cache, and
+      these settings have no effect. Set to '0' to disable.
+
+        Note: Credentials are cached in encrypted form. This may cause a
+        performance penalty that offsets the reduction in latency gained by
+        caching.
+    default: 2000
   partitioner:
     description: |
       Sets the class that distributes rows (by partition key) across all nodes

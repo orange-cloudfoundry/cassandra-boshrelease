@@ -128,7 +128,7 @@ role_manager: CassandraRoleManager
 # after the period specified here, become eligible for (async) reload.
 # Defaults to 2000, set to 0 to disable caching entirely.
 # Will be disabled automatically for AllowAllAuthenticator.
-roles_validity_in_ms: 2000
+roles_validity_in_ms: <%= p("permissions_validity_in_ms").to_json %>
 
 # Refresh interval for roles cache (if enabled).
 # After this interval, cache entries become eligible for refresh. Upon next
@@ -161,7 +161,7 @@ permissions_validity_in_ms: <%= p("permissions_validity_in_ms") %>
 # underlying table, it may not  bring a significant reduction in the
 # latency of individual authentication attempts.
 # Defaults to 2000, set to 0 to disable credentials caching.
-credentials_validity_in_ms: 2000
+credentials_validity_in_ms: <%= p("credentials_validity_in_ms") %>
 
 # Refresh interval for credentials cache (if enabled).
 # After this interval, cache entries become eligible for refresh. Upon next
