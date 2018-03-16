@@ -204,10 +204,12 @@ properties:
   key_cache_size_in_mb:
     description: |
       A global cache setting for the maximum size of the key cache in memory
-      (for all tables). If an empty string or a 'null' value is set, the cache
-      is set to the smaller of 5% of the available heap (when heap size is
-      above 2GB), or 100MB. To disable set to 0.
-    default: 100
+      (for all tables). To disable set to '0'.
+
+      If an empty string or a 'null' value is set, the cache is set to the
+      smaller of 5% of the available heap (when heap size is below 2GB), or
+      100MB.
+    default: null # min(5% of heap, 100MB)
   key_cache_save_period:
     description: |
       Duration in seconds that keys are kept in cache. Saved caches greatly
@@ -228,7 +230,6 @@ properties:
     default: 0
   commitlog_sync:
     description: |
-
       The method that Cassandra uses to acknowledge writes in milliseconds:
 
       - periodic: (Default: 10000 milliseconds [10 seconds])
@@ -240,8 +241,11 @@ properties:
         is the maximum length of time that queries may be batched together.
     default: periodic
   commitlog_sync_period_in_ms:
-    default: 2
-    description: temps d attente d autres ecritures par cassandra avant de faire un sync. Utiliser si option batch activee. Acquittement retarde au sync.
+    description: |
+      When 'commitlog_sync' is set to 'periodic', this controls how often the
+      commit log is synchronized to disk. Periodic syncs are acknowledged
+      immediately.
+    default: 10000
   commitlog_segment_size_in_mb:
     description: |
       The size of an individual commitlog file segment. A commitlog segment
@@ -260,7 +264,7 @@ properties:
       (16 × number_of_drives) allows operations to queue low enough in the
       stack so that the OS and drives can reorder them. The default setting
       applies to both logical volume managed (LVM) and RAID drives.
-    default: 32
+    default: 16
   concurrent_writes:
     description: |
       Writes in Cassandra are rarely I/O bound, so the ideal number of
@@ -269,9 +273,14 @@ properties:
     default: 32
   file_cache_size_in_mb:
     description: |
-      Total memory to use for SSTable-reading buffers. Defaults to the smaller
-      of 1/4 of heap (when heap is less than 2GB) or 512MB.
-    default: 512
+      Total memory to use for SSTable-reading buffers.
+
+      32MB of this are reserved for pooling buffers, the rest is used as a
+      cache that holds uncompressed sstable chunks.
+
+      When set to 'null' or not defined, this value defaults to the smaller of
+      1/4 of heap (when heap is less than 2GB) or 512MB.
+    default: null # Smaller of 1/4 heap or 512
   memtable_flush_writers:
     description: |
       The number of memtable flush writer threads. These threads are blocked
@@ -279,9 +288,11 @@ properties:
       your data directories are backed by SSDs, increase this setting to the
       number of cores.
 
-      (Default: Smaller of number of disks or number of cores with a minimum
-      of 2 and a maximum of 8)
-    default: 1
+      When set to 'null' or not defined, this value defaults to the smaller of
+      number_of_disks or number_of_cores with a minimum of 2 and a maximum of
+      8. Using this BOSH Release, Cassandra nodes always have one disk, so
+      this calculation should always result in a value of '2'.
+    default: null # min(8, max(2, min(number_of_disks, number_of_cores)))
   trickle_fsync:
     description: |
       When set to 'true', causes fsync to force the operating system to flush
@@ -438,7 +449,13 @@ properties:
       disk space for compaction, because concurrent compactions happen in
       parallel, especially for STCS. Ensure that adequate disk space is
       available before increasing this configuration.
-    default: 4
+
+      If set to 'null' or not defined, this value defaults to the smaller of
+      number_of_disks or number_of_cores, with a minimum of 2 and a maximum of
+      8 per CPU core. Using this BOSH Release, Cassandra nodes always have one
+      disk, so this calculation should always result in a value of '2'.
+    default: null # min(8 × number_of_cores, max(2, min(number_of_disks, number_of_cores)))
+    example: 8 # the number of CPU core, when using SSDs
   read_request_timeout_in_ms:
     description: |
       The number of milliseconds that the coordinator waits for read
@@ -490,6 +507,14 @@ properties:
     description: |
       Adjusts the sensitivity of the failure detector on an exponential scale.
       Generally this setting does not need adjusting.
+
+      Use the default value for most situations, but increase it to 10 or 12
+      for Amazon EC2 (due to frequently encountered network congestion). In
+      unstable network environments (such as EC2 at times), raising the value
+      to 10 or 12 helps prevent false failures. Values higher than 12 and
+      lower than 5 are not recommended.
+
+      See also: <https://docs.datastax.com/en/cassandra/latest/cassandra/architecture/archDataDistributeFailDetect.html>
     default: 8
   endpoint_snitch:
     description: |
@@ -636,7 +661,7 @@ properties:
   cert:
     type: certificate
     description: |
-      Cluster certificate.
+      Cluster certificate, as can be provided by CredHub.
     example:
       ca: |
         -----BEGIN CERTIFICATE-----
@@ -663,7 +688,7 @@ properties:
 
       - 'none'
         No compression.
-    default: none
+    default: dc
   inter_dc_tcp_nodelay:
     description: |
       Enable this property or 'disable tcp_nodelay' for inter-datacenter
@@ -671,7 +696,7 @@ properties:
       but fewer, network packets. This reduces overhead from the TCP protocol
       itself. However, disabling 'inter_dc_tcp_nodelay' may increase latency
       by blocking cross data-center responses.
-    default: true
+    default: false
 
   tombstone_warn_threshold:
     description: |
@@ -745,9 +770,10 @@ properties:
     default: cassandra
   validate_ssl_TF:
     description: |
-      When validate is enabled, the cqlsh clients will verify that the
-      certificate is trusted. The host in the certificate is compared to the
-      host of the machine to which it is connected.
+      When validate is enabled, the locally installed cqlsh clients will
+      verify that the certificate is trusted, and the host in the certificate
+      will be compared to the host of the machine to which the clients are
+      connected.
     default: false
 
   system_auth_keyspace_replication_factor:
