@@ -70,6 +70,10 @@ fi
 
 
 log_err "INFO: setting replication strategy for cassandra password"
+# Note: should we support multiple datacenters one day, then we should set the
+# replication class to 'NetworkTopologyStrategy' here instead of 'SimpleStrategy'.
+# See: <https://docs.datastax.com/en/cassandra/latest/cassandra/configuration/configCassandra_yaml.html#configCassandra_yaml__authenticator>
+# See: <https://docs.datastax.com/en/cassandra/latest/cassandra/configuration/configCassandra_yaml.html#configCassandra_yaml__authorizer>
 $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
      -e "alter keyspace system_auth WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '<%= p('system_auth_keyspace_replication_factor') %>'}  AND durable_writes = true"
 

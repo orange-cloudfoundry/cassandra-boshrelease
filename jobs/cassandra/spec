@@ -54,7 +54,7 @@ templates:
   config/jmx_exporter.yml: conf/jmx_exporter.yml
   bin/nodetool: bin/nodetool
   bin/sstableloader: bin/sstableloader
-  
+
 properties:
   bpm.enabled:
     description: |
@@ -62,213 +62,665 @@ properties:
       the benefit of improved security measures at runtime.
     default: false
   cluster_name:
-    default: testcluster
-    description: The name of the cluster. This setting prevents nodes in one logical cluster from joining another. 
+    description: |
+      The name of the cluster. This is mainly used to prevent machines in one
+      logical cluster from joining another.
+    default: testcluster # 'Test Cluster'
   num_tokens:
+    description: |
+      Defines the number of tokens randomly assigned to each node of the
+      instance group. The more tokens, relative to nodes of other instance
+      groups, the larger the proportion of data that this node will store.
+
+      When defining different instance groups for a single Cassandra cluster,
+      each with varying hardware capabilities, then the number of tokens
+      assigned to nodes of must be relative to their hardware capabilities.
     default: 256
-    description: Defines the number of tokens randomly assigned to this node on the ring when using virtual nodes vnodes.
   hinted_handoff_enabled:
+    description: |
+      Enables or disables hinted handoff. To enable per datacenter, add a list
+      of datacenters. For example: 'hinted_handoff_enabled: DC1,DC2'. A hint
+      indicates that the write needs to be replayed to an unavailable node.
+      Cassandra writes the hint to a hints file on the coordinator node.
+
+      See: <http://wiki.apache.org/cassandra/HintedHandoff>
+      See: <https://www.datastax.com/dev/blog/modern-hinted-handoff>
     default: true
-    description: Enable or disable hinted handoff To enable per data center add data center list For example hinted_handoff_enabled DC1DC2
+    example: DC1,DC2
   max_hint_window_in_ms:
-    default: 10800000
-    description: en ms donc 3 heures.Maximum amount of time that hints are generates hints for an unresponsive node.
+    description: |
+      Maximum amount of time (in milliseconds) during which Cassandra
+      generates hints for an unresponsive node. After this interval, Cassandra
+      does not generate any new hints for the node until it is back up and
+      responsive. If the node goes down again, Cassandra starts a new
+      interval.
+    default: 10800000 # 3 hours
   hinted_handoff_throttle_in_kb:
-    default: 1024 
-    description: taux de hint en Kbsec par thread. Il diminue proportionnellemnt au nombre de noeuds du cluster
+    description: |
+      Maximum amount of traffic per delivery thread in kilobytes per second.
+      This rate reduces proportionally to the number of nodes in the cluster.
+      For example, if there are two nodes in the cluster, each delivery thread
+      uses the maximum rate. If there are three, each node throttles to half
+      of the maximum, since the two nodes are expected to deliver hints
+      simultaneously.
+    default: 1024
   max_hints_delivery_threads:
+    description: |
+      Number of threads Cassandra uses to deliver hints. In multiple data-
+      center deployments, consider increasing this number because cross data-
+      center handoff is generally slower.
     default: 2
-    description: nombre de thread pour gerer les hints. A augmenter si cluster multi datacenter.
   authenticator:
-    default: PasswordAuthenticator 
-    description: AllowAllAuthenticator c.a.d pas de controle sinon possible avec  PasswordAuthenticator.
+    description: |
+      The authentication backend. It implements IAuthenticator for identifying
+      users. Available authenticators:
+
+      - AllowAllAuthenticator:
+        Disables authentication; Cassandra performs no checks.
+
+      - PasswordAuthenticator:
+        Authenticates users with user names and hashed passwords stored in the
+        'system_auth.roles' table. Leaving the default replication factor of 1
+        set for the 'system_auth' keyspace results in denial of access to the
+        cluster if the single replica of the keyspace goes down.
+    default: PasswordAuthenticator
   authorizer:
+    description: |
+      The authorization backend. It implements IAuthenticator to limit access
+      and provide permissions. Available authorizers:
+
+      - AllowAllAuthorizer:
+        Disables authorization: Cassandra allows any action to any user.
+
+      - CassandraAuthorizer:
+        Stores permissions in 'system_auth.permissions' table. Setting
+        'system_auth_keyspace_replication_factor' to 1 results in denial of
+        access to the cluster if the single replica of the keyspace goes down.
     default: CassandraAuthorizer
-    description: pour gerer les droits dans la bdd. Controle fin avec CassandraAuthorizer.
   permissions_validity_in_ms:
-    default: 4000 
-    description: duree de validite des permissions stockees en cache.Se desactive en positionnant a 0 avec AllowAllAuthorizer.
+    description: |
+      How many milliseconds permissions in cache remain valid. Depending on
+      the authorizer, such as 'CassandraAuthorizer', fetching permissions can
+      be resource intensive. This setting is disabled when set to 0 or when
+      'authorizer' is set to 'AllowAllAuthorizer'.
+    default: 4000
   partitioner:
-    default: org.apache.cassandra.dht.Murmur3Partitioner 
-    description: par defaut Murmur3Partitioner. Existe aussi Randompartioner
+    description: |
+      Sets the class that distributes rows (by partition key) across all nodes
+      in the cluster. Any IPartitioner may be used, including your own as long
+      as it is in the class path. For new clusters use the default
+      partitioner.
+
+      Cassandra provides the following partitioners for backwards compatibility:
+      - RandomPartitioner
+      - ByteOrderedPartitioner (deprecated)
+      - OrderPreservingPartitioner (deprecated)
+    default: org.apache.cassandra.dht.Murmur3Partitioner
   persistent_directory:
     default: /var/vcap/store/cassandra
     description: point racine de l arborescence Cassandra pour stocker tous les fichiers data, commit log et saved_cache
   disk_failure_policy:
-    default: stop 
-    description: que doit faire le noeud en cas de pb disque  die, stop, best_effort or ignore.
+    description: |
+      Sets how Cassandra responds to disk failure. Recommend settings: 'stop'
+      or 'best_effort'. Valid values:
+
+      - die:
+        Shut down gossip and Thrift and kill the JVM for any file system
+        errors or single SSTable errors, so the node can be replaced.
+
+      - stop_paranoid:
+        Shut down gossip and Thrift even for single SSTable errors.
+
+      - stop:
+        Shut down gossip and Thrift, leaving the node effectively dead, but
+        available for inspection using JMX.
+
+      - best_effort:
+        Stop using the failed disk and respond to requests based on the
+        remaining available SSTables. This allows obsolete data at consistency
+        level of ONE.
+
+      - ignore:
+        Ignore fatal errors and lets the requests fail; all file system errors
+        are logged but otherwise ignored. Cassandra acts as in versions prior
+        to 1.2.
+    default: stop
   key_cache_size_in_mb:
+    description: |
+      A global cache setting for the maximum size of the key cache in memory
+      (for all tables). If an empty string or a 'null' value is set, the cache
+      is set to the smaller of 5% of the available heap (when heap size is
+      above 2GB), or 100MB. To disable set to 0.
     default: 100
-    description: empty par defaut. Si vide alors Calculer comme min(5% Heap; 100Mb). Desactiver si = 0 .
   key_cache_save_period:
-    default: 14400
-    description: en secondes, soit 4 heures par defaut, pour la conservation des cles en cache sur disque
+    description: |
+      Duration in seconds that keys are kept in cache. Saved caches greatly
+      improve cold-start speeds and have relatively little effect on I/O.
+    default: 14400 # 4 hours
   row_cache_size_in_mb:
+    description: |
+      Maximum size of the row cache in memory. The row cache can save more
+      time than 'key_cache_size_in_mb', but it is space-intensive because it
+      contains the entire row. Use the row cache only for hot rows or static
+      rows. If you reduce the size, you may not get you hottest keys loaded on
+      start up.
     default: 0
-    description: 0 signifie desactive, c.a.d pas de stockages de ligne en cache.
   row_cache_save_period:
+    description: |
+      The number of seconds that rows are kept in cache. This setting has
+      limited use as described in 'row_cache_size_in_mb'.
     default: 0
-    description: 0 signifie desactive. Sinon duree en secondes pour la conservation sur disque du cache de lignes.
   commitlog_sync:
-    default: periodic 
-    description: periodic toutes les 10 sec flush cache fs (sync) du commit log vers disque. Acquitement instantannee. Sinon batch.
+    description: |
+
+      The method that Cassandra uses to acknowledge writes in milliseconds:
+
+      - periodic: (Default: 10000 milliseconds [10 seconds])
+        With 'commitlog_sync_period_in_ms', controls how often the commit log
+        is synchronized to disk. Periodic syncs are acknowledged immediately.
+
+      - batch: (Default: disabled)
+        Used with 'commitlog_sync_batch_window_in_ms' (Default: 2 ms), which
+        is the maximum length of time that queries may be batched together.
+    default: periodic
   commitlog_sync_period_in_ms:
     default: 2
     description: temps d attente d autres ecritures par cassandra avant de faire un sync. Utiliser si option batch activee. Acquittement retarde au sync.
   commitlog_segment_size_in_mb:
+    description: |
+      The size of an individual commitlog file segment. A commitlog segment
+      may be archived, deleted, or recycled after all its data has been
+      flushed to SSTables. This data can potentially include commitlog
+      segments from every table in the system. The default size is usually
+      suitable for most commitlog archiving, but if you want a finer
+      granularity, 8 or 16 MB is reasonable.
+
+      See also: <https://docs.datastax.com/en/cassandra/latest/cassandra/configuration/configLogArchive.html>
     default: 32
-    description: 32 Mb peut etre reduit a 8 ou 16 pour reduire le nombre de SSTables present dans un fichier.
   concurrent_reads:
+    description: |
+      Workloads with more data than can fit in memory encounter a bottleneck
+      in fetching data from disk during reads. Setting 'concurrent_reads' to
+      (16 × number_of_drives) allows operations to queue low enough in the
+      stack so that the OS and drives can reorder them. The default setting
+      applies to both logical volume managed (LVM) and RAID drives.
     default: 32
-    description: valeur recommandee 16 fois le nbr de drives; applicable aussi bien aux LVM qu aux disques RAIDs.
   concurrent_writes:
-    default: 32 
-    description: valeur recommandee 8 fois le nbr de CPU
+    description: |
+      Writes in Cassandra are rarely I/O bound, so the ideal number of
+      concurrent writes depends on the number of CPU cores on the node. The
+      recommended value is 8 × number_of_cpu_cores.
+    default: 32
   file_cache_size_in_mb:
+    description: |
+      Total memory to use for SSTable-reading buffers. Defaults to the smaller
+      of 1/4 of heap (when heap is less than 2GB) or 512MB.
     default: 512
-    description: defaut = min 14 HEap; 512. C est la memoire totale utilisable pour la lecture des SST.
   memtable_flush_writers:
+    description: |
+      The number of memtable flush writer threads. These threads are blocked
+      by disk I/O, and each one holds a memtable in memory while blocked. If
+      your data directories are backed by SSDs, increase this setting to the
+      number of cores.
+
+      (Default: Smaller of number of disks or number of cores with a minimum
+      of 2 and a maximum of 8)
     default: 1
-    description: defaut = min('Nbr disks|nbr CPUs';2|8)
   trickle_fsync:
+    description: |
+      When set to 'true', causes fsync to force the operating system to flush
+      the dirty buffers at the set interval 'trickle_fsync_interval_in_kb'.
+      Enable this parameter to prevent sudden dirty buffer flushing from
+      impacting read latencies. Recommended for use with SSDs, but not with
+      HDDs.
     default: false
-    description:
   trickle_fsync_interval_in_kb:
-    default: 10240
-    description:
+    description: |
+      The size of the fsync in kilobytes.
+    default: 10240 # 10MB
   storage_port:
+    description: |
+      The port for inter-node communication.
     default: 7000
-    description:
   ssl_storage_port:
+    description: |
+      The SSL port for encrypted communication. Unused when
+      'internode_encryption_mode' is set to 'none'.
     default: 7001
-    description:
   start_native_transport:
+    description: |
+      Enables or disables the native transport server. This server uses the
+      same address as the 'rpc_address', but the port it uses is different
+      from 'rpc_port'. See 'native_transport_port'.
     default: true
-    description:
   native_transport_port:
+    description: |
+      The port where the CQL native transport listens for clients.
     default: 9042
-    description:
   native_transport_max_threads:
+    description: |
+      The maximum number of thread handling requests. Similar to
+      'rpc_max_threads', but this property differs as follows:
+
+      - The default for 'native_transport_max_threads' is 128; the default for
+        'rpc_max_threads' is 2048.
+
+      - There is no corresponding 'native_transport_min_threads'.
+
+      - Cassandra stops idle native transport threads after 30 seconds.
     default: 128
-    description:
   native_transport_max_frame_size_in_mb:
+    description: |
+      The maximum allowed size of a frame. Frame (requests) larger than this
+      are rejected as invalid.
+
+      If you're changing this parameter, you may want to adjust
+      'max_value_size_in_mb' accordingly. This should be positive and less than
+      2048.
     default: 256
-    description:
   start_rpc:
+    description: |
+      Enables or disables the Thrift RPC server.
     default: true
-    description:
-  rpc_address:
-    default: localhost
-    description:
   rpc_port:
+    description: |
+      Thrift port for client connections.
     default: 9160
-    description:
   rpc_keepalive:
+    description: |
+      Enables or disables keepalive on client connections (RPC or native).
     default: true
-    description:
   rpc_server_type:
+    description: |
+      Cassandra provides three options for the RPC server. 'sync' and 'hsha'
+      performance is about the same, but 'hsha' uses less memory.
+
+      - 'sync': (Default: one thread per Thrift connection.)
+        For a very large number of clients, memory is the limiting factor. On
+        a 64-bit JVM, 180KB is the minimum stack size per thread and
+        corresponds to your use of virtual memory. Physical memory may be
+        limited depending on use of stack space.
+
+      - 'hsha':
+        Half synchronous, half asynchronous. All Thrift clients are handled
+        asynchronously using a small number of threads that does not vary with
+        the number of clients. This mechanism scales well to many clients. The
+        RPC requests are synchronous (one thread per active request).
+
+        Note: If you select this option, you must change the default value
+        (unlimited) of 'rpc_max_threads'.
+
+      - Your own RPC server
+        You must provide a fully-qualified class name of an
+        'o.a.c.t.TServerFactory' that can create a server instance.
     default: sync
-    description:
   rpc_min_threads:
+    description: |
+      The minimum thread pool size for remote procedure calls.
     default: 16
-    description:
   rpc_max_threads:
+    description: |
+      Regardless of your choice of RPC server (See 'rpc_server_type'),
+      'rpc_max_threads' dictates the maximum number of concurrent requests in
+      the RPC thread pool. If you are using the parameter 'sync' (see
+      'rpc_server_type') it also dictates the number of clients that can be
+      connected. A high number of client connections could cause excessive
+      memory usage for the thread stack. Connection pooling on the client side
+      is highly recommended. Setting a 'rpc_max_threads' acts as a safeguard
+      against misbehaving clients. If the number of threads reaches the
+      maximum, Cassandra blocks additional connections until a client
+      disconnects.
     default: 2048
-    description:
   thrift_framed_transport_size_in_mb:
+    description: |
+      Frame size (maximum field length) for Thrift. The frame is the row or
+      part of the row that the application is inserting.
     default: 15
-    description:
   incremental_backups:
+    description: |
+      Backs up data updated since the last snapshot was taken. When enabled,
+      Cassandra creates a hard link to each SSTable flushed or streamed
+      locally in a backups subdirectory of the keyspace data. Removing these
+      links is the operator's responsibility.
+
+      See also: <https://docs.datastax.com/en/cassandra/latest/cassandra/operations/opsBackupIncremental.html>
     default: false
-    description:
   snapshot_before_compaction:
+    description: |
+      Enables or disables taking a snapshot before each compaction. A snapshot
+      is useful to back up data when there is a data format change. Be careful
+      using this option: Cassandra does not clean up older snapshots
+      automatically.
     default: false
-    description:
   auto_snapshot:
+    description: |
+      Whether Cassandra takes a snapshot of the data before truncating a
+      keyspace or dropping a table. To prevent data loss, DataStax strongly
+      advises using the default setting. If you set 'auto_snapshot' to
+      'false', data loss occurs on truncation or drop.
     default: true
-    description:
-  tombstone_warn_threshold:
-    default: 1000
-    description:
-  tombstone_failure_threshold:
-    default: 100000
-    description:
   column_index_size_in_kb:
+    description: |
+      Granularity of the index of rows within a partition. For huge rows,
+      decrease this setting to improve seek time. If you use key cache, be
+      careful not to make this setting too large because key cache will be
+      overwhelmed. If you're unsure of the size of the rows, it's best to use
+      the default setting.
     default: 64
-    description:
   concurrent_compactors:
+    description: |
+      The number of concurrent compaction processes allowed to run
+      simultaneously on a node, not including validation compactions for anti-
+      entropy repair. Simultaneous compactions help preserve read performance
+      in a mixed read-write workload by limiting the number of small SSTables
+      that accumulate during a single long-running compaction. If your data
+      directories are backed by SSDs, increase this value to the number of
+      cores. If compaction running too slowly or too fast, adjust
+      'compaction_throughput_mb_per_sec' first.
+
+      Note: Increasing concurrent compactors leads to more use of available
+      disk space for compaction, because concurrent compactions happen in
+      parallel, especially for STCS. Ensure that adequate disk space is
+      available before increasing this configuration.
     default: 4
-    description:
   read_request_timeout_in_ms:
-    default: 5000
-    description:
+    description: |
+      The number of milliseconds that the coordinator waits for read
+      operations to complete before timing it out.
+    default: 5000 # 5 seconds
   range_request_timeout_in_ms:
+    description: |
+      The number of milliseconds that the coordinator waits for sequential or
+      index scans to complete before timing it out.
     default: 10000
-    description:
   write_request_timeout_in_ms:
+    description: |
+      The number of milliseconds that the coordinator waits for a write
+      operations to complete before timing it out for requests with at least
+      one node in the local datacenter.
     default: 2000
-    description:
   cas_contention_timeout_in_ms:
+    description: |
+      The number of milliseconds during which the coordinator continues to
+      retry a CAS (compare and set) operation that contends with other
+      proposals for the same row. If the coordinator cannot complete the
+      operation within this timespan, it aborts the operation.
     default: 1000
-    description:
   truncate_request_timeout_in_ms:
+    description: |
+      The number of milliseconds that the coordinator waits for a truncate
+      (the removal of all data from a table) to complete before timing it out.
+      The long default value allows Cassandra to take a snapshot before
+      removing the data. If 'auto_snapshot' is disabled (not recommended), you
+      can reduce this time.
     default: 60000
-    description:
   request_timeout_in_ms:
+    description: |
+      The default timeout value for other miscellaneous operations.
     default: 10000
-    description:
   cross_node_timeout:
+    description: |
+      Enables or disables operation timeout information exchange between nodes
+      (to accurately measure request timeouts). If this property is disabled,
+      the replica assumes any requests are forwarded to it instantly by the
+      coordinator. During overload conditions this means extra time is
+      required for processing already-timed-out requests.
+
+        CAUTION:
+        Before enabling this property make sure NTP (network time protocol) is
+        installed and the times are synchronized among the nodes.
     default: false
-    description:
   phi_convict_threshold:
+    description: |
+      Adjusts the sensitivity of the failure detector on an exponential scale.
+      Generally this setting does not need adjusting.
     default: 8
-    description:
   endpoint_snitch:
+    description: |
+      Set to a class that implements the IEndpointSnitch interface. Cassandra
+      uses the snitch to locate nodes and route requests.
+
+      - 'SimpleSnitch'
+        Use for single-datacenter deployment or single-zone deployment in
+        public clouds. Does not recognize datacenter or rack information.
+        Treats strategy order as proximity, which can improve cache locality
+        when you disable read repair.
+
+      - 'GossipingPropertyFileSnitch'
+        Recommended for production. Reads rack and datacenter for the local
+        node in 'cassandra-rackdc.properties' file and propagates these values
+        to other nodes via gossip. For migration from the PropertyFileSnitch,
+        uses the 'cassandra-topology.properties' file if it is present.
+
+      - 'PropertyFileSnitch'
+        Determines proximity by rack and datacenter, which are explicitly
+        configured in 'cassandra-topology.properties' file.
+
+      - 'Ec2Snitch'
+        For EC2 deployments in a single region. Loads region and availability
+        zone information from the Amazon EC2 API. The region is treated as the
+        datacenter and the availability zone as the rack and uses only private
+        IP addresses. For this reason, it does not work across multiple
+        regions.
+
+      - 'Ec2MultiRegionSnitch'
+        Uses the public IP as the broadcast_address to allow cross-region
+        connectivity. This means you must also set seed addresses to the
+        public IP and open the 'storage_port' or 'ssl_storage_port' on the
+        public IP firewall. For intra-region traffic, Cassandra switches to
+        the private IP after establishing a connection.
+
+      - 'RackInferringSnitch'
+        Proximity is determined by rack and datacenter, which are assumed to
+        correspond to the 3rd and 2nd octet of each node's IP address,
+        respectively. Best used as an example for writing a custom snitch
+        class (unless this happens to match your deployment conventions).
+
+      - 'GoogleCloudSnitch'
+        Use for Cassandra deployments on Google Cloud Platform across one or
+        more regions. The region is treated as a datacenter and the
+        availability zones are treated as racks within the datacenter. All
+        communication occurs over private IP addresses within the same logical
+        network.
+
+      - 'CloudstackSnitch'
+        Use this snitch for Apache Cloudstack environments.
     default: PropertyFileSnitch
-    description:
-  dynamic_snitch_update_interval_in_ms:
-    default: 100
-    description:
-  dynamic_snitch_reset_interval_in_ms:
-    default: 600000
-    description:
-  dynamic_snitch_badness_threshold:
-    default: 0.1
-    description:
-  request_scheduler:
-    default: org.apache.cassandra.scheduler.NoScheduler
-    description:
-  request_scheduler_id:
-    default: 
-    description:
-  internode_compression:
-    default: none
-    description:
-  inter_dc_tcp_nodelay:
-    default: true
-    description:
-  max_heap_size:
-    default: 8G
-    description:
-  heap_newsize:
-    default: 1G
-    description:
   topology:
-    description:
-  cass_pwd:
-    default: cassandra
+    description: |
+      The topology (in Java Properties file syntax) to be injected in the
+      'cassandra-topology.properties' file. Directives are expressed as an
+      array, the elements of which will be joined with newlines ('\n'). Thus,
+      each array elements can be made of one or many Java Properties,
+      depending on what fits best for your use-case.
+
+      The template 'cassandra-topology.properties' file includes a
+      'default=DC1:RAC1' directive that applies to all unknown nodes.
+    default: ''
+    example:
+    - |
+      192.168.1.100=DC1:RAC1
+      192.168.2.200=DC2:RAC2
+    - |
+      10.0.0.11=DC1:RAC1
+      10.0.0.12=DC1:RAC2
+  dynamic_snitch_update_interval_in_ms:
+    description: |
+      The number of milliseconds between Cassandra's calculation of node
+      scores. Because score calculation is CPU intensive, be careful when
+      reducing this interval.
+    default: 100 # 0.1 second
+  dynamic_snitch_reset_interval_in_ms:
+    description: |
+      Time interval after which Cassandra resets all node scores. This allows
+      a bad node to recover.
+    default: 600000 # 10 minutes
+  dynamic_snitch_badness_threshold:
+    description: |
+      The performance threshold for dynamically routing client requests away
+      from a poorly performing node. Specifically, it controls how much worse
+      a poorly performing node has to be before the dynamic snitch prefers
+      other replicas over it. A value of 0.2 means Cassandra continues to
+      prefer the static snitch values until the node response time is 20%
+      worse than the best performing node. Until the threshold is reached,
+      incoming requests are statically routed to the closest replica (as
+      determined by the snitch). A value greater than zero for this parameter,
+      with a value of less than 1.0 for 'read_repair_chance', maximizes cache
+      capacity across the nodes.
+    default: 0.1
+  request_scheduler:
+    description: |
+      The scheduler to handle incoming client requests according to a defined
+      policy. This scheduler is useful for throttling client requests in
+      single clusters containing multiple keyspaces. This parameter is
+      specifically for requests from the client and does not affect inter-node
+      communication. Valid values:
+
+      - 'org.apache.cassandra.scheduler.NoScheduler'
+        Cassandra does no scheduling.
+
+      - 'org.apache.cassandra.scheduler.RoundRobinScheduler'
+        Cassandra uses a round robin of client requests to a node with a
+        separate queue for each 'request_scheduler_id' property. (Currently
+        'request_scheduler_id' can only be 'keyspace' as the scope of the
+        scheduler's activity.)
+
+      - Cassandra uses a Java class that implements the 'RequestScheduler'
+        interface.
+    default: org.apache.cassandra.scheduler.NoScheduler
+
+  internode_encryption_mode:
+    description: |
+      Enables or disables encryption of inter-node communication using the
+      'TLS_RSA_WITH_AES_128_CBC_SHA' cipher suite for authentication, key
+      exchange, and encryption of data transfers. Use the DHE/ECDHE ciphers,
+      such as 'TLS_DHE_RSA_WITH_AES_128_CBC_SHA' if running in (Federal
+      Information Processing Standard) FIPS 140 compliant mode. Available
+      inter-node options:
+
+      - 'all': Encrypt all inter-node communications.
+      - 'none': No encryption.
+      - 'dc': Encrypt the traffic between the datacenters (server only).
+      - 'rack': Encrypt the traffic between the racks (server only).
+
+      See: <https://docs.datastax.com/en/cassandra/3.0/cassandra/configuration/configCassandra_yaml.html#configCassandra_yaml__ul_gbd_cns_1k>
+    default: none
+  client_encryption.enabled:
+    default: false
+    description: |
+      Enables or disables client-to-node encryption.
+  client_encryption.require_client_auth:
+    default: false
+    description: |
+      Enables or disables certificate authentication.
+  cass_KSP:
+    description: |
+      Password for the keystore that is used to to store server and client
+      encryption certificates and keys.
   cassDbCertificate:
+    type: certificate
+    description: |
+      use tls/ssl for authent and transactions.
+
+      Structured certificate as can be provided by CredHub.
+
+      Injected in:
+      - .ca: ssl/cassandradb.ca.erb (deprecated)
+      - .certificate and .private_key: cassandradb.pem.erb (deprecated)
+
     default: "NOT INITIALIZED"
-    description: use tls/ssl for authent and transactions 
   cert:
     type: certificate
-    description: cluster certificate
-  cass_KSP:
-    default: 
-    description: cassandra ssl keystore passwd
+    description: |
+      Cluster certificate.
+    example:
+      ca: |
+        -----BEGIN CERTIFICATE-----
+        ...
+        -----END CERTIFICATE-----
+      cetificate: |
+        -----BEGIN CERTIFICATE-----
+        ...
+        -----END CERTIFICATE-----
+      provate_key: |
+        -----BEGIN RSA PRIVATE KEY-----
+        ...
+        -----END RSA PRIVATE KEY-----
+
+  internode_compression:
+    description: |
+      Controls whether traffic between nodes is compressed. Valid values:
+
+      - 'all'
+        Compresses all traffic.
+
+      - 'dc'
+        Compresses traffic between datacenters only.
+
+      - 'none'
+        No compression.
+    default: none
+  inter_dc_tcp_nodelay:
+    description: |
+      Enable this property or 'disable tcp_nodelay' for inter-datacenter
+      communication. If this property is disabled, the network sends larger,
+      but fewer, network packets. This reduces overhead from the TCP protocol
+      itself. However, disabling 'inter_dc_tcp_nodelay' may increase latency
+      by blocking cross data-center responses.
+    default: true
+
+  tombstone_warn_threshold:
+    description: |
+      Cassandra issues a warning if a query scans more than this number of
+      tombstones.
+    default: 1000
+  tombstone_failure_threshold:
+    description: |
+      Cassandra aborts a query if it scans more than this number of
+      tombstones.
+    default: 100000
+
+  max_heap_size:
+    description: |
+      The total amount of memory dedicated to the Java heap.
+
+      The default max heap size is based on the following calculation:
+
+        max(min(1/2 ram, 1024MB), min(1/4 ram, 8GB))
+
+      Which can be described by this algorithm:
+        1. calculate 1/2 ram and cap to 1024MB
+        2. calculate 1/4 ram and cap to 8192MB
+        3. pick the max
+    default: 8G
+  heap_newsize:
+    description: |
+      Size of the young generation.
+
+      The default young generation size is computed as folows:
+
+        min(max_sensible_per_modern_cpu_core * num_cores, 1/4 * heap size)
+
+      Where 'max_sensible_per_modern_cpu_core' is 100 MB, which assumes a
+      modern 8-core+ machine for decent pause times. If in doubt, and if you
+      do not particularly want to tweak, go with 100 MB per physical CPU core.
+
+      On Linux, the 'num_cores' value is taken from the 'processor:' property
+      as found in '/proc/cpuinfo'. Be careful that in BOSH-Lite (using Garden
+      RunC), this may not be accurate.
+
+      The main trade-off for the young generation is that the larger it is,
+      the longer GC pause times will be. The shorter it is, the more expensive
+      GC will be (usually).
+    default: 1G
+  cass_pwd:
+    default: cassandra
   validate_ssl_TF:
+    description: |
+      When validate is enabled, the cqlsh clients will verify that the
+      certificate is trusted. The host in the certificate is compared to the
+      host of the machine to which it is connected.
     default: false
-    description: cassandra ssl validate true or false
 
   system_auth_keyspace_replication_factor:
     description: |
@@ -288,40 +740,12 @@ properties:
       In Bosh-Lite, you need to set this to 'false', as the 'swapoff'
       command cannot be invoked within Garden containers.
     default: true
-  internode_encryption_mode:
-    default: none
-    description: |
 
-      Enables or disables encryption of inter-node communication using
-      the TLS_RSA_WITH_AES_128_CBC_SHA cipher suite for
-      authentication, key exchange, and encryption of data
-      transfers. Use the DHE/ECDHE ciphers, such as
-      TLS_DHE_RSA_WITH_AES_128_CBC_SHA if running in (Federal
-      Information Processing Standard) FIPS 140 compliant
-      mode. Available inter-node options:
-
-      * 'all': Encrypt all inter-node communications.
-
-      * 'none': No encryption.
-
-      * 'dc': Encrypt the traffic between the datacenters (server only).
-
-      * 'rack': Encrypt the traffic between the racks (server only).
-
-      See: <https://docs.datastax.com/en/cassandra/3.0/cassandra/configuration/configCassandra_yaml.html#configCassandra_yaml__ul_gbd_cns_1k>
-
-  client_encryption.enabled:
-    default: false
-    description: |
-      Enables or disables client-to-node encryption.
-  client_encryption.require_client_auth:
-    default: false
-    description: |
-      Enables or disables certificate authentication.
   jmx_exporter_enabled:
+    description: |
+      Scrape and expose mBeans of a JMX target.
     default: true
-    description: scrape and expose mBeans of a JMX target
   jmx_exporter_port:
+    description: |
+      Port on which to expose metrics and web interface.
     default: 9001
-    description: Port on which to expose metrics and web interface
-
