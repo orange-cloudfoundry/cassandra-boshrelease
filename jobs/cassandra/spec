@@ -697,6 +697,15 @@ properties:
       Cassandra aborts a query if it scans more than this number of
       tombstones.
     default: 100000
+  max_value_size_in_mb:
+    description: |
+      The maximum size of any value in SSTables.
+
+      Any value size larger than this threshold will result into marking an
+      SSTable as corrupted.
+
+      This should be positive and less than 2048.
+    default: 256
 
   max_heap_size:
     description: |
