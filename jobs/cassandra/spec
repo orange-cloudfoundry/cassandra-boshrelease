@@ -780,7 +780,11 @@ properties:
     description: |
       The replication factor to apply to the 'system_auth' keyspace that holds
       users and passwords.
-    default: 3
+
+      When this value is nor defined or 'null', the default replication factor
+      used is the number of seeds instances, as can be inferred when
+      traversing the 'seeds' Bosh Link.
+    default: null
 
   disable_linux_swap:
     description: |

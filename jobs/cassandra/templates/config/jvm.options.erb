@@ -7,6 +7,13 @@
 # - only static flags are accepted (no variables or parameters)           #
 # - dynamic flags will be appended to these on cassandra-env              #
 ###########################################################################
+<%
+  require "shellwords"
+
+  def esc(x)
+      Shellwords.shellescape(x)
+  end
+-%>
 
 ######################
 # STARTUP PARAMETERS #
@@ -254,5 +261,5 @@
 -Djava.io.tmpdir=/var/vcap/data/cassandra/jna-tmp
 
 <% if p('jmx_exporter_enabled') %>
--javaagent:/var/vcap/packages/cassandra/lib/jmx_prometheus_javaagent-0.1.0.jar=<%= p('jmx_exporter_port') %>:/var/vcap/jobs/cassandra/conf/jmx_exporter.yml
+-javaagent:/var/vcap/packages/cassandra/lib/jmx_prometheus_javaagent-0.1.0.jar=<%= esc(p('jmx_exporter_port')) %>:/var/vcap/jobs/cassandra/conf/jmx_exporter.yml
 <% end %>
