@@ -210,6 +210,7 @@ properties:
       smaller of 5% of the available heap (when heap size is below 2GB), or
       100MB.
     default: null # min(5% of heap, 100MB)
+    example: 100
   key_cache_save_period:
     description: |
       Duration in seconds that keys are kept in cache. Saved caches greatly
@@ -280,7 +281,8 @@ properties:
 
       When set to 'null' or not defined, this value defaults to the smaller of
       1/4 of heap (when heap is less than 2GB) or 512MB.
-    default: null # Smaller of 1/4 heap or 512
+    default: null # min(1/4 heap, 512MB)
+    example: 512
   memtable_flush_writers:
     description: |
       The number of memtable flush writer threads. These threads are blocked
@@ -293,6 +295,7 @@ properties:
       8. Using this BOSH Release, Cassandra nodes always have one disk, so
       this calculation should always result in a value of '2'.
     default: null # min(8, max(2, min(number_of_disks, number_of_cores)))
+    example: 2
   trickle_fsync:
     description: |
       When set to 'true', causes fsync to force the operating system to flush
@@ -785,6 +788,7 @@ properties:
       used is the number of seeds instances, as can be inferred when
       traversing the 'seeds' Bosh Link.
     default: null
+    example: 3
 
   disable_linux_swap:
     description: |
