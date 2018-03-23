@@ -289,7 +289,7 @@ thrift_prepared_statements_cache_size_mb:
 # NOTE: if you reduce the size, you may not get you hottest keys loaded on startup.
 #
 # Default value is empty to make it "auto" (min(5% of Heap (in MB), 100MB)). Set to 0 to disable key cache.
-key_cache_size_in_mb: <%= p("key_cache_size_in_mb").to_json %>
+key_cache_size_in_mb: <%= p("key_cache_size_in_mb", nil).to_json %>
 
 # Duration in seconds after which Cassandra should
 # save the key cache. Caches are saved to saved_caches_directory as
@@ -454,7 +454,7 @@ concurrent_materialized_view_writes: 32
 # overhead which is roughly 128 bytes per chunk (i.e. 0.2% of the reserved size
 # if the default 64k chunk size is used).
 # Memory is only allocated when needed.
-file_cache_size_in_mb: <%= p("file_cache_size_in_mb").to_json %>
+file_cache_size_in_mb: <%= p("file_cache_size_in_mb", nil).to_json %>
 
 # Flag indicating whether to allocate on or off heap when the sstable buffer
 # pool is exhausted, that is when it has exceeded the maximum memory
@@ -539,7 +539,9 @@ memtable_allocation_type: heap_buffers
 # and flush size and frequency. More is not better you just need enough flush writers
 # to never stall waiting for flushing to free memory.
 #
-memtable_flush_writers: <%= p("memtable_flush_writers").to_json %>
+<% if_p("memtable_flush_writers") do |memtable_flush_writers| -%>
+memtable_flush_writers: <%= memtable_flush_writers.to_json %>
+<% end -%>
 
 # Total space to use for change-data-capture logs on disk.
 #
@@ -811,7 +813,7 @@ column_index_cache_size_in_kb: 2
 # 
 # If your data directories are backed by SSD, you should increase this
 # to the number of cores.
-concurrent_compactors: <%= p("concurrent_compactors").to_json %>
+concurrent_compactors: <%= p("concurrent_compactors", nil).to_json %>
 
 # Throttles compaction to the given total throughput across the entire
 # system. The faster you insert data, the faster you need to compact in
