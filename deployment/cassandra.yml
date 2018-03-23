@@ -21,19 +21,13 @@ instance_groups:
             require_client_auth: false
           max_heap_size: 6G
           heap_newsize: 800M
-          cass_pwd: ((cassandra_admin_password))
+          cassandra_password: ((cassandra_admin_password))
           validate_ssl_TF: false
-          cassDbCertificate:
-            ca: ((cassandra_certificate_seeds.ca))
-            private_key: ((cassandra_certificate_seeds.private_key))
-            certificate: ((cassandra_certificate_seeds.certificate))
           cert:
             ca: ((cassandra_certificate_seeds))
             private_key: ((cassandra_certificate_seeds.private_key))
             certificate: ((cassandra_certificate_seeds.certificate))
-          cass_KSP: ((cassandra_key_store_pass))
-          cass_version: 3.11.1
-          cass_upgrade_TF: false
+          keystore_password: ((cassandra_key_store_pass))
           topology:
             # Don't bother these values, as they are not used yet, but ketp
             # here for future improments on the Cassandra BOSH Release.
