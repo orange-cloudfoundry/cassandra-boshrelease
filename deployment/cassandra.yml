@@ -28,13 +28,6 @@ instance_groups:
             private_key: ((cassandra_certificate_seeds.private_key))
             certificate: ((cassandra_certificate_seeds.certificate))
           keystore_password: ((cassandra_key_store_pass))
-          topology:
-            # Don't bother these values, as they are not used yet, but ketp
-            # here for future improments on the Cassandra BOSH Release.
-            - 10.165.0.92=DC1:RAC1
-            - 10.165.0.93=DC1:RAC1
-            - 10.165.0.94=DC1:RAC1
-            - 10.165.0.95=DC1:RAC1
     stemcell: *trusty_stemcell
     vm_type: &cassandra_vm_type default
     persistent_disk_type: &cassandra_persistent_disk_type 5GB

@@ -580,7 +580,7 @@ properties:
 
       The template 'cassandra-topology.properties' file includes a
       'default=DC1:RAC1' directive that applies to all unknown nodes.
-    default: ''
+    default: []
     example:
     - |
       192.168.1.100=DC1:RAC1
