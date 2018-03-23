@@ -13,6 +13,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+<%
+  require "shellwords"
+
+  def esc(x)
+      Shellwords.shellescape(x)
+  end
+-%>
 
 calculate_heap_sizes()
 {
@@ -122,7 +129,7 @@ case "$jvm" in
 esac
 
 #GC log path has to be defined here because it needs to access CASSANDRA_HOME
-JVM_OPTS="$JVM_OPTS -Xloggc:${CASSANDRA_HOME}/logs/gc.log"
+#JVM_OPTS="$JVM_OPTS -Xloggc:${CASSANDRA_HOME}/logs/gc.log"
 
 # Here we create the arguments that will get passed to the jvm when
 # starting cassandra.
@@ -161,8 +168,8 @@ USING_G1=$?
 # times. If in doubt, and if you do not particularly want to tweak, go with
 # 100 MB per physical CPU core.
 
-MAX_HEAP_SIZE="<%= p("max_heap_size") %>"
-HEAP_NEWSIZE="<%= p("heap_newsize") %>"
+MAX_HEAP_SIZE=<%= esc(p("max_heap_size")) %>
+HEAP_NEWSIZE=<%= esc(p("heap_newsize")) %>
 
 # Set this to control the amount of arenas per-thread in glibc
 #export MALLOC_ARENA_MAX=4
