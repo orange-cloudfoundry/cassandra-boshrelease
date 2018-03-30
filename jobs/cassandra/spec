@@ -18,6 +18,8 @@ provides:
 consumes:
   - name: seeds
     type: cassandra
+  - name: non_seeds
+    type: cassandra
 
 templates:
   bin/pre-start.sh: bin/pre-start
@@ -588,6 +590,39 @@ properties:
     - |
       10.0.0.11=DC1:RAC1
       10.0.0.12=DC1:RAC2
+  bosh_to_cassandra_topology_mapping:
+    description: |
+      Maps BOSH Availability Zone (AZs) to Cassandra “DCs” (Data Centers) and
+      “Racks”.
+
+      To understand the notion of “Rack”, you need to know that the
+      replication strategy implemented in Cassandra does its best not to have
+      more than one replica on the same “Rack”, as informed by the snitch.
+      (See also the 'endpoint_snitch' configuration property for more
+      details.)
+
+      To understand the notion of “DC”, you need to know that Cassandra
+      implements different transfer strategies when nodes are not in the same
+      Data Center and thus the latency is higher between them.
+
+      Depending on your BOSH setup, a BOSH Availability Zone can be mapped to
+      different zones (the usual setup) or different Data Centers (the more
+      recent multi-CPI setup).
+
+      The mapping you give here in this configuration property allows you to
+      set a specific “DC” and “Rack” location to each BOSH availability zone.
+
+      This mapping will be used to polulate the 'cassandra-topology.properties'
+      (used by 'PropertyFileSnitch') and 'cassandra-rackdc.properties' (used
+      by 'GossipingPropertyFileSnitch'). See the 'endpoint_snitch'
+      configuration property for more details about snitch implementations.
+    default: {}
+    example:
+      z1: { dc: DC1, rack: RAC1 }
+      z2: { dc: DC1, rack: RAC2 }
+      z3: { dc: DC2, rack: RAC1 }
+      z4: { dc: DC2, rack: RAC2 }
+      default: { dc: DC2, rack: RAC1 }
   dynamic_snitch_update_interval_in_ms:
     description: |
       The number of milliseconds between Cassandra's calculation of node

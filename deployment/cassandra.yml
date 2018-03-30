@@ -12,6 +12,7 @@ instance_groups:
           cassandra: { as: &cassandra_seeds_link cassandra_seeds_list }
         consumes:
           seeds: { from: *cassandra_seeds_link }
+          non_seeds: { from: *cassandra_non_seeds_link }
         properties: &cassandra_properties
           cluster_name: &cassandra_cluster_name cluster
           num_tokens: 256
@@ -42,8 +43,11 @@ instance_groups:
     jobs:
       - name: cassandra
         release: *cassandra_release
+        provides:
+          cassandra: { as: &cassandra_non_seeds_link cassandra_non_seeds_list }
         consumes:
           seeds: { from: *cassandra_seeds_link }
+          non_seeds: { from: *cassandra_non_seeds_link }
         properties: *cassandra_properties
     stemcell: *trusty_stemcell
     vm_type: *cassandra_vm_type
