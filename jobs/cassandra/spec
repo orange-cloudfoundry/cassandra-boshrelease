@@ -572,24 +572,6 @@ properties:
       - 'CloudstackSnitch'
         Use this snitch for Apache Cloudstack environments.
     default: PropertyFileSnitch
-  topology:
-    description: |
-      The topology (in Java Properties file syntax) to be injected in the
-      'cassandra-topology.properties' file. Directives are expressed as an
-      array, the elements of which will be joined with newlines ('\n'). Thus,
-      each array elements can be made of one or many Java Properties,
-      depending on what fits best for your use-case.
-
-      The template 'cassandra-topology.properties' file includes a
-      'default=DC1:RAC1' directive that applies to all unknown nodes.
-    default: []
-    example:
-    - |
-      192.168.1.100=DC1:RAC1
-      192.168.2.200=DC2:RAC2
-    - |
-      10.0.0.11=DC1:RAC1
-      10.0.0.12=DC1:RAC2
   bosh_to_cassandra_topology_mapping:
     description: |
       Maps BOSH Availability Zone (AZs) to Cassandra “DCs” (Data Centers) and
