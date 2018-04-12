@@ -18,7 +18,7 @@ instance_groups:
           max_heap_size: 6G
           heap_newsize: 800M
           cassandra_password: ((cassandra_admin_password))
-          keystore_password: ((cassandra_key_store_pass))
+          keystore_password: ((cassandra_keystore_password))
           bosh_to_cassandra_topology_mapping:
             z1:      { dc: DC1, rack: RAC1 }
             z2:      { dc: DC1, rack: RAC2 }
@@ -55,7 +55,7 @@ instance_groups:
 variables:
   - name: cassandra_admin_password
     type: password
-  - name: cassandra_key_store_pass  
+  - name: cassandra_keystore_password
     type: password
 
 
