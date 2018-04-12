@@ -15,19 +15,9 @@ instance_groups:
           non_seeds: { from: *cassandra_non_seeds_link }
         properties: &cassandra_properties
           cluster_name: &cassandra_cluster_name cluster
-          num_tokens: 256
-          internode_encryption_mode: none
-          client_encryption:
-            enabled: false
-            require_client_auth: false
           max_heap_size: 6G
           heap_newsize: 800M
           cassandra_password: ((cassandra_admin_password))
-          validate_ssl_TF: false
-          cert:
-            ca: ((cassandra_certificate_seeds))
-            private_key: ((cassandra_certificate_seeds.private_key))
-            certificate: ((cassandra_certificate_seeds.certificate))
           keystore_password: ((cassandra_key_store_pass))
           bosh_to_cassandra_topology_mapping:
             z1:      { dc: DC1, rack: RAC1 }
@@ -65,27 +55,6 @@ instance_groups:
 variables:
   - name: cassandra_admin_password
     type: password
-  - name: /internalCA
-    type: certificate
-    options:
-      is_ca: true
-      common_name: internalCA
-  - name: cassandra_certificate_seeds
-    type: certificate
-    options:
-      ca: /internalCA
-      common_name: <%= seed.instance.address %>
-      alternative_names: 
-        - "*.cassandra-seeds.default.cassandra.bosh"
-      extended_key_usage: [ client_auth, server_auth ]
-  - name: cassandra_certificate_servers
-    type: certificate
-    options:
-      ca: /internalCA
-      common_name: <%= cluster.instance.address %>
-      alternative_names: 
-        - "*.cassandra-servers.default.cassandra.bosh"
-      extended_key_usage: [ client_auth, server_auth ]
   - name: cassandra_key_store_pass  
     type: password
 
