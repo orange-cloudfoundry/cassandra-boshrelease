@@ -1,5 +1,5 @@
 ---
-name: cassandra
+name: &cassandra_deployment_name cassandra
 
 instance_groups:
   - name: cassandra-seeds
@@ -14,7 +14,7 @@ instance_groups:
           seeds: { from: *cassandra_seeds_link }
           non_seeds: { from: *cassandra_non_seeds_link }
         properties: &cassandra_properties
-          cluster_name: &cassandra_cluster_name cluster
+          cluster_name: *cassandra_deployment_name
           max_heap_size: 6G
           heap_newsize: 800M
           cassandra_password: ((cassandra_admin_password))
