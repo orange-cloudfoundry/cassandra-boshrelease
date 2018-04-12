@@ -60,14 +60,15 @@ variables:
 
 
 update:
-  serial: true # instance groups to be deployed sequentially.
+  # We don't support Cassandra instance groups to be deployed in parallel.
+  # They must be deployed sequentially.
+  serial: true
 
   canaries: 1
   canary_watch_time: 30000-240000
 
-  # We don't support values >= 2 for 'max_in_flight'. Indeed there can
-  # be a race condition in post-start when 2 repair-table are executed
-  # in parallel.
+  # We don't support values > 1 for 'max_in_flight'. Indeed there can be a
+  # race condition in post-start when 2 repair-table are executed in parallel.
   max_in_flight: 1
   update_watch_time: 30000-240000
 
