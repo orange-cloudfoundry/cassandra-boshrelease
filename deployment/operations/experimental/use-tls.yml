@@ -14,6 +14,10 @@
   type: replace
   value: ((cassandra_seeds_certificate))
 
+- path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/keystore_password
+  type: replace
+  value: ((cassandra_keystore_password))
+
 
 
 - path: /instance_groups/name=cassandra-servers/jobs/name=cassandra/properties?/internode_encryption_mode
@@ -28,7 +32,17 @@
   type: replace
   value: ((cassandra_servers_certificate))
 
+- path: /instance_groups/name=cassandra-servers/jobs/name=cassandra/properties?/keystore_password
+  type: replace
+  value: ((cassandra_keystore_password))
 
+
+
+- path: /variables?/name=cassandra_keystore_password
+  type: replace
+  value:
+    name: cassandra_keystore_password
+    type: password
 
 - path: /variables?/name=cassandraCA
   type: replace
