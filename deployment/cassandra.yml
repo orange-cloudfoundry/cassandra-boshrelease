@@ -15,9 +15,11 @@ instance_groups:
           non_seeds: { from: *cassandra_non_seeds_link }
         properties: &cassandra_properties
           cluster_name: *cassandra_deployment_name
+          cassandra_password: ((cassandra_admin_password))
+          # Notice: these two properties 'max_heap_size' and 'heap_newsize'
+          # have to be set in pair
           max_heap_size: 6G
           heap_newsize: 800M
-          cassandra_password: ((cassandra_admin_password))
           bosh_to_cassandra_topology_mapping:
             z1:      { dc: DC1, rack: RAC1 }
             z2:      { dc: DC1, rack: RAC2 }
