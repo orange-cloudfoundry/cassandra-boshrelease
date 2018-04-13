@@ -28,7 +28,7 @@ public final class Converter {
         return uuid;
     }
 
-    public static Map<String, Object> buildCredentials(String pContactPoints, String pPort, String pKeyspaceName, String pRoleName, String pPasswordGenerated) {
+    public static Map<String, Object> buildCredentials(String pContactPoints, String pPort, boolean ssl, String pKeyspaceName, String pRoleName, String pPasswordGenerated) {
         //"credentials":{
         //	"hostname":"192.168.30.150",
         //	"jdbcUrl":
@@ -47,6 +47,7 @@ public final class Converter {
         }
         credentials.put("contact-points", normalizedContactPoints);
         credentials.put("port", pPort);
+        credentials.put("ssl", ssl);
         credentials.put("login", Converter.uuidToRoleName(pRoleName));
         credentials.put("password", pPasswordGenerated);
         credentials.put("keyspaceName", Converter.uuidToKeyspaceName(pKeyspaceName));

@@ -1,4 +1,11 @@
 #!/bin/bash
+<%
+  require "shellwords"
+
+  def esc(x)
+      Shellwords.shellescape(x)
+  end
+%>
 
 set -e # exit immediately if a simple command exits with a non-zero status
 set -u # report the usage of uninitialized variables
@@ -18,10 +25,16 @@ case $1 in
     echo $$ > $PIDFILE
 
 	exec chpst -u vcap:vcap $JAVA_HOME/bin/java  \
-               -server -XX:+UseG1GC -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=25 -Xms128M -Xmx512M -Dlogging.config=$JOB_DIR/config/logback.xml \
+               -server \
+               -Xms<%= esc(p("broker.heap_size")) %> \
+               -Xmx<%= esc(p("broker.heap_size")) %> \
+               -XX:+UseG1GC -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=25 \
+               -Dlogging.config=$JOB_DIR/config/logback.xml \
                -Dspring.config.location=file:$JOB_DIR/config/application.yml \
+               -Djavax.net.ssl.trustStore=/var/vcap/jobs/broker/tls/cassandra_truststore.jks \
+               -Djavax.net.ssl.trustStorePassword=<%= esc(p("broker.truststore_password")) %> \
                -jar /var/vcap/packages/cassandra-broker-pkg/cassandra-broker.jar  \
-               >>$LOG_DIR/$JOB_NAME.log 2>&1
+               >> $LOG_DIR/$JOB_NAME.log 2>&1
     ;;
 
   stop)

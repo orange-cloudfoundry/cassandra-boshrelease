@@ -1,4 +1,6 @@
 ---
+<% require "json" -%>
+
 logging:
   level: DEBUG
 
@@ -9,16 +11,17 @@ pidfile: /var/vcap/sys/run/broker/broker.pid
 
 security:
   user:
-    name: <%= p('broker.user') %>
-    password: <%= p('broker.password') %>
+    name: <%= p('broker.user').to_json %>
+    password: <%= p('broker.password').to_json %>
 
 spring:
   main:
     show-banner: true
   data:
     cassandra:
-      password: <%= link('seeds').p('cassandra_password') %>
-      contact-points: <% link('seeds').instances.each do |instance| %><%= instance.address %>,<% end %>
-      single-contact-points: <%= link('seeds').instances[0].address %>
+      cluster-name: <%= link('seeds').p('cluster_name').to_json %>
+      password: <%= link('seeds').p('cassandra_password').to_json %>
+      contact-points: <%= (link('seeds').instances.map { |instance| instance.address }).join(",").to_json %>
       username: cassandra
-      port: <%= link('seeds').p('native_transport_port') %>
+      port: <%= link('seeds').p('native_transport_port').to_json %>
+      ssl: <%= link('seeds').p('client_encryption.enabled').to_json %>

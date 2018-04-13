@@ -1,0 +1,1 @@
+<% link('seeds').if_p('cert') do |cassandra_cert| %><%= cassandra_cert["ca"] %><% end %>

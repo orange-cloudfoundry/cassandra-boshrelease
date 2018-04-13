@@ -13,6 +13,7 @@ provides:
       - native_transport_port
       - client_encryption.enabled
       - client_encryption.require_client_auth
+      - cert
       - cluster_name
 
 consumes:

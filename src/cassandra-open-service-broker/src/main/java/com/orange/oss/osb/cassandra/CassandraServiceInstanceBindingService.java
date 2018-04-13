@@ -34,6 +34,9 @@ public class CassandraServiceInstanceBindingService implements ServiceInstanceBi
 	@Value("${spring.data.cassandra.port}")
 	private int port;
 
+	@Value("${spring.data.cassandra.ssl}")
+	private boolean ssl;
+
 	@Value("${spring.data.cassandra.username}")
 	private String user;
 
@@ -48,7 +51,7 @@ public class CassandraServiceInstanceBindingService implements ServiceInstanceBi
 		this.grantRoleOnKeyspace(arg0.getServiceInstanceId(), arg0.getBindingId());
 		//Build credentials
 		CreateServiceInstanceAppBindingResponse createServiceInstanceAppBindingResponse = new CreateServiceInstanceAppBindingResponse();
-		Map<String, Object> credentials = Converter.buildCredentials(this.contactPoints, String.valueOf(port), arg0.getServiceInstanceId(), arg0.getBindingId(), passwordGenerated);
+		Map<String, Object> credentials = Converter.buildCredentials(this.contactPoints, String.valueOf(port), ssl, arg0.getServiceInstanceId(), arg0.getBindingId(), passwordGenerated);
 		return createServiceInstanceAppBindingResponse.withCredentials(credentials);
 
 	}
