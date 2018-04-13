@@ -15,6 +15,7 @@
           broker:
             user: cassandra-broker
             password: ((cassandra_broker_password))
+            truststore_password: ((cassandra_key_store_pass))
     stemcell: trusty
     vm_type: default
     networks: [ name: ((network_name)) ]

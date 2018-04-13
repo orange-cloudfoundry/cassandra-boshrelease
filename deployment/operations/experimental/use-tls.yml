@@ -2,17 +2,17 @@
 
 - path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/internode_encryption_mode
   type: replace
-  value: &internode_encryption_mode none
+  value: &internode_encryption_mode all
 
 - path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/client_encryption
   type: replace
   value: &client_encryption
-    enabled: false
+    enabled: true
     require_client_auth: false
 
 - path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/cert
   type: replace
-  value: ((cassandra_seeds_certificate))
+  value: ((cassandra_certificate))
 
 - path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/keystore_password
   type: replace
@@ -30,7 +30,7 @@
 
 - path: /instance_groups/name=cassandra-servers/jobs/name=cassandra/properties?/cert
   type: replace
-  value: ((cassandra_servers_certificate))
+  value: ((cassandra_certificate))
 
 - path: /instance_groups/name=cassandra-servers/jobs/name=cassandra/properties?/keystore_password
   type: replace
@@ -44,35 +44,23 @@
     name: cassandra_keystore_password
     type: password
 
-- path: /variables?/name=cassandraCA
+- path: /variables?/name=cassandra_ca
   type: replace
   value:
-    name: cassandraCA
+    name: cassandra_ca
     type: certificate
     options:
       is_ca: true
-      common_name: cassandraCA
+      common_name: cassandra_ca
 
-- path: /variables?/name=cassandra_seeds_certificate
+- path: /variables?/name=cassandra_certificate
   type: replace
   value:
-    name: cassandra_seeds_certificate
+    name: cassandra_certificate
     type: certificate
     options:
-      ca: cassandraCA
-      common_name: <%= seed.instance.address %>
-      alternative_names: 
-        - "*.cassandra-seeds.default.cassandra.bosh"
-      extended_key_usage: [ client_auth, server_auth ]
-
-- path: /variables?/name=cassandra_servers_certificate
-  type: replace
-  value:
-    name: cassandra_servers_certificate
-    type: certificate
-    options:
-      ca: cassandraCA
-      common_name: <%= cluster.instance.address %>
-      alternative_names: 
+      ca: cassandra_ca
+      common_name: "*.cassandra-seeds.default.cassandra.bosh"
+      alternative_names:
         - "*.cassandra-servers.default.cassandra.bosh"
       extended_key_usage: [ client_auth, server_auth ]
