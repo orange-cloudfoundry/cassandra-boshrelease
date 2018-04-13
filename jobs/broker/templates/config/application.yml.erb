@@ -2,7 +2,7 @@
 <% require "json" -%>
 
 logging:
-  level: DEBUG
+  level: <%= p('broker.log_level').to_json %>
 
 management:
   context-path: /admin

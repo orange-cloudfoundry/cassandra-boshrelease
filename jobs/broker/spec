@@ -33,6 +33,12 @@ properties:
       The Java heap size to use, knowing that both minimum and maximum heap
       size will be set to this value.
     default: 256M
+  broker.log_level:
+    description: |
+      Log level for the Java application. Can be ERROR, WARN, INFO, DEBUG, or
+      any other log level supported by LogBack.
+    default: WARN
+    example: DEBUG
   broker.truststore_password:
     description: |
       The password to use for the truststore.
