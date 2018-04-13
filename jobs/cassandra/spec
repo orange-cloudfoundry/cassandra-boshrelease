@@ -12,7 +12,7 @@ provides:
       - cassandra_password
       - native_transport_port
       - client_encryption.enabled
-      - validate_ssl_TF
+      - client_encryption.require_client_auth
       - cluster_name
 
 consumes:
@@ -23,6 +23,7 @@ consumes:
 
 templates:
   bin/pre-start.sh: bin/pre-start
+  bin/generate-keystores.sh: bin/generate-keystores.sh
   bpm.yml: config/bpm.yml
   bpm-prestart: bpm-prestart
   bin/drain: bin/drain
@@ -40,17 +41,10 @@ templates:
   config/logback.xml.erb: conf/logback.xml
   config/logback-tools.xml.erb: conf/logback-tools.xml
   config/commitlog_archiving.properties.erb: conf/commitlog_archiving.properties
-#  bin/generate_ssl_cert.sh: bin/generate_ssl_cert.sh
-  ssl2/cert: config/certs/node.crt
-  ssl2/cert_ca: config/certs/ca.crt
-  ssl2/cert_private_key: config/certs/node.key
-#  ssl2/ssl_env.ctl.erb: config/certs/ssl_env.ctl
-#  ssl2/gen_keystore_client.sh: config/certs/gen_keystore_client.sh
-#  ssl2/gen_ca_cert.conf: config/certs/gen_ca_cert.conf
+  ssl2/cert: tls/node.crt
+  ssl2/cert_ca: tls/ca.crt
+  ssl2/cert_private_key: tls/node.key
   config/cqlshrc.erb: root/.cassandra/cqlshrc
-  ssl3/ssl_env.ctl.erb: config/certs/ssl_env.ctl
-  ssl3/gen_keystore_client.sh: config/certs/gen_keystore_client.sh
-  bin/creer_pem_cli_serv.sh: bin/creer_pem_cli_serv.sh
   bin/post-start.sh: bin/post-start
   config/jmx_exporter.yml: conf/jmx_exporter.yml
   bin/nodetool: bin/nodetool
@@ -675,7 +669,7 @@ properties:
   client_encryption.require_client_auth:
     default: false
     description: |
-      Enables or disables certificate authentication.
+      Enables or disables client authentication via certificates.
   keystore_password:
     description: |
       Password for the keystore that is used to to store server and client

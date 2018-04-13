@@ -1033,9 +1033,9 @@ request_scheduler: <%= p("request_scheduler").to_json %>
 #
 server_encryption_options:
     internode_encryption: <%= p("internode_encryption_mode").to_json %>
-    keystore: <%= "/var/vcap/jobs/cassandra/config/certs/#{spec.ip}_cassandra.keystore".to_json %>
+    keystore: /var/vcap/jobs/cassandra/tls/cassandra_keystore.jks
     keystore_password: <%= p("keystore_password", "").to_json %>
-    truststore: <%= "/var/vcap/jobs/cassandra/config/certs/#{spec.ip}_cassandra.truststore".to_json %>
+    truststore: /var/vcap/jobs/cassandra/tls/cassandra_truststore.jks
     truststore_password: <%= p("keystore_password", "").to_json %>
     protocol: TLS
     # More advanced defaults below:
@@ -1043,7 +1043,7 @@ server_encryption_options:
     # algorithm: SunX509
     # store_type: JKS
     # cipher_suites: [TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA]
-    # require_client_auth: false
+    require_client_auth: true
     # require_endpoint_verification: false
 
 # enable or disable client/server encryption.
@@ -1051,12 +1051,12 @@ client_encryption_options:
     enabled: <%= p("client_encryption.enabled").to_json %>
     # If enabled and optional is set to true encrypted and unencrypted connections are handled.
     optional: false
-    keystore: <%= "/var/vcap/jobs/cassandra/config/certs/#{spec.ip}_cassandra.keystore".to_json %>
+    keystore: /var/vcap/jobs/cassandra/tls/cassandra_keystore.jks
     keystore_password: <%= p("keystore_password", "").to_json %>
 
     require_client_auth: <%= p("client_encryption.require_client_auth").to_json %>
     # Set trustore and truststore_password if require_client_auth is true
-    truststore: <%= "/var/vcap/jobs/cassandra/config/certs/#{spec.ip}_cassandra.truststore".to_json %>
+    truststore: /var/vcap/jobs/cassandra/tls/cassandra_truststore.jks
     truststore_password: <%= p("keystore_password", "").to_json %>
 
     # More advanced defaults below:
