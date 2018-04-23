@@ -15,9 +15,43 @@
 # limitations under the License.
 
 # Cassandra Node IP=Data Center:Rack
-<% (p("topology")).each do |topology| %>
-<%= topology %>
-<% end %>
+<%
+    def to_topology_line(instance, topology_map)
+        dc = "DC1"
+        rack = "RAC1"
+        if topology_map[instance.az] != nil
+            dc = topology_map[instance.az]['dc']
+            rack = topology_map[instance.az]['rack']
+        elsif topology_map['default'] != nil
+            dc = topology_map['default']['dc']
+            rack = topology_map['default']['rack']
+        end
+        return "#{instance.address}=#{dc}:#{rack}"
+    end
+
+    topology = []
+    if_p('bosh_to_cassandra_topology_mapping') do |topology_map|
+        link('seeds').instances.each do |instance|
+            topology << to_topology_line(instance, topology_map)
+        end
+        link('non_seeds').instances.each do |instance|
+            topology << to_topology_line(instance, topology_map)
+        end
+    end
+%>
+<% topology.each do |topology_line| -%>
+<%= topology_line %>
+<% end -%>
 
 # default for unknown nodes
-default=DC1:RAC1
+<%
+    dc = "DC1"
+    rack = "RAC1"
+    if_p('bosh_to_cassandra_topology_mapping') do |topology_map|
+        if topology_map['default'] != nil
+            dc = topology_map['default']['dc']
+            rack = topology_map['default']['rack']
+        end
+    end
+-%>
+default=<%= "#{dc}:#{rack}" %>

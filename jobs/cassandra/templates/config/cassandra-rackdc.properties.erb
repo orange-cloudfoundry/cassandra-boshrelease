@@ -16,8 +16,21 @@
 
 # These properties are used with GossipingPropertyFileSnitch and will
 # indicate the rack and dc for this node
-dc=DC1
-rack=RAC1
+<%
+    dc = "DC1"
+    rack = "RAC1"
+    if_p('bosh_to_cassandra_topology_mapping') do |topology_map|
+        if topology_map[spec.az] != nil
+            dc = topology_map[spec.az]['dc']
+            rack = topology_map[spec.az]['rack']
+        elsif topology_map['default'] != nil
+            dc = topology_map['default']['dc']
+            rack = topology_map['default']['rack']
+        end
+    end
+%>
+dc=<%= dc %>
+rack=<%= rack %>
 
 # Add a suffix to a datacenter name. Used by the Ec2Snitch and Ec2MultiRegionSnitch
 # to append a string to the EC2 region name.
