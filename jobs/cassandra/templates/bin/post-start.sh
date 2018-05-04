@@ -21,8 +21,6 @@ export CASSANDRA_CONF=$job_dir/conf
 export JAVA_HOME=/var/vcap/packages/openjdk
 export PATH=$PATH:$JAVA_HOME/bin:$CASSANDRA_BIN
 
-cass_pwd=<%= esc(p('cassandra_password')) %>
-
 
 function log_err() {
     echo "$(date +%F_%T):" "$@" >&2
@@ -47,26 +45,38 @@ log_err "INFO: reached Cassandra on '$cass_ip:$cass_port' after '$attempts' atte
 sleep 30
 
 
-log_err "INFO: setting first password"
-$CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
-    -e "alter role cassandra with password = '$cass_pwd' " -u cassandra -p cassandra
-failure=$?
-log_err "DEBUG: setting first password, exit status: '$failure'"
 
-if [[ "$failure" != 0 ]]; then
-    log_err "INFO: verifying that the current password is the desired password"
-    $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
-        -e "alter role cassandra with password = '$cass_pwd' "
-    failure2=$?
-    log_err "DEBUG: verifying current password, exit status: '$failure2'"
-    if [ "$failure2" != 0 ]; then
-        log_err "ERROR: the password for user 'cassandra' is inconsistent. Aborting."
-        exit 1
-    fi
-else
-    log_err "INFO: waiting 5 secs for the cassandra password to effectively be changed"
-    sleep 5
+password_file=/var/vcap/store/cassandra/cassandra.secret
+readonly password_file
+function store_password() {
+    local password=$1
+    printf "$password" | base64 > "$password_file"
+}
+
+if [ ! -e "$password_file" ]; then
+    store_password cassandra
 fi
+chown root:vcap "$password_file"
+chmod 600 "$password_file"
+cassandra_password=$(cat "$password_file" | base64 --decode)
+new_cassandra_password=<%= esc(p('cassandra_password')) %>
+
+log_err "INFO: setting password"
+$CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
+    -u cassandra -p "$cassandra_password" \
+    -e "alter role cassandra with password = '$new_cassandra_password'"
+failure=$?
+log_err "DEBUG: setting password, exit status: '$failure'"
+if [ "$failure" != 0 ]; then
+    log_err "ERROR: the password for user 'cassandra' is inconsistent. Aborting."
+    exit 1
+fi
+
+store_password "$new_cassandra_password"
+
+log_err "INFO: waiting 5 secs for the cassandra password to effectively be changed"
+sleep 5
+
 
 
 log_err "INFO: setting replication strategy for cassandra password"
