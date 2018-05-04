@@ -25,7 +25,7 @@ cass_pwd=<%= esc(p('cassandra_password')) %>
 
 
 function log_err() {
-	echo "$(date +%F_%T):" "$@" >&2
+    echo "$(date +%F_%T):" "$@" >&2
 }
 
 
@@ -37,7 +37,7 @@ while ! nc -z "$cass_ip" "$cass_port"; do
     attempts=$(($attempts + 1))
     if [[ $attempts -ge $max_attempts ]]; then
         log_err "ERROR: could not reach cassandra on IP '$cass_ip' and TCP port '$cass_port'" \
-			 "after '$max_attempts' attemps. Aborting."
+             "after '$max_attempts' attemps. Aborting."
         exit 1
     fi
     sleep 1
@@ -59,13 +59,13 @@ if [[ "$failure" != 0 ]]; then
         -e "alter role cassandra with password = '$cass_pwd' "
     failure2=$?
     log_err "DEBUG: verifying current password, exit status: '$failure2'"
-	if [ "$failure2" != 0 ]; then
-		log_err "ERROR: the password for user 'cassandra' is inconsistent. Aborting."
-		exit 1
-	fi
+    if [ "$failure2" != 0 ]; then
+        log_err "ERROR: the password for user 'cassandra' is inconsistent. Aborting."
+        exit 1
+    fi
 else
-	log_err "INFO: waiting 5 secs for the cassandra password to effectively be changed"
-	sleep 5
+    log_err "INFO: waiting 5 secs for the cassandra password to effectively be changed"
+    sleep 5
 fi
 
 
