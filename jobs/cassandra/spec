@@ -173,7 +173,8 @@ properties:
       as it is in the class path. For new clusters use the default
       partitioner.
 
-      Cassandra provides the following partitioners for backwards compatibility:
+      Cassandra provides the following partitioners for backwards
+      compatibility:
       - RandomPartitioner
       - ByteOrderedPartitioner (deprecated)
       - OrderPreservingPartitioner (deprecated)
@@ -348,8 +349,8 @@ properties:
       are rejected as invalid.
 
       If you're changing this parameter, you may want to adjust
-      'max_value_size_in_mb' accordingly. This should be positive and less than
-      2048.
+      'max_value_size_in_mb' accordingly. This should be positive and less
+      than 2048.
     default: 256
   start_rpc:
     description: |

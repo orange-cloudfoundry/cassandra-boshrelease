@@ -1,6 +1,6 @@
 # Base deployment
 
-The `cassandra.yml` base manifests describes a classical deployment with 3
+The `cassandra.yml` base manifest describes a classical deployment with 3
 seeds and optionally more servers. It provides two separate instance groups
 for this, named `cassandra-seeds` and `cassandra-servers`.
 
