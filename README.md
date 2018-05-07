@@ -11,8 +11,9 @@ operations files. They cover:
 - Cloud Foundry integration, with [Service Broker](https://www.openservicebrokerapi.org)
   deployment, sanity tests & registration.
 
-- Integration with the [SHIELD](https://shieldproject.io/) backup solution (v7
-  and v8).
+- Integration with the [SHIELD](https://shieldproject.io/) backup solution
+  ([v7](https://github.com/gstackio/gk-shield-boshrelease/releases/tag/v7.0.4)
+  and [v8](https://github.com/starkandwayne/shield-boshrelease/releases/tag/v8.0.8)).
 
 - Bosh-Lite support.
 
