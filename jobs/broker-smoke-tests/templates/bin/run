@@ -1,91 +1,114 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+<%
+  require "shellwords"
+
+  def esc(x)
+      Shellwords.shellescape(x)
+  end
+%>
 
 set -e # exit immediately if a simple command exits with a non-zero status
 set -u # report the usage of uninitialized variables
 
 # Setup env vars and folders for the webapp_ctl script
-source /var/vcap/jobs/broker-smoke-tests/helpers/ctl_setup.sh 'broker-smoke-tests'
+source /var/vcap/jobs/broker-smoke-tests/helpers/ctl_setup.sh broker-smoke-tests
 
 # Home directory
-export CF_HOME=/var/vcap/data/cf_home
-mkdir -p $CF_HOME
-cd $CF_HOME
-echo '$PWD' $PWD
+export CF_HOME=/var/vcap/data/broker-smoke-tests
+mkdir -p "$CF_HOME"
+cd "$CF_HOME"
+echo "Current Working Directory: '$PWD'"
 
 # Get parameters from spec
-CF_API_URL='<%= p("cf.api.url") %>'
-CF_ADMIN_USERNAME='<%= p("cf.admin.username") %>'
-CF_ADMIN_PASSWORD='<%= p("cf.admin.password") %>'
-CF_SKIP_SSL_VALIDATION='<%= p("cf.skip.ssl.validation") %>'
-CF_ORG='<%= p("cf.org") %>'
-CF_SPACE='<%= p("cf.space") %>'
+CF_API_URL=<%= esc(p("cf.api.url")) %>
+CF_ADMIN_USERNAME=<%= esc(p("cf.admin.username")) %>
+CF_ADMIN_PASSWORD=<%= esc(p("cf.admin.password")) %>
+CF_SKIP_SSL_VALIDATION=<%= esc(p("cf.skip.ssl.validation")) %>
+CF_ORG=<%= esc(p("cf.org")) %>
+CF_SPACE=<%= esc(p("cf.space")) %>
 CF_CASSANDRA_APPNAME=cassandra-example-app
-CF_CASSANDRA_APPDOMAIN='<%= p("cf.cassandra.appdomain") %>'
-CF_CASSANDRA_SERVICENAME='<%= p("cf.cassandra.servicename") %>'
-CF_CASSANDRA_SERVICEPLAN='<%= p("cf.cassandra.serviceplan") %>'
-CF_CASSANDRA_SERVICEINSTANCENAME='<%= p("cf.cassandra.serviceinstancename") %>'
+CF_CASSANDRA_APPDOMAIN=<%= esc(p("cf.cassandra.appdomain")) %>
+CF_CASSANDRA_SERVICENAME=<%= esc(p("cf.cassandra.servicename")) %>
+CF_CASSANDRA_SERVICEPLAN=<%= esc(p("cf.cassandra.serviceplan")) %>
+CF_CASSANDRA_SERVICEINSTANCENAME=<%= esc(p("cf.cassandra.serviceinstancename")) %>
 echo 'End Get parameters'
 
 # Copy cf-cassandra-example-app to $CF_HOME
-cp -R /var/vcap/packages/cf-cassandra-example-app $CF_HOME/.
+cp -R /var/vcap/packages/cf-cassandra-example-app "$CF_HOME/"
 cd $CF_HOME/cf-cassandra-example-app
 echo '$PWD' $PWD
 echo 'End Copy'
 
 # Define CF API end point
-if [[ ${CF_SKIP_SSL_VALIDATION} == "true" ]]; then
-    cf api ${CF_API_URL} --skip-ssl-validation
-else
-    cf api ${CF_API_URL}
+ssl_validation_arg=
+if [[ $CF_SKIP_SSL_VALIDATION == "true" ]]; then
+	ssl_validation_arg=--skip-ssl-validation
 fi
+set -x
+cf api "$CF_API_URL" $ssl_validation_arg
+set +x
 echo 'End api'
 
 # Log to CF
-cf auth ${CF_ADMIN_USERNAME} ${CF_ADMIN_PASSWORD}
+cf auth "$CF_ADMIN_USERNAME" "$CF_ADMIN_PASSWORD"
 echo 'End auth'
 
 # Target to org and space
-cf target -o ${CF_ORG} -s ${CF_SPACE}
+set -x
+cf target -o "$CF_ORG" -s "$CF_SPACE"
+set +x
 echo 'End target org and space'
 
 # Push cassandra-example-app
-cf push
-echo 'End push'
+set -x
+cf push --no-start
+set +x
+echo 'End push no start'
 
 # Provision service
-cf create-service ${CF_CASSANDRA_SERVICENAME} ${CF_CASSANDRA_SERVICEPLAN} ${CF_CASSANDRA_SERVICEINSTANCENAME}
+set -x
+cf create-service "$CF_CASSANDRA_SERVICENAME" "$CF_CASSANDRA_SERVICEPLAN" "$CF_CASSANDRA_SERVICEINSTANCENAME"
+set +x
 echo 'End create-service'
 
 # Bind service
-cf bind-service ${CF_CASSANDRA_APPNAME} ${CF_CASSANDRA_SERVICEINSTANCENAME}
+set -x
+cf bind-service "$CF_CASSANDRA_APPNAME" "$CF_CASSANDRA_SERVICEINSTANCENAME"
+set +x
 echo 'End bind-service'
 
 # Restage cassandra-example-app
-cf restage ${CF_CASSANDRA_APPNAME}
-echo 'End restage'
+set -x
+cf start "$CF_CASSANDRA_APPNAME"
+set +x
+echo 'End start'
 
 # Curl cassandra-example-app (POST)
-URL="https://"$CF_CASSANDRA_APPNAME"."$CF_CASSANDRA_APPDOMAIN"/test"
+URL="https://${CF_CASSANDRA_APPNAME}.${CF_CASSANDRA_APPDOMAIN}/test"
 
 # First POST (create table)
-curlResponse="`curl -k -v -X POST $URL 2>&1`"
-flagHttp=`echo "${curlResponse}" | grep -E "HTTP/1.1 200 OK"`
-if [ "${flagHttp}" = "" ] ; then
+set -x
+curl_response=$(curl -k -v -X POST "$URL" 2>&1)
+set +x
+response_ok=$(echo "$curl_response" | grep -E "HTTP/1.1 200 OK")
+if [ -z "$response_ok" ] ; then
   exit 1
 else
-  echo "End POST"
+  echo "End POST data"
 fi
 
 # Second DELETE (delete table)
-curlResponse="`curl -k -v -X DELETE $URL 2>&1`"
-flagHttp=`echo "${curlResponse}" | grep -E "HTTP/1.1 200 OK"`
-if [ "${flagHttp}" = "" ] ; then
+set -x
+curl_response=$(curl -k -v -X DELETE "$URL" 2>&1)
+set +x
+response_ok=$(echo "$curl_response" | grep -E "HTTP/1.1 200 OK")
+if [ -z "$response_ok" ] ; then
   exit 1
 else
-  echo "End DELETE"
+  echo "End DELETE data"
 fi
 
 # Exit
-EXITSTATUS=0
-echo 'Errand broker-smoke-tests is complete; exit status $EXITSTATUS'
-exit $EXITSTATUS
+echo "Cassandra service broker smoke-tests are complete and SUCCESSFUL."
+exit 0
