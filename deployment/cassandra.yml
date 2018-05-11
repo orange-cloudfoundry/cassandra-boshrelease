@@ -1,5 +1,5 @@
 ---
-name: cassandra
+name: &cassandra_deployment_name cassandra
 
 instance_groups:
   - name: cassandra-seeds
@@ -14,21 +14,12 @@ instance_groups:
           seeds: { from: *cassandra_seeds_link }
           non_seeds: { from: *cassandra_non_seeds_link }
         properties: &cassandra_properties
-          cluster_name: &cassandra_cluster_name cluster
-          num_tokens: 256
-          internode_encryption_mode: none
-          client_encryption:
-            enabled: false
-            require_client_auth: false
+          cluster_name: *cassandra_deployment_name
+          cassandra_password: ((cassandra_admin_password))
+          # Notice: these two properties 'max_heap_size' and 'heap_newsize'
+          # have to be set in pair
           max_heap_size: 6G
           heap_newsize: 800M
-          cassandra_password: ((cassandra_admin_password))
-          validate_ssl_TF: false
-          cert:
-            ca: ((cassandra_certificate_seeds))
-            private_key: ((cassandra_certificate_seeds.private_key))
-            certificate: ((cassandra_certificate_seeds.certificate))
-          keystore_password: ((cassandra_key_store_pass))
           bosh_to_cassandra_topology_mapping:
             z1:      { dc: DC1, rack: RAC1 }
             z2:      { dc: DC1, rack: RAC2 }
@@ -36,7 +27,7 @@ instance_groups:
             default: { dc: DC1, rack: RAC3 }
     stemcell: *trusty_stemcell
     vm_type: &cassandra_vm_type default
-    persistent_disk_type: &cassandra_persistent_disk_type 5GB
+    persistent_disk_type: &cassandra_persistent_disk_type default
     env:
       persistent_disk_fs: xfs
       bosh: { swap_size: 0 }
@@ -65,40 +56,18 @@ instance_groups:
 variables:
   - name: cassandra_admin_password
     type: password
-  - name: /internalCA
-    type: certificate
-    options:
-      is_ca: true
-      common_name: internalCA
-  - name: cassandra_certificate_seeds
-    type: certificate
-    options:
-      ca: /internalCA
-      common_name: <%= seed.instance.address %>
-      alternative_names: 
-        - "*.cassandra-seeds.default.cassandra.bosh"
-      extended_key_usage: [ client_auth, server_auth ]
-  - name: cassandra_certificate_servers
-    type: certificate
-    options:
-      ca: /internalCA
-      common_name: <%= cluster.instance.address %>
-      alternative_names: 
-        - "*.cassandra-servers.default.cassandra.bosh"
-      extended_key_usage: [ client_auth, server_auth ]
-  - name: cassandra_key_store_pass  
-    type: password
 
 
 update:
-  serial: true # instance groups to be deployed sequentially.
+  # We don't support Cassandra instance groups to be deployed in parallel.
+  # They must be deployed sequentially.
+  serial: true
 
   canaries: 1
   canary_watch_time: 30000-240000
 
-  # We don't support values >= 2 for 'max_in_flight'. Indeed there can
-  # be a race condition in post-start when 2 repair-table are executed
-  # in parallel.
+  # We don't support values > 1 for 'max_in_flight'. Indeed there can be a
+  # race condition in post-start when 2 repair-table are executed in parallel.
   max_in_flight: 1
   update_watch_time: 30000-240000
 
