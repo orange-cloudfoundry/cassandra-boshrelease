@@ -42,8 +42,8 @@ public class CatalogConfig {
 		sdMetadata.put("imageUrl", "http://cassandra.apache.org/img/cassandra_logo.png");
 		sdMetadata.put("longDescription", "cassandra Service");
 		sdMetadata.put("providerDisplayName", "Orange");
-		sdMetadata.put("documentationUrl", "https://github.com/orange-cloudfoundry/cassandra-cf-service-boshrelease\n");
-		sdMetadata.put("supportUrl", "https://github.com/orange-cloudfoundry/cassandra-cf-service-boshrelease\n");
+		sdMetadata.put("documentationUrl", "https://github.com/orange-cloudfoundry/cassandra-boshrelease\n");
+		sdMetadata.put("supportUrl", "https://github.com/orange-cloudfoundry/cassandra-boshrelease\n");
 		return sdMetadata;
 	}
 
