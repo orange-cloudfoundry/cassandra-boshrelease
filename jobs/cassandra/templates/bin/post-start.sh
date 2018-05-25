@@ -58,13 +58,13 @@ if [ ! -e "$password_file" ]; then
 fi
 chown root:vcap "$password_file"
 chmod 600 "$password_file"
-cassandra_password=$(cat "$password_file" | base64 --decode)
-new_cassandra_password=<%= esc(p('cassandra_password')) %>
+current_password=$(cat "$password_file" | base64 --decode)
+new_password=<%= esc(p('cassandra_password')) %>
 
 log_err "INFO: setting password"
 $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
-    -u cassandra -p "$cassandra_password" \
-    -e "alter role cassandra with password = '$new_cassandra_password'"
+    -u cassandra -p "$current_password" \
+    -e "alter role cassandra with password = '$new_password'"
 failure=$?
 log_err "DEBUG: setting password, exit status: '$failure'"
 if [ "$failure" != 0 ]; then
@@ -72,7 +72,7 @@ if [ "$failure" != 0 ]; then
     exit 1
 fi
 
-store_password "$new_cassandra_password"
+store_password "$new_password"
 
 log_err "INFO: waiting 5 secs for the cassandra password to effectively be changed"
 sleep 5
