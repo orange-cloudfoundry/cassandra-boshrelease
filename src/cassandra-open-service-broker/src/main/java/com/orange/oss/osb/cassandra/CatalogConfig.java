@@ -42,11 +42,11 @@ public class CatalogConfig {
 		sdMetadata.put("imageUrl", "http://cassandra.apache.org/img/cassandra_logo.png");
 		sdMetadata.put("longDescription", "cassandra Service");
 		sdMetadata.put("providerDisplayName", "Orange");
-		sdMetadata.put("documentationUrl", "https://github.com/orange-cloudfoundry/cassandra-cf-service-boshrelease\n");
-		sdMetadata.put("supportUrl", "https://github.com/orange-cloudfoundry/cassandra-cf-service-boshrelease\n");
+		sdMetadata.put("documentationUrl", "https://github.com/orange-cloudfoundry/cassandra-boshrelease\n");
+		sdMetadata.put("supportUrl", "https://github.com/orange-cloudfoundry/cassandra-boshrelease\n");
 		return sdMetadata;
 	}
-	
+
 	private Map<String,Object> getPlanMetadata() {
 		Map<String,Object> planMetadata = new HashMap<>();
 		planMetadata.put("costs", getCosts());
@@ -56,21 +56,21 @@ public class CatalogConfig {
 
 	private List<Map<String,Object>> getCosts() {
 		Map<String,Object> costsMap = new HashMap<>();
-		
+
 		Map<String,Object> amount = new HashMap<>();
 		amount.put("usd", 0.0);
-	
+
 		costsMap.put("amount", amount);
 		costsMap.put("unit", "MONTHLY");
-		
+
 		return Collections.singletonList(costsMap);
 	}
-	
+
 	private List<String> getBullets() {
-		return Arrays.asList("Shared cassandra server", 
-				"100 MB Storage (not enforced)", 
+		return Arrays.asList("Shared cassandra server",
+				"100 MB Storage (not enforced)",
 				"40 concurrent connections (not enforced)");
 	}
-	
+
 
 }

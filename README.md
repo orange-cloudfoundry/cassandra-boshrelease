@@ -24,7 +24,7 @@ Provided that you have a properly targeted Bosh director, here is how you
 would deploy a Cassandra cluster:
 
 ```bash
-git clone https://github.com/orange-cloudfoundry/cassandra-cf-service-boshrelease.git cassandra-boshrelease
+git clone https://github.com/orange-cloudfoundry/cassandra-boshrelease.git
 cd cassandra-boshrelease
 
 bosh create-release

@@ -1,7 +1,7 @@
 ---
 final_name: cassandra
 blobstore:
-  provider: s3 
+  provider: s3
   options:
-    bucket_name: orange-cassandra-cf-service-boshrelease 
+    bucket_name: orange-cassandra-cf-service-boshrelease
 
