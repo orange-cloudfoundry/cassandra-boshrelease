@@ -692,6 +692,44 @@ properties:
         -----BEGIN RSA PRIVATE KEY-----
         ...
         -----END RSA PRIVATE KEY-----
+  trusted_ca_certs:
+    description: |
+      The overriding list of CA (Certificate Authority) certificates for the
+      Cassandra node to trust.
+
+      When this list is empty, a one-element list is built in order to at
+      least trust the CA of the node certificate, as obtained with the
+      'cert.ca' property. When this list is not empty, it MUST specify the CA
+      of the node certificate.
+
+      Having such a list is especially useful when:
+
+      - Interacting with Cassandra nodes that are not part of the same
+        deployment, not managed by the same BOSH server, or even not managed
+        by BOSH at all. In this case any other CA certificate can be added
+        here.
+
+      - Rotating certificates, using a new certificate that is signed by a new
+        Certificate Authority.
+
+      The exact certificate rotation process consists in:
+
+      1. Adding new CA certificate to this list, and re-deploy.
+
+      2. Rotate server certificates, changing the 'cert' property and re-
+         deploying. During this step, both old and new CA certificates are
+         trusted.
+
+      3. Remove old CA certificates from this list, and re-deploy.
+
+      WARNING: this is just a list of plain (public) certificates, with no
+      private keys. This is NOT a list of CredHub structures with the usual
+      three properties (i.e. ".ca", ".certificate" and ".private_key").
+    default: []
+    example:
+      - ((current_certificate.ca))
+      - ((future_certificate.ca))
+      - ((external_ca_cert)) # no private key, no structure.
 
   internode_compression:
     description: |

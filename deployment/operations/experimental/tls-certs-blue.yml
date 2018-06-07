@@ -1,0 +1,32 @@
+---
+
+- path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/cert
+  type: replace
+  value: ((cassandra_certificate_blue))
+
+- path: /instance_groups/name=cassandra-servers/jobs/name=cassandra/properties?/cert
+  type: replace
+  value: ((cassandra_certificate_blue))
+
+
+
+- path: /variables?/name=cassandra_ca_blue
+  type: replace
+  value:
+    name: cassandra_ca_blue
+    type: certificate
+    options:
+      is_ca: true
+      common_name: cassandra_ca_blue
+
+- path: /variables?/name=cassandra_certificate_blue
+  type: replace
+  value:
+    name: cassandra_certificate_blue
+    type: certificate
+    options:
+      ca: cassandra_ca_blue
+      common_name: "*.cassandra-seeds.((network_name)).((deployment_name)).bosh"
+      alternative_names:
+        - "*.cassandra-servers.((network_name)).((deployment_name)).bosh"
+      extended_key_usage: [ client_auth, server_auth ]

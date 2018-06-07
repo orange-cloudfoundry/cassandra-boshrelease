@@ -74,6 +74,26 @@ import_in_keystore_ca_and_cert_and_key \
 
 restrict_access_to "$CERTS_DIR/cassandra_keystore.jks"
 
+<%
+    if_p('trusted_ca_certs') do |trusted_ca_certs|
+        if trusted_ca_certs.length == 0
+            # We at least import the node certificate CA
+%>
 import_in_truststore_cert_as_alias "$CERTS_DIR/ca.crt" "cassandra-ca"
+<%
+        else
+            trusted_ca_certs.each_index do |idx|
+%>
+# import trusted certificate #<%= idx %>
+ca_cert_file=$CERTS_DIR/ca.<%= esc(idx) %>.crt
+cat > "$ca_cert_file" <<END_OF_CERTIFICATE
+<%= trusted_ca_certs[idx] %>
+END_OF_CERTIFICATE
+import_in_truststore_cert_as_alias "$ca_cert_file" cassandra-ca-<%= esc(idx) %>
+<%
+            end
+        end
+    end
+-%>
 
 restrict_access_to "$CERTS_DIR/cassandra_truststore.jks"

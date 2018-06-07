@@ -10,10 +10,6 @@
     enabled: true
     require_client_auth: false
 
-- path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/cert
-  type: replace
-  value: ((cassandra_certificate))
-
 - path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/keystore_password
   type: replace
   value: ((cassandra_keystore_password))
@@ -28,10 +24,6 @@
   type: replace
   value: *client_encryption
 
-- path: /instance_groups/name=cassandra-servers/jobs/name=cassandra/properties?/cert
-  type: replace
-  value: ((cassandra_certificate))
-
 - path: /instance_groups/name=cassandra-servers/jobs/name=cassandra/properties?/keystore_password
   type: replace
   value: ((cassandra_keystore_password))
@@ -43,24 +35,3 @@
   value:
     name: cassandra_keystore_password
     type: password
-
-- path: /variables?/name=cassandra_ca
-  type: replace
-  value:
-    name: cassandra_ca
-    type: certificate
-    options:
-      is_ca: true
-      common_name: cassandra_ca
-
-- path: /variables?/name=cassandra_certificate
-  type: replace
-  value:
-    name: cassandra_certificate
-    type: certificate
-    options:
-      ca: cassandra_ca
-      common_name: "*.cassandra-seeds.default.cassandra.bosh"
-      alternative_names:
-        - "*.cassandra-servers.default.cassandra.bosh"
-      extended_key_usage: [ client_auth, server_auth ]
