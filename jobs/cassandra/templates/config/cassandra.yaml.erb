@@ -1034,9 +1034,9 @@ request_scheduler: <%= p("request_scheduler").to_json %>
 server_encryption_options:
     internode_encryption: <%= p("internode_encryption_mode").to_json %>
     keystore: <%= "/var/vcap/jobs/cassandra/config/certs/#{spec.ip}_cassandra.keystore".to_json %>
-    keystore_password: <%= p("keystore_password").to_json %>
+    keystore_password: <%= p("keystore_password", "").to_json %>
     truststore: <%= "/var/vcap/jobs/cassandra/config/certs/#{spec.ip}_cassandra.truststore".to_json %>
-    truststore_password: <%= p("keystore_password").to_json %>
+    truststore_password: <%= p("keystore_password", "").to_json %>
     protocol: TLS
     # More advanced defaults below:
     # protocol: TLS
@@ -1052,12 +1052,12 @@ client_encryption_options:
     # If enabled and optional is set to true encrypted and unencrypted connections are handled.
     optional: false
     keystore: <%= "/var/vcap/jobs/cassandra/config/certs/#{spec.ip}_cassandra.keystore".to_json %>
-    keystore_password: <%= p("keystore_password").to_json %>
+    keystore_password: <%= p("keystore_password", "").to_json %>
 
     require_client_auth: <%= p("client_encryption.require_client_auth").to_json %>
     # Set trustore and truststore_password if require_client_auth is true
     truststore: <%= "/var/vcap/jobs/cassandra/config/certs/#{spec.ip}_cassandra.truststore".to_json %>
-    truststore_password: <%= p("keystore_password").to_json %>
+    truststore_password: <%= p("keystore_password", "").to_json %>
 
     # More advanced defaults below:
     protocol: TLS
