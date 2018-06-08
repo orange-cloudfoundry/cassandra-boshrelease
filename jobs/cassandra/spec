@@ -46,7 +46,7 @@ templates:
   ssl2/cert_ca: tls/ca.crt
   ssl2/cert_private_key: tls/node.key
   config/cqlshrc.erb: root/.cassandra/cqlshrc
-  bin/post-start.sh: bin/post-start
+  bin/post-deploy.sh: bin/post-deploy
   config/jmx_exporter.yml: conf/jmx_exporter.yml
   bin/nodetool: bin/nodetool
   bin/sstableloader: bin/sstableloader

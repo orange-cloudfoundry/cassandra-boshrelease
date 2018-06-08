@@ -26,7 +26,7 @@ chmod 600 /var/vcap/jobs/cassandra/root/.cassandra/cqlshrc
 
 chmod 600 /var/vcap/jobs/cassandra/tls/node.key
 
-chmod 700 /var/vcap/jobs/cassandra/bin/post-start
+chmod 700 /var/vcap/jobs/cassandra/bin/post-deploy
 chmod 700 /var/vcap/jobs/cassandra/bin/generate-keystores.sh
 
 
