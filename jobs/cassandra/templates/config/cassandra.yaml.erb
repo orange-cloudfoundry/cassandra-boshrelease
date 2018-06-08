@@ -1037,9 +1037,8 @@ server_encryption_options:
     keystore_password: <%= p("keystore_password", "").to_json %>
     truststore: /var/vcap/jobs/cassandra/tls/cassandra_truststore.jks
     truststore_password: <%= p("keystore_password", "").to_json %>
-    protocol: TLS
     # More advanced defaults below:
-    # protocol: TLS
+    protocol: TLS
     # algorithm: SunX509
     # store_type: JKS
     # cipher_suites: [TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA]
