@@ -1,19 +1,27 @@
 # Base deployment
 
-The `cassandra.yml` base manifest describes a classical deployment with 3
-seeds and optionally more servers. It provides two separate instance groups
-for this, named `cassandra-seeds` and `cassandra-servers`.
+The base deployment suggested here is made of the `cassandra.yml` base
+manifest and the `default-vars.yml` default variables.
 
-Cassandra seeds are plain Cassandra nodes with a special role in the cluster:
-They are meant to “explain” the cluster topology (how data is spread accross
-nodes) to any new node that enters the cluster. From the perspective of a BOSH
-Release maintainer, the only particularity they have is to be listed in the
-`seed_provider:` section of the `cassandra.yaml` configuration file.
+This is a classical deployment with 3 seeds and optionally more servers. It
+provides two separate instance groups for this, named `cassandra-seeds` and
+`cassandra-servers`.
 
-Please note that you cannot set a number of seeds that is less than 3. This is
-due to the replication factor for the `system` keyspace is currently hardwired
-to `3`. As Cassandra seeds are mandatory, this implies that this Bosh Release
-cannot deploy clusters with less than 3 Cassandra nodes.
+Cassandra “seeds” are plain Cassandra nodes with a special role in the
+cluster: They are meant to “explain” the cluster topology (how data is spread
+accross nodes) to any new node that enters the cluster. From the perspective
+of a BOSH Release maintainer, the only particularity they have is to be listed
+in the `seed_provider:` section of the `cassandra.yaml` configuration file.
+
+When scaling out the cluster, you should add more instances (default is 0) of
+the `cassandra-servers` instance group.
+
+The default of 3 seeds is reasonable because less becomes risky to handle
+situations when performing rolling upgrades or in case of failure.
+
+By default, the `system_auth` keyspace (holding users and keyspaces) is
+replicated as many times as there are cassandra seeds. So when you deploy
+seeds only, you get one replication of it on all nodes.
 
 
 # Operations files

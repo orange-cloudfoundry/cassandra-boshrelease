@@ -24,7 +24,7 @@
             cassandra_password: ((cassandra_admin_password))
             cassandra_keyspace: system
             cassandra_bindir: /var/vcap/jobs/cassandra/bin
-            cassandra_datadir: /var/vcap/store/cassandra/cluster/data
+            cassandra_datadir: /var/vcap/store/cassandra/((deployment_name))/data
       jobs:
         example-sys-ks_hourly2fs:
           name: (deployment)/(name)-(index)/system/hourly2fs

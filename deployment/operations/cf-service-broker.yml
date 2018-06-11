@@ -17,7 +17,7 @@
             password: ((cassandra_broker_password))
     stemcell: trusty
     vm_type: default
-    networks: [ name: default ]
+    networks: [ name: ((network_name)) ]
 
 - path: /instance_groups/-
   type: replace
@@ -48,7 +48,7 @@
               serviceinstancename: cassandra-instance
     stemcell: trusty
     vm_type: default
-    networks: [ name: default ]
+    networks: [ name: ((network_name)) ]
 
 
 - path: /variables/-
@@ -80,7 +80,7 @@
             # Note: the cassandra broker doesn't provide this link yet, so we revert
             # back to manual linking
             instances:
-              - 0.cassandra-brokers.default.cassandra.bosh # Provided by a Bosh DNS alias
+              - 0.cassandra-brokers.((network_name)).((deployment_name)).bosh # Provided by a Bosh DNS alias
             properties:
               external_host: ((cassandra_domain))
               port: 8080
@@ -96,7 +96,7 @@
             skip_ssl_validation: ((cf_skip_ssl_validation)) # not provided by the 'cf-admin-user' link
     stemcell: trusty
     vm_type: minimal
-    networks: [ name: default ]
+    networks: [ name: ((network_name)) ]
 
 - path: /instance_groups/-
   type: replace
@@ -112,4 +112,4 @@
         properties: *broker_registrar_additional_properties
     stemcell: trusty
     vm_type: minimal
-    networks: [ name: default ]
+    networks: [ name: ((network_name)) ]
