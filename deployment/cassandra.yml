@@ -1,5 +1,5 @@
 ---
-name: &cassandra_deployment_name cassandra
+name: ((deployment_name))
 
 instance_groups:
   - name: cassandra-seeds
@@ -14,7 +14,7 @@ instance_groups:
           seeds: { from: *cassandra_seeds_link }
           non_seeds: { from: *cassandra_non_seeds_link }
         properties: &cassandra_properties
-          cluster_name: *cassandra_deployment_name
+          cluster_name: ((deployment_name))
           cassandra_password: ((cassandra_admin_password))
           # Notice: these two properties 'max_heap_size' and 'heap_newsize'
           # have to be set in pair
@@ -31,7 +31,7 @@ instance_groups:
     env:
       persistent_disk_fs: xfs
       bosh: { swap_size: 0 }
-    networks: [ name: default ]
+    networks: [ name: ((network_name)) ]
 
   - name: cassandra-servers
     instances: 0
@@ -51,7 +51,7 @@ instance_groups:
     env:
       persistent_disk_fs: xfs
       bosh: { swap_size: 0 }
-    networks: [ name: default ]
+    networks: [ name: ((network_name)) ]
 
 variables:
   - name: cassandra_admin_password
