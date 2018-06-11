@@ -689,11 +689,11 @@ properties:
         -----BEGIN CERTIFICATE-----
         ...
         -----END CERTIFICATE-----
-      cetificate: |
+      certificate: |
         -----BEGIN CERTIFICATE-----
         ...
         -----END CERTIFICATE-----
-      provate_key: |
+      private_key: |
         -----BEGIN RSA PRIVATE KEY-----
         ...
         -----END RSA PRIVATE KEY-----
