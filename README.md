@@ -13,14 +13,14 @@ operations files. They cover:
 
 - Integration with the [SHIELD](https://shieldproject.io/) backup solution
   ([v7](https://github.com/gstackio/gk-shield-boshrelease/releases/tag/v7.0.4)
-  and [v8](https://github.com/starkandwayne/shield-boshrelease/releases/tag/v8.0.8)).
+  and [v8](https://github.com/starkandwayne/shield-boshrelease/releases/tag/v8.0.9)).
 
-- Bosh-Lite support.
+- BOSH-Lite support.
 
 
 ## Usage
 
-Provided that you have a properly targeted Bosh director, here is how you
+Provided that you have a properly targeted BOSH director, here is how you
 would deploy a Cassandra cluster:
 
 ```bash
@@ -74,7 +74,7 @@ provide twice the persistent storage required for your data.
 
 ## Cassandra admin tools
 
-These tools can be installed on Cassandra nodes by an optional Bosh Job, that
+These tools can be installed on Cassandra nodes by an optional BOSH Job, that
 you can opt in with the `admin-tools.yml` operations file.
 
 ### Running Nodetool/CQL-sh/Cassandra-Stress

@@ -20,8 +20,9 @@ cannot deploy clusters with less than 3 Cassandra nodes.
 
 ## `cf-service-broker.yml`
 
-This operations file add a `cassandra-brokers` instance group, a`broker-smoke-tests`
-errand job, and both `broker-registrar` and `broker-deregistrar` errand jobs.
+This operations file add a `cassandra-brokers` instance group, a
+`broker-smoke-tests` errand job, and both `broker-registrar` and
+`broker-deregistrar` errand jobs.
 
 The Cassandra Service Broker implements the `cf create-service` verb as a
 keyspace creation and the `cf bind-service` verb as a user creation.
@@ -32,29 +33,43 @@ the created keyspaces and users. Keyspaces typically start with the `ks`
 prefix. The Service Brokers only relies to the keyspaces and users in
 Cassandra that follow its naming pattern.
 
+### Broker smoke tests
+
 The Service Broker comes with a `broker-smoke-tests` errand job that
 implements a full round-trip around pushing an app in Cloud Foundry, binding a
 Cassandra service to it, writing some data, and checking it can be read back.
+
+### Broker registration and purge
 
 The `broker-registrar` and `broker-deregistrar` errand jobs are provided by
 the standard
 [`broker-registrar` BOSH release](https://github.com/cloudfoundry-community/broker-registrar-boshrelease),
 as provided by the Cloud Foundry community. Then you can register your broker
-in CF with `bosh run-errand broker-registrar`.
+
+in CF with `bosh run-errand broker-registrar`. The deployment option retained
+here is to have those two errand jobs be deployed each one on its own VM. This
+is recommended as a security perspective because the confguration files that
+are rendered for running those errands typically contain admin passwords, so
+it's best deleting them after their errand has run. From a performance
+perspective though, you might be interedted in collocating those jobs on a
+single service broker instance (this implies you have only one), so that you
+don't pay the cost of creating a new VM when running them.
 
 If you are not familiar with the semantics of this `broker-registrar` BOSH
-release, you just need to be warned that the `broker-deregistrar` job actually
-purges all services offerings from Cloud Foundry, which can be pretty
-destructive for your Clooud Foundry users. This is supposed to be used with
-great caution.
+release, there's one important thing to know. Be aware that the
+`broker-deregistrar` job actually purges all services offerings from Cloud
+Foundry, which can be pretty destructive for your Clooud Foundry users. This
+is supposed to be used with great caution.
+
+### Requirements on your Cloud Foundry deployment
 
 With the `cf-service-broker.yml` operations file, we assumes that you are
 using the *de facto* standard `cf-admin-user` job from the
 [`collection-of-pullrequests` BOSH Release](https://github.com/cloudfoundry-community/collection-of-pullrequests-boshrelease),
-(as provided by the Cloud Foundry community), wich is pretty useful at
-providing a BOSH 2.0 Link that transmits Cloud Foundry settings to the Broker
-(De-)Registrar errand jobs. If you don't use it, then you can provide values
-for this Bosh Link manually. See the [Manual Linking](https://bosh.io/docs/links-manual.html)
+(as provided by the Cloud Foundry community), which is pretty useful at
+providing a BOSH 2.0 Link that lets the Broker (De-)Registrar errand jobs know
+the exact Cloud Foundry settings. If you don't use it, then you can provide
+values for this Bosh Link manually. See the [Manual Linking](https://bosh.io/docs/links-manual/)
 section of the Bosh documentation for details about how to do this.
 
 

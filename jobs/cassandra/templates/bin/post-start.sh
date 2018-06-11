@@ -64,7 +64,7 @@ new_password=<%= esc(p('cassandra_password')) %>
 log_err "INFO: setting password"
 $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
     -u cassandra -p "$current_password" \
-    -e "alter role cassandra with password = '$new_password'"
+    -e "ALTER ROLE cassandra WITH password = '$new_password'"
 failure=$?
 log_err "DEBUG: setting password, exit status: '$failure'"
 if [ "$failure" != 0 ]; then
@@ -93,9 +93,6 @@ $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
      -e 'alter keyspace system_auth WITH replication = {"class": "SimpleStrategy", "replication_factor": <%= replication_factor.to_json %>}  AND durable_writes = true'
 
 log_err "INFO: propagating any new password with the enforced replication strategy"
-$job_dir/bin/nodetool repair system_auth
-
-log_err "INFO: creating SSL certificates"
-$job_dir/bin/creer_pem_cli_serv.sh
+$job_dir/bin/nodetool repair -full system_auth
 
 exit 0
