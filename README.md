@@ -33,6 +33,7 @@ bosh upload-release
 >> depl-state.yml; chmod 600 depl-state.yml # just making sure the secrets are not readable by everyone
 
 bosh -d cassandra deploy deployment/cassandra.yml \
+    --vars-file deployment/default-vars.yml \
     --vars-store depl-state.yml
 ```
 
@@ -42,6 +43,7 @@ Foundry:
 
 ```bash
 bosh -d cassandra deploy deployment/cassandra.yml \
+    --vars-file deployment/default-vars.yml \
     -o deployment/operations/cf-service-broker.yml \
     --vars-store depl-state.yml
 
