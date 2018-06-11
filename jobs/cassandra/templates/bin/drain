@@ -1,18 +1,27 @@
 #!/usr/bin/env bash
 
-set -eo pipefail
+# If a command fails, in a pipeline or not, exit immediately
+set -e -o pipefail
 
-exec 3>&1
-exec 1>> /var/vcap/sys/log/cassandra/drain.stdout.log
-exec 2>> /var/vcap/sys/log/cassandra/drain.stderr.log
+function prepend_datetime() {
+	awk -W interactive '{ system("echo -n [$(date +%FT%T%z)]"); print " " $0 }'
+}
+
+# Before redirecting stdout and stderr, copy the file descriptor for original
+# stdout (file desc 1) to file descriptor number 3. That's where where BOSH is
+# expecting an integer, and only that.
+exec \
+    3>&1 \
+    1> >(prepend_datetime >> /var/vcap/sys/log/cassandra/drain.stdout.log) \
+    2> >(prepend_datetime >> /var/vcap/sys/log/cassandra/drain.stderr.log)
 
 output_for_bosh() {
-    exit_code=$?
+    local exit_code=$?
 
     if [ $exit_code -eq 0 ]; then
-        echo "$(date +%F_%T): cassandra member removed"
+        echo "BOSH drain script succeeded"
     else
-        echo "$(date +%F_%T): drain failed"
+        echo "BOSH drain script failed, with exit status: '$exit_code'"
     fi
 
     echo $exit_code >&3
@@ -21,6 +30,11 @@ output_for_bosh() {
 trap output_for_bosh EXIT
 
 if echo "${BOSH_JOB_NEXT_STATE}" | grep -Fq '"persistent_disk":0'; then
-    echo "$(date +%F_%T): detected 'scale-in' condition, decommissioning current node"
+    echo "detected 'scale-in' condition, decommissioning Cassandra node"
     /var/vcap/jobs/cassandra/bin/nodetool decommission
+    echo "decommissioned Cassandra node"
+else
+    echo "about to go down, draining Cassandra node"
+    /var/vcap/jobs/cassandra/bin/nodetool drain
+    echo "drained Cassandra node"
 fi

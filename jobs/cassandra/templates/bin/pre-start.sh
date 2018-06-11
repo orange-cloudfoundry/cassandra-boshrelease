@@ -1,11 +1,23 @@
 #!/usr/bin/env bash
 
-set +ex
+set -ue -o pipefail
+
+
+function prepend_datetime() {
+    awk -W interactive '{ system("echo -n [$(date +%FT%T%z)]"); print " " $0 }'
+}
+
+exec \
+    3>&1 \
+    4>&2 \
+    > >(prepend_datetime >&3) \
+    2> >(prepend_datetime >&4)
+
 
 <% if p('disable_linux_swap').to_s == "true" %>
-echo "Deactivating Linux swap"
+echo "INFO: Deactivating Linux swap"
 /sbin/swapoff --all
-echo "Deactivated Linux swap"
+echo "INFO: Deactivated Linux swap"
 <% end %>
 
 
