@@ -67,9 +67,16 @@ $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
     -e "ALTER ROLE cassandra WITH password = '$new_password'"
 failure=$?
 log_err "DEBUG: setting password, exit status: '$failure'"
-if [ "$failure" != 0 ]; then
-    log_err "ERROR: the password for user 'cassandra' is inconsistent. Aborting."
-    exit 1
+if [[ "$failure" != 0 ]]; then
+    log_err "INFO: verifying that the current password is the desired password"
+    $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
+        -e "alter role cassandra with password = '$new_password' "
+    failure2=$?
+    log_err "DEBUG: verifying current password, exit status: '$failure2'"
+    if [ "$failure2" != 0 ]; then
+        log_err "ERROR: the password for user 'cassandra' is inconsistent. Aborting."
+        exit 1
+    fi
 fi
 
 store_password "$new_password"
