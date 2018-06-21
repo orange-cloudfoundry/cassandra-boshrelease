@@ -1,0 +1,62 @@
+name: cassandra
+version: "7"
+commit_hash: 65c0e90
+uncommitted_changes: false
+jobs:
+- name: broker
+  version: 58a1935640b1fb648699a62a8a28f877eb383d47
+  fingerprint: 58a1935640b1fb648699a62a8a28f877eb383d47
+  sha1: 7f98580f0c0c444ca34ed2b240f30976b7b5cec8
+- name: broker-smoke-tests
+  version: 6aab08840fbf3b83416eb93b45e8b0c9a3ef7906
+  fingerprint: 6aab08840fbf3b83416eb93b45e8b0c9a3ef7906
+  sha1: cc0dd5e009b2d492eaac275ed361faf82b16689e
+- name: cassandra
+  version: 89c489ceec02f55108e721ab6f1e497a9d8d0260
+  fingerprint: 89c489ceec02f55108e721ab6f1e497a9d8d0260
+  sha1: 47c9d5d2949b7b99a7744cc83dcdb3aa1d053dba
+- name: cassandra-admin-tools
+  version: 22943829d5b16304e91c6720f32dc6dabb25d76c
+  fingerprint: 22943829d5b16304e91c6720f32dc6dabb25d76c
+  sha1: 6a7aca8738c9a6d3651916403fe2b7e13dc0e4bd
+packages:
+- name: cassandra
+  version: c91accf9a2b2fb2ae74f5af7b154f06c80c06e06
+  fingerprint: c91accf9a2b2fb2ae74f5af7b154f06c80c06e06
+  sha1: afaa487f2b6cfeaf4d1fa088ec1cf17afd5ac9eb
+  dependencies:
+  - openjdk
+- name: cassandra-broker-pkg
+  version: e6a315e359a62cb0e07787198cec1edd5925aaf2
+  fingerprint: e6a315e359a62cb0e07787198cec1edd5925aaf2
+  sha1: 2c0f761397bcf7a0526f2653b492aa9d4fdee132
+  dependencies: []
+- name: cf-cassandra-example-app
+  version: 29c4de20e48c567ca32d19d35ac88bf89a758c55
+  fingerprint: 29c4de20e48c567ca32d19d35ac88bf89a758c55
+  sha1: 918bddf060043a3a7226a03252f5e6d8d8c8db9a
+  dependencies: []
+- name: cf-cli
+  version: 19050c0a1e025241fed29f6656adaf4f6df170fb
+  fingerprint: 19050c0a1e025241fed29f6656adaf4f6df170fb
+  sha1: 709bee1e2793c2f2f10fb0cbf94a1a07c8c98769
+  dependencies: []
+- name: golang-1.9-linux
+  version: 200a29b129a9078cb156be44c4a792ae24f42900
+  fingerprint: 200a29b129a9078cb156be44c4a792ae24f42900
+  sha1: bacfa6a162fa7085f95df7d43e911404a3644b01
+  dependencies: []
+- name: java-common
+  version: 018744938b5a691527c626963211f4ba4b5772bf
+  fingerprint: 018744938b5a691527c626963211f4ba4b5772bf
+  sha1: 66061ebebb28b87bc42be447a7f32f326c5b84e6
+  dependencies: []
+- name: openjdk
+  version: 93c072891062f43e6a7fad1f3232064da90429af
+  fingerprint: 93c072891062f43e6a7fad1f3232064da90429af
+  sha1: cb11bdc0c7526b927eb4b5c6860b57fea00cd640
+  dependencies: []
+license:
+  version: 32ba4e7baff79aa4731846b70691d98a998a483b
+  fingerprint: 32ba4e7baff79aa4731846b70691d98a998a483b
+  sha1: 9a9f801df42ba312392281575962b42b17c5f46f

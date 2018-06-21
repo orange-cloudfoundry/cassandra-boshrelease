@@ -67,9 +67,16 @@ $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
     -e "ALTER ROLE cassandra WITH password = '$new_password'"
 failure=$?
 log_err "DEBUG: setting password, exit status: '$failure'"
-if [ "$failure" != 0 ]; then
-    log_err "ERROR: the password for user 'cassandra' is inconsistent. Aborting."
-    exit 1
+if [[ "$failure" != 0 ]]; then
+    log_err "INFO: verifying that the current password is the desired password"
+    $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
+        -e "alter role cassandra with password = '$new_password' "
+    failure2=$?
+    log_err "DEBUG: verifying current password, exit status: '$failure2'"
+    if [ "$failure2" != 0 ]; then
+        log_err "ERROR: the password for user 'cassandra' is inconsistent. Aborting."
+        exit 1
+    fi
 fi
 
 store_password "$new_password"
@@ -81,16 +88,17 @@ sleep 5
 
 log_err "INFO: setting replication strategy for cassandra password"
 <%
-  require "json"
-
-  replication_factor = p('system_auth_keyspace_replication_factor', link('seeds').instances.count)
+    replication_factor = p('system_auth_keyspace_replication_factor', link('seeds').instances.count)
+    if !replication_factor.is_a?(Integer)
+        replication_factor = link('seeds').instances.count
+    end
 -%>
 # Note: should we support multiple datacenters one day, then we should set the
 # replication class to 'NetworkTopologyStrategy' here instead of 'SimpleStrategy'.
 # See: <https://docs.datastax.com/en/cassandra/latest/cassandra/configuration/configCassandra_yaml.html#configCassandra_yaml__authenticator>
 # See: <https://docs.datastax.com/en/cassandra/latest/cassandra/configuration/configCassandra_yaml.html#configCassandra_yaml__authorizer>
 $CASSANDRA_BIN/cqlsh --cqlshrc "$job_dir/root/.cassandra/cqlshrc" \
-     -e 'alter keyspace system_auth WITH replication = {"class": "SimpleStrategy", "replication_factor": <%= replication_factor.to_json %>}  AND durable_writes = true'
+    -e "ALTER KEYSPACE system_auth WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': <%= replication_factor %>}  AND durable_writes = true"
 
 log_err "INFO: propagating any new password with the enforced replication strategy"
 $job_dir/bin/nodetool repair -full system_auth
