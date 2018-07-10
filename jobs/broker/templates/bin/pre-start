@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+# Restrict permissions on files that contain cleartext passwords
+chmod 600 /var/vcap/jobs/broker/config/application.yml
+chown vcap:vcap /var/vcap/jobs/broker/config/application.yml
+chmod 700 /var/vcap/jobs/broker/bin/generate-truststore.sh
+chmod 700 /var/vcap/jobs/broker/bin/ctl
+
+<% if link('seeds').p('client_encryption.enabled') -%>
+/var/vcap/jobs/broker/bin/generate-truststore.sh
+<% end -%>

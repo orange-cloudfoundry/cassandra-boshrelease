@@ -11,7 +11,7 @@
 	</appender>
 
 	<logger name="com.orange.oss.cassandra" level="${config.logger.level}" />
-	<root level="WARN">
+	<root level="<%= p('broker.log_level') %>">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>

@@ -15,7 +15,19 @@ operations files. They cover:
   ([v7](https://github.com/gstackio/gk-shield-boshrelease/releases/tag/v7.0.4)
   and [v8](https://github.com/starkandwayne/shield-boshrelease/releases/tag/v8.0.9)).
 
-- BOSH-Lite support.
+- Support for client-server TLS encryption and server-side inter-nodes mutual TLS.
+
+- BOSH-Lite support and other goodies for release authors.
+
+
+## Prerequisites
+
+You need to ensure your BOSH director has `post-deploy` scripts enabled. This
+is usually the case with [standard bosh-deployment][std-bosh-deployment]. See
+the [post-deploy documentation][post-deploy] for more information about this.
+
+[post-deploy]: https://bosh.io/docs/post-deploy/#director-configuration
+[std-bosh-deployment]: https://github.com/cloudfoundry/bosh-deployment/blob/92917e7/bosh.yml#L87
 
 
 ## Usage
@@ -72,6 +84,9 @@ Cassandra cluster, one keyspace at a time.
 As a result of the backup strategy implemented by the SHIELD plugin, extra
 space is required on the persistent disk. As a rule of the thumb, you should
 provide twice the persistent storage required for your data.
+
+You'll find further information on backuping Cassandra with SHIELD in the
+[deployment manifests documentation](./deployment/README.md).
 
 
 ## Cassandra admin tools

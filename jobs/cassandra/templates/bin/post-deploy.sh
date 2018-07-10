@@ -11,6 +11,28 @@
 # set -x # Print commands and their arguments as they are executed.
 set -u # report the usage of uninitialized variables.
 
+function display_exit_code() {
+    local exit_code=$?
+
+    if [ $exit_code -eq 0 ]; then
+        echo "BOSH post-deploy script succeeded"
+    else
+        echo "BOSH post-deploy script failed, with exit status: '$exit_code'"
+    fi
+}
+
+trap display_exit_code EXIT
+
+function prepend_datetime() {
+    awk -W interactive '{ system("echo -n [$(date +%FT%T%z)]"); print " " $0 }'
+}
+
+exec \
+    3>&1 \
+    4>&2 \
+    > >(prepend_datetime >&3) \
+    2> >(prepend_datetime >&4)
+
 export LANG=en_US.UTF-8
 
 job_dir=/var/vcap/jobs/cassandra
@@ -23,9 +45,22 @@ export PATH=$PATH:$JAVA_HOME/bin:$CASSANDRA_BIN
 
 
 function log_err() {
-    echo "$(date +%F_%T):" "$@" >&2
+    echo "$@" >&2
 }
 
+
+node_id=$(/var/vcap/jobs/cassandra/bin/nodetool info \
+            | awk -F: '/^ID/{print $2}' | tr -d ' ')
+
+up_node_with_lowest_id=$(/var/vcap/jobs/cassandra/bin/nodetool status \
+            | grep "^U[NLJM] " | sort -k7 | head -n1 | awk '{print $7}')
+
+if [[ $node_id != $up_node_with_lowest_id ]]; then
+    echo "INFO: current node '$node_id' is not lowest ID of all UP nodes" \
+        "(i.e. '$up_node_with_lowest_id') according to 'nodetool'." \
+        "Aborting the 'post-deploy' execution on this node."
+    exit 0
+fi
 
 max_attempts=120
 cass_ip=<%= esc(spec.ip) %>
@@ -40,9 +75,11 @@ while ! nc -z "$cass_ip" "$cass_port"; do
     fi
     sleep 1
 done
-log_err "INFO: reached Cassandra on '$cass_ip:$cass_port' after '$attempts' attemps." \
-     "Waiting 30 more seconds for the service to be available."
-sleep 30
+echo "INFO: reached Cassandra on '$cass_ip:$cass_port' after '$(($attempts + 1))' attemps."
+if [[ $attempts -gt 0 ]]; then
+    echo "INFO: Waiting 30 more seconds for the service to be available."
+    sleep 30
+fi
 
 
 

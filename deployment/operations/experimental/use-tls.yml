@@ -2,17 +2,13 @@
 
 - path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/internode_encryption_mode
   type: replace
-  value: &internode_encryption_mode none
+  value: &internode_encryption_mode all
 
 - path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/client_encryption
   type: replace
   value: &client_encryption
-    enabled: false
+    enabled: true
     require_client_auth: false
-
-- path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/cert
-  type: replace
-  value: ((cassandra_seeds_certificate))
 
 - path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/keystore_password
   type: replace
@@ -28,10 +24,6 @@
   type: replace
   value: *client_encryption
 
-- path: /instance_groups/name=cassandra-servers/jobs/name=cassandra/properties?/cert
-  type: replace
-  value: ((cassandra_servers_certificate))
-
 - path: /instance_groups/name=cassandra-servers/jobs/name=cassandra/properties?/keystore_password
   type: replace
   value: ((cassandra_keystore_password))
@@ -43,36 +35,3 @@
   value:
     name: cassandra_keystore_password
     type: password
-
-- path: /variables?/name=cassandraCA
-  type: replace
-  value:
-    name: cassandraCA
-    type: certificate
-    options:
-      is_ca: true
-      common_name: cassandraCA
-
-- path: /variables?/name=cassandra_seeds_certificate
-  type: replace
-  value:
-    name: cassandra_seeds_certificate
-    type: certificate
-    options:
-      ca: cassandraCA
-      common_name: <%= seed.instance.address %>
-      alternative_names: 
-        - "*.cassandra-seeds.default.cassandra.bosh"
-      extended_key_usage: [ client_auth, server_auth ]
-
-- path: /variables?/name=cassandra_servers_certificate
-  type: replace
-  value:
-    name: cassandra_servers_certificate
-    type: certificate
-    options:
-      ca: cassandraCA
-      common_name: <%= cluster.instance.address %>
-      alternative_names: 
-        - "*.cassandra-servers.default.cassandra.bosh"
-      extended_key_usage: [ client_auth, server_auth ]

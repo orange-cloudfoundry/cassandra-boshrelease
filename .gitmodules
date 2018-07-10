@@ -1,3 +1,3 @@
 [submodule "src/cf-cassandra-example-app"]
 	path = src/cf-cassandra-example-app
-	url = https://github.com/JCL38-ORANGE/cf-cassandra-example-app.git
+	url = https://github.com/orange-cloudfoundry/cf-cassandra-example-app.git

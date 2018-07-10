@@ -11,10 +11,14 @@ ssl = <%= link("seeds").p("client_encryption.enabled") %>
 request_timeout = 1800
 
 [ssl]
-certfile = /var/vcap/jobs/cassandra/config/certs/<%= spec.ip %>_<%= link("seeds").p("cluster_name") %>_CLIENT.cer.pem
-validate = <%= link("seeds").p("validate_ssl_TF") %>
-userkey = /var/vcap/jobs/cassandra/config/certs/<%= spec.ip %>_<%= link("seeds").p("cluster_name") %>_CLIENT.key.pem
-usercert = /var/vcap/jobs/cassandra/config/certs/<%= spec.ip %>_<%= link("seeds").p("cluster_name") %>_CLIENT.cer.pem
+<% if link("seeds").p("client_encryption.enabled") -%>
+certfile = /var/vcap/jobs/cassandra/tls/ca.crt
+validate = true
+<%     if link("seeds").p("client_encryption.require_client_auth") -%>
+usercert = /var/vcap/jobs/cassandra/tls/node.crt
+userkey = /var/vcap/jobs/cassandra/tls/node.key
+<%     end -%>
+<% end -%>
 
 ;; Optional section, overrides default certfile in [ssl] section, if present
 ; [certfiles]

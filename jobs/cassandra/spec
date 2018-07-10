@@ -12,7 +12,8 @@ provides:
       - cassandra_password
       - native_transport_port
       - client_encryption.enabled
-      - validate_ssl_TF
+      - client_encryption.require_client_auth
+      - cert
       - cluster_name
 
 consumes:
@@ -23,6 +24,7 @@ consumes:
 
 templates:
   bin/pre-start.sh: bin/pre-start
+  bin/generate-keystores.sh: bin/generate-keystores.sh
   bpm.yml: config/bpm.yml
   bpm-prestart: bpm-prestart
   bin/drain: bin/drain
@@ -40,18 +42,11 @@ templates:
   config/logback.xml.erb: conf/logback.xml
   config/logback-tools.xml.erb: conf/logback-tools.xml
   config/commitlog_archiving.properties.erb: conf/commitlog_archiving.properties
-#  bin/generate_ssl_cert.sh: bin/generate_ssl_cert.sh
-#  ssl2/cert: config/certs/node.crt
-#  ssl2/cert_ca: config/certs/ca.crt
-#  ssl2/cert_private_key: config/certs/node.key
-#  ssl2/ssl_env.ctl.erb: config/certs/ssl_env.ctl
-#  ssl2/gen_keystore_client.sh: config/certs/gen_keystore_client.sh
-#  ssl2/gen_ca_cert.conf: config/certs/gen_ca_cert.conf
+  ssl2/cert: tls/node.crt
+  ssl2/cert_ca: tls/ca.crt
+  ssl2/cert_private_key: tls/node.key
   config/cqlshrc.erb: root/.cassandra/cqlshrc
-  ssl3/ssl_env.ctl.erb: config/certs/ssl_env.ctl
-  ssl3/gen_keystore_client.sh: config/certs/gen_keystore_client.sh
-  bin/creer_pem_cli_serv.sh: bin/creer_pem_cli_serv.sh
-  bin/post-start.sh: bin/post-start
+  bin/post-deploy.sh: bin/post-deploy
   config/jmx_exporter.yml: conf/jmx_exporter.yml
   bin/nodetool: bin/nodetool
   bin/sstableloader: bin/sstableloader
@@ -675,7 +670,7 @@ properties:
   client_encryption.require_client_auth:
     default: false
     description: |
-      Enables or disables certificate authentication.
+      Enables or disables client authentication via certificates.
   keystore_password:
     description: |
       Password for the keystore that is used to to store server and client
@@ -697,6 +692,44 @@ properties:
         -----BEGIN RSA PRIVATE KEY-----
         ...
         -----END RSA PRIVATE KEY-----
+  trusted_ca_certs:
+    description: |
+      The overriding list of CA (Certificate Authority) certificates for the
+      Cassandra node to trust.
+
+      When this list is empty, a one-element list is built in order to at
+      least trust the CA of the node certificate, as obtained with the
+      'cert.ca' property. When this list is not empty, it MUST specify the CA
+      of the node certificate.
+
+      Having such a list is especially useful when:
+
+      - Interacting with Cassandra nodes that are not part of the same
+        deployment, not managed by the same BOSH server, or even not managed
+        by BOSH at all. In this case any other CA certificate can be added
+        here.
+
+      - Rotating certificates, using a new certificate that is signed by a new
+        Certificate Authority.
+
+      The exact certificate rotation process consists in:
+
+      1. Adding new CA certificate to this list, and re-deploy.
+
+      2. Rotate server certificates, changing the 'cert' property and re-
+         deploying. During this step, both old and new CA certificates are
+         trusted.
+
+      3. Remove old CA certificates from this list, and re-deploy.
+
+      WARNING: this is just a list of plain (public) certificates, with no
+      private keys. This is NOT a list of CredHub structures with the usual
+      three properties (i.e. ".ca", ".certificate" and ".private_key").
+    default: []
+    example:
+      - ((current_certificate.ca))
+      - ((future_certificate.ca))
+      - ((external_ca_cert)) # no private key, no structure.
 
   internode_compression:
     description: |

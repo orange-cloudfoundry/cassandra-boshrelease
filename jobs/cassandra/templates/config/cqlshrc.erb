@@ -9,7 +9,11 @@ ssl = <%= p("client_encryption.enabled") %>
 request_timeout = 1800
 
 [ssl]
-certfile = /var/vcap/jobs/cassandra/config/certs/<%= spec.ip %>_<%= p("cluster_name") %>_CLIENT.cer.pem
-validate = <%= p("validate_ssl_TF") %>
-userkey = /var/vcap/jobs/cassandra/config/certs/<%= spec.ip %>_<%= p("cluster_name") %>_CLIENT.key.pem
-usercert = /var/vcap/jobs/cassandra/config/certs/<%= spec.ip %>_<%= p("cluster_name") %>_CLIENT.cer.pem
+<% if p("client_encryption.enabled") -%>
+certfile = /var/vcap/jobs/cassandra/tls/ca.crt
+validate = true
+<%     if p("client_encryption.require_client_auth") -%>
+usercert = /var/vcap/jobs/cassandra/tls/node.crt
+userkey = /var/vcap/jobs/cassandra/tls/node.key
+<%     end -%>
+<% end -%>
