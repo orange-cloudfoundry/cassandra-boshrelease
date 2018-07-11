@@ -1,0 +1,56 @@
+---
+resources:
+
+  - name: cassandra-bosh-release
+    type: git
+    source:
+      uri:    ((repositories.cassandra.uri))
+      branch: ((repositories.cassandra.branch))
+
+jobs:
+
+- &deploy-cassandra
+  name: deploy-cassandra
+  serial: true
+  plan:
+    - &deploy-init
+      do:
+        - &create-bosh-config     #### definition connexion Bosh director
+          do:
+          - get: cassandra-bosh-release 
+          - task: create-bosh-config
+            file: cassandra-bosh-release/ci/common/tasks/create-bosh-config.yml
+            params:
+              CA_CERT:  ((bosh-server.ca))
+              IP:       ((bosh-server.ip))
+              ALIAS:    ((bosh-server.alias))
+              USER:     ((bosh-server.user))
+              PASSWORD: ((bosh-server.password))
+
+##    - &deploy
+##      task: deploy
+##      file: ...
+##      attempts: 3
+##      params: &deploy-params
+##        CA_CERT:              ((bosh-server.ca))
+##        IP:                   ((bosh-server.ip))
+##        ALIAS:                ((bosh-server.alias))
+##        USER:                 ((bosh-server.user))
+##        PASSWORD:             ((bosh-server.password))
+##        RELEASE_NAME:         ((deployment.tests.name))
+##        DEPLOYMENT_NAME:      ((deployment.tests.name))
+##        DEPLOYMENT_NETWORK:   ((deployment.tests.network))
+##        ...
+##
+#
+    - &create-release
+      task: create-release
+      file: cassandra-bosh-release/ci/deployment/create-release/tasks/create-release.yml
+      params: &create-release-params
+        ALIAS:            ((bosh-server.alias))
+        UUID:             ((bosh-server.uuid))
+        BOSH_RELEASE:     ((deployment.tests-ci.release))
+        DEPLOYMENT_NAME:  ((deployment.tests-ci.name))
+        NETWORK:          ((deployment.tests-ci.network))
+##        INSTANCE_GROUP:   ((deployment.tests-ci.instance-group))
+
