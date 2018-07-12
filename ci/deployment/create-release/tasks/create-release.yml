@@ -13,3 +13,4 @@ inputs:
 
 run:
   path: cassandra-bosh-release/ci/deployment/create-release/scripts/create-release.sh
+  path: cassandra-bosh-release/ci/deployment/create-release/scripts/deploy.sh
