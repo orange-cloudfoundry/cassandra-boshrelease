@@ -1,0 +1,7 @@
+---
+final_name: cassandra-bosh-release
+blobstore:
+  provider: s3
+  options:
+    bucket_name: cassandra-bucket
+host: https://10.171.44.59:8000/
