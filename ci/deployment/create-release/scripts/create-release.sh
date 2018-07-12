@@ -14,6 +14,17 @@ sed -i -e "s/^\(final_name:\).*/\1 ${BOSH_RELEASE}/" config/final.yml
 # removing deployment
 # bosh -e ${ALIAS} delete-deployment -n -d ${DEPLOYMENT_NAME}
 
+# removing already existing release if exists
+bosh -e ${ALIAS} releases | cat | grep ${cassandra-ci-v8} |while read rel ver other
+do
+	if [ "${rel}" == "${BOSH_RELEASE}" ]
+	then	
+		bosh -e ${ALIAS} -n delete-release ${rel}/${ver}
+	fi
+done
+
+
+
 ## bosh -e ${ALIAS} create-release --force --version ${CASSANDRA_VERSION}
 bosh -e ${ALIAS} create-release --force 
 

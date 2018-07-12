@@ -1,0 +1,132 @@
+---
+name: ((deployment_name))
+
+releases:
+  - {name: cassandra, version: latest}
+  - {name: route-registrar, version: latest}
+
+update:
+  serial: false
+  canaries: 1
+  canary_watch_time: 30000-240000
+  max_in_flight: 1 #<-- important to limit max in flight
+  update_watch_time:  30000-240000
+
+stemcells:
+- alias: trusty
+  os: ubuntu-trusty
+  version: latest
+
+instance_groups:
+- name: cassandra-seeds
+  instances: 3
+  vm_type: &cassandra_vm_type large
+  #see https://github.com/cloudfoundry/bosh-agent/pull/123#issuecomment-289520844
+  env:
+    bosh:
+      remove_dev_tools: true
+      swap_size: 0
+  stemcell: trusty
+  azs: [z1]
+  networks: [{name: tf-net-services-2}]
+  persistent_disk_type: &cassandra_persistent_disk_type xlarge
+  jobs:
+  - name: cassandra
+    release: cassandra
+    provides:
+      cassandra: { as: &cassandra_seeds_link cassandra_seeds_list }
+    consumes:
+      seeds: { from: *cassandra_seeds_link }
+      non_seeds: { from: *cassandra_non_seeds_link }
+    properties: &cassandra_properties
+      cluster_name: ((deployment_name)) # should be ((deployment_name)) instead
+      cassandra_password: ((!cassandra_admin_password))
+      # Notice: these two properties 'max_heap_size' and 'heap_newsize'
+      # have to be set in pair
+      max_heap_size: 6G
+      heap_newsize: 1G
+      bosh_to_cassandra_topology_mapping:
+        z1:      { dc: DC1, rack: RAC1 }
+        default: { dc: DC1, rack: RAC1 }
+
+- name: cassandra-servers
+  instances: 2
+  vm_type: *cassandra_vm_type
+  #see https://github.com/cloudfoundry/bosh-agent/pull/123#issuecomment-289520844
+  env:
+    bosh:
+      remove_dev_tools: true
+      swap_size: 0
+  stemcell: trusty
+  azs: [z1]
+  networks: [{name: tf-net-services-2}]
+  persistent_disk_type: *cassandra_persistent_disk_type
+  jobs:
+  - name: cassandra
+    release: cassandra
+    provides:
+      cassandra: { as: &cassandra_non_seeds_link cassandra_non_seeds_list }
+    consumes:
+      seeds: {from: *cassandra_seeds_link}
+      non_seeds: { from: *cassandra_non_seeds_link }
+    properties: *cassandra_properties
+
+- name: cassandra-broker
+  instances: 1
+  vm_type: default
+  stemcell: trusty
+  azs: [z1]
+  networks: [{name: tf-net-services-2}]
+  persistent_disk_type: default
+  jobs:
+  - name: broker-smoke-tests
+    release: cassandra
+    properties:
+      cf:
+        api:
+          url: ((cf.api.url))
+        admin:
+          username: admin
+          password: ((cf.admin.password))
+        skip:
+          ssl:
+            validation: true
+        org: service-sandbox
+        space: cassandra-smoke-tests
+        cassandra:
+          appdomain: ((cf.cassandra.appdomain))
+          servicename: cassandra
+          serviceplan: default
+          serviceinstancename: cassandra-instance
+
+  - name: broker
+    release: cassandra
+    consumes:
+      seeds: {from: *cassandra_seeds_link}
+    properties:
+      broker:
+        user: cassandra-broker
+        password: ((broker.password))
+      cassandra_seed:
+        admin_password: ((!cassandra_admin_password))
+
+  # this is a route to expose cassandra broker  via cf routers
+  - name: route-registrar
+    release: route-registrar
+    properties:
+      route_registrar:
+        external_host: ((route_registrar.external_host))
+        port: 8080
+        message_bus_servers:
+        - host:  ((route_registrar.message_bus_servers.host)) # <-- cf nats, cant use dns cause cf is in bosh-ops powerdns, not bosh-master
+          user: nats
+          password: ((route_registrar.message_bus_servers.password))  #nats
+        health_checker:
+          interval: 10
+          name: healthchk
+
+variables:
+- name: cassandra_admin_password
+  type: password
+- name: cassandra_key_store_pass
+  type: password% 

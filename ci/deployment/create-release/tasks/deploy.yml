@@ -1,0 +1,19 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: concourse/bosh-cli
+    tag: latest
+
+inputs:
+  - name: bosh-director-config
+  - name: cassandra-bosh-release
+  - name: versions
+
+outputs:
+  - name: deployed  
+
+run:
+path: cassandra-bosh-release/ci/deployement/scripts/deploy.sh
