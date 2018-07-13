@@ -1,6 +1,15 @@
 ---
 name: ((deployment_name))
 
+releases:
+  - name: &cassandra_release cassandra
+    version: latest
+
+stemcells:
+  - alias: &trusty_stemcell trusty
+    os: ubuntu-trusty
+    version: latest
+
 instance_groups:
   - name: cassandra-seeds
     instances: 3
@@ -12,7 +21,7 @@ instance_groups:
           cassandra: { as: &cassandra_seeds_link cassandra_seeds_list }
         consumes:
           seeds: { from: *cassandra_seeds_link }
-          non_seeds: { from: *cassandra_non_seeds_link }
+          non_seeds: { from: &cassandra_non_seeds_link cassandra_non_seeds_list }
         properties: &cassandra_properties
           cluster_name: ((deployment_name))
           cassandra_password: ((cassandra_admin_password))
@@ -26,8 +35,8 @@ instance_groups:
             z3:      { dc: DC1, rack: RAC3 }
             default: { dc: DC1, rack: RAC3 }
     stemcell: *trusty_stemcell
-    vm_type: &cassandra_vm_type default
-    persistent_disk_type: &cassandra_persistent_disk_type default
+    vm_type: &cassandra_vm_type ((vm_type))
+    persistent_disk_type: &cassandra_persistent_disk_type ((persistent_disk_type))
     env:
       persistent_disk_fs: xfs
       bosh: { swap_size: 0 }
@@ -57,7 +66,6 @@ variables:
   - name: cassandra_admin_password
     type: password
 
-
 update:
   # We don't support Cassandra instance groups to be deployed in parallel.
   # They must be deployed sequentially.
@@ -72,11 +80,3 @@ update:
   update_watch_time: 30000-240000
 
 
-releases:
-  - name: &cassandra_release cassandra
-    version: latest
-
-stemcells:
-  - alias: &trusty_stemcell trusty
-    os: ubuntu-trusty
-    version: latest

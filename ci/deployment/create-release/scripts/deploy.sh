@@ -8,10 +8,6 @@ export BOSH_CONFIG=$PWD/bosh-director-config/bosh_config.yml
 
 deployment_ops_files="admin-tools.yml,use-bpm.yml"
 
-# Updating final.yml with release name specified in settings
-sed -i -e "s/^\(final_name:\).*/\1 ${BOSH_RELEASE}/" ${PWD}/../../../config/final.yml
-
-
 # RELEASE_VERSION=$(grep '^cassandra' ${ROOT_FOLDER}/versions/keyval.properties \
 #                | cut -d'=' -f2)
 
@@ -26,16 +22,14 @@ deployment_var="  	-v deployment=${DEPLOYMENT_NAME} \
 
 
 bosh -e ${ALIAS} -d ${DEPLOYMENT_NAME} -n deploy \
-				     ${PWD}/../tasks/cassandra.yml \
-                -o ${PWD}/../tasks/admin-tools.yml \
-                -o ${PWD}/../tasks/use-bpm.yml \
-                -var deployment_name=${DEPLOYMENT_NAME} 
+				     cassandra-bosh-release/deployment/cassandra.yml \
+                -o cassandra-bosh-release/deployment/operations/admin-tools.yml \
+                -o cassandra-bosh-release/deployment/operations/use-bpm.yml \
+                -v deployment_name=${DEPLOYMENT_NAME} \
+                -v network_name=${NETWORK} \
+                -v vm_type=small \
+                -v persistent_disk_type=small
 ##              --recreate
 				
-popd
 
-mkdir -p deployed
-
-pushd deployed || exit 666
-touch keyval.properties
 popd
