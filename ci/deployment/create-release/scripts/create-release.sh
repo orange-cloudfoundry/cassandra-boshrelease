@@ -12,10 +12,10 @@ pushd cassandra-bosh-release|| exit 666
 sed -i -e "s/^\(final_name:\).*/\1 ${BOSH_RELEASE}/" config/final.yml
 
 # removing deployment
-# bosh -e ${ALIAS} delete-deployment -n -d ${DEPLOYMENT_NAME}
+bosh -e ${ALIAS} delete-deployment -n -d ${DEPLOYMENT_NAME}
 
 # removing already existing release if exists
-bosh -e ${ALIAS} releases | cat | grep ${cassandra-ci-v8} |while read rel ver other
+bosh -e ${ALIAS} releases | cat | grep ${BOSH_RELEASE} |while read rel ver other
 do
 	if [ "${rel}" == "${BOSH_RELEASE}" ]
 	then	

@@ -10,10 +10,6 @@ image_resource:
 inputs:
   - name: bosh-director-config
   - name: cassandra-bosh-release
-  - name: versions
-
-outputs:
-  - name: deployed  
 
 run:
-path: cassandra-bosh-release/ci/deployement/scripts/deploy.sh
+  path: cassandra-bosh-release/ci/deployement/scripts/deploy.sh
