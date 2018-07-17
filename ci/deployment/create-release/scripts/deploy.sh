@@ -16,7 +16,8 @@ deployment_var="  	-v deployment=${DEPLOYMENT_NAME} \
                         -v release_version=${RELEASE_VERSION} \
     					-v instance_group=${INSTANCE_GROUP} \
     					-v network=${NETWORK} \
-                        -v director_uuid=${UUID}"
+                        -v director_uuid=${UUID} \
+			--recreate "
 #    					-v director_uuid=${UUID} \
 #    					-v version=${RELEASE_VERSION}"
 

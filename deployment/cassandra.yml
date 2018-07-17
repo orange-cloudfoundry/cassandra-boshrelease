@@ -12,7 +12,7 @@ stemcells:
 
 instance_groups:
   - name: cassandra-seeds
-    instances: 3
+    instances: 1
     azs: [ z1, z2, z3 ]
     jobs:
       - name: cassandra
@@ -27,8 +27,8 @@ instance_groups:
           cassandra_password: ((cassandra_admin_password))
           # Notice: these two properties 'max_heap_size' and 'heap_newsize'
           # have to be set in pair
-          max_heap_size: 2G
-          heap_newsize: 400M
+          max_heap_size: 1G
+          heap_newsize: 300M
           bosh_to_cassandra_topology_mapping:
             z1:      { dc: DC1, rack: RAC1 }
             z2:      { dc: DC1, rack: RAC2 }
@@ -43,7 +43,7 @@ instance_groups:
     networks: [ name: ((network_name)) ]
 
   - name: cassandra-servers
-    instances: 0
+    instances: 1
     azs: [ z1, z2, z3 ]
     jobs:
       - name: cassandra
