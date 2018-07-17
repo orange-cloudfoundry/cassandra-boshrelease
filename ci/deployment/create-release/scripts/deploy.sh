@@ -33,4 +33,4 @@ bosh -e ${ALIAS} -d ${DEPLOYMENT_NAME} -n deploy \
 ##              --recreate
 				
 
-popd
+## popd
