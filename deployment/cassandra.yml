@@ -12,7 +12,7 @@ stemcells:
 
 instance_groups:
   - name: cassandra-seeds
-    instances: 1
+    instances: 3
     azs: [ z1, z2, z3 ]
     jobs:
       - name: cassandra
@@ -28,7 +28,7 @@ instance_groups:
           # Notice: these two properties 'max_heap_size' and 'heap_newsize'
           # have to be set in pair
           max_heap_size: 1G
-          heap_newsize: 300M
+          heap_newsize: 800M
           bosh_to_cassandra_topology_mapping:
             z1:      { dc: DC1, rack: RAC1 }
             z2:      { dc: DC1, rack: RAC2 }

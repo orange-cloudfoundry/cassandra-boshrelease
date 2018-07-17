@@ -28,8 +28,8 @@ bosh -e ${ALIAS} -d ${DEPLOYMENT_NAME} -n deploy \
                 -o cassandra-bosh-release/deployment/operations/use-bpm.yml \
                 -v deployment_name=${DEPLOYMENT_NAME} \
                 -v network_name=${NETWORK} \
-                -v vm_type=small \
-                -v persistent_disk_type=small
+                -v vm_type=large \
+                -v persistent_disk_type=large
 ##              --recreate
 				
 
