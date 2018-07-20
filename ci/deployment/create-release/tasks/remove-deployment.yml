@@ -10,7 +10,6 @@ image_resource:
 inputs:
   - name: bosh-director-config
   - name: cassandra-bosh-release
-  - name: remove-deploy
 
 run:
   path: cassandra-bosh-release/ci/deployment/create-release/scripts/remove-deployment.sh
