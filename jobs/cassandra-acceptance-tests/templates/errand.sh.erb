@@ -1,0 +1,24 @@
+#!/bin/bash
+<%
+cassandra_test_suites = p('cassandra_test_suites')
+-%>
+set -e
+
+pushd /var/vcap/packages/cassandra-acceptance-tests || exit 115
+    source /var/vcap/packages/golang-1.9-linux/bosh/compile.env
+popd
+
+export CATS_PKG_NAME=github.com/orange-cloudfoundry/cassandra-acceptance-tests
+export CATS_PKG_DIR=${GOPATH}/src/${CATS_PKG_NAME}
+
+export CONFIG_PATH=/var/vcap/jobs/cassandra-acceptance-tests/config.json
+
+pushd ${CATS_PKG_DIR}
+    chmod +x ./bin/test
+
+    # Ginkgo compiles and runs binaries from /tmp which is 'noexec' on hardened
+    # stemcells, so we use this as temporary directory instead.
+    export TMPDIR=/var/vcap/data/tmp
+
+    ./bin/test <%= cassandra_test_suites.join(' ') %>
+popd

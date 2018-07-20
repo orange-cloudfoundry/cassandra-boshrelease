@@ -15,6 +15,7 @@ provides:
       - client_encryption.require_client_auth
       - cert
       - cluster_name
+      - system_auth_keyspace_replication_factor     
 
 consumes:
   - name: seeds

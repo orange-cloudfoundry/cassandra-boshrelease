@@ -1,0 +1,25 @@
+name: cassandra-acceptance-tests
+
+packages:
+  - golang-1.9-linux
+  - cassandra-acceptance-tests
+
+consumes:
+  - name: cassandra_seeds_list
+    type: cassandra
+  - name: cassandra_servers_list
+    type: cassandra
+
+templates:
+  config.json.erb: config.json
+  errand.sh.erb: bin/run
+
+properties:
+  cassandra_test_suites:
+    description: Test suites to run (["CRUD"] or ["replicaset_and_failover"])
+    default: ["CRUD"] 
+
+  timeout_scale:
+    description: connection timeout (default 600ms)
+    default: 10
+
