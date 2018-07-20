@@ -54,3 +54,8 @@ jobs:
         NETWORK:          ((deployment.tests-ci.network))
 ##        INSTANCE_GROUP:   ((deployment.tests-ci.instance-group))
 
+- &remove-deployment
+  name: remove-deployment
+  serial: true
+  params: *create-release-params
+  file: cassandra-bosh-release/ci/deployment/create-release/tasks/remove-deployment.yml
