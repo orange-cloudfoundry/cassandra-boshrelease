@@ -29,7 +29,8 @@ link('cassandra_seeds_list').instances.each do |instance|
   "cassandra_native_transport_port":  "<%= link('cassandra_seeds_list').p('native_transport_port') %>",
   "cassandra_seeds":                   <%= seeds_array.to_json %>,   
   "cassandra_servers":                 <%= servers_array.to_json %>,
-  "client_encryption.enabled" :   	   <%= link('cassandra_seeds_list').p('client_encryption.enabled') %>,
+  "client_encryption.enabled":         <%= link('cassandra_seeds_list').p('client_encryption.enabled') %>,
+  "ca_cert_file":                      "/var/vcap/jobs/cassandra-acceptance-tests/tls/ca.crt",
   "keyspace_replication_factor":       <%= link('cassandra_seeds_list').p('system_auth_keyspace_replication_factor', link('cassandra_seeds_list').instances.count) %>,
   "replication_strategy":              "SimpleStrategy",
   "durable_write":                     true

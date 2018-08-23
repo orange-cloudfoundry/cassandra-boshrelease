@@ -13,10 +13,11 @@ consumes:
 templates:
   config.json.erb: config.json
   errand.sh.erb: bin/run
+  tls/ca.crt.erb: tls/ca.crt
 
 properties:
   cassandra_test_suites:
-    description: Test suites to run (["CRUD"] or ["replicaset_and_failover"])
+    description: Test suites to run (["CRUD"])
     default: ["CRUD"] 
 
   timeout_scale:
