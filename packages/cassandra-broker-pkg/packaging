@@ -3,14 +3,25 @@
 set -e # exit immediately if a simple command exits with a non-zero status
 set -u # report the usage of uninitialized variables
 
-. common/setup-java-prepackaging.sh #declared in spec file as files and available in src directory
-
 # Detect # of CPUs so make jobs can be parallelized
 CPUS=$(grep -c ^processor /proc/cpuinfo)
  # Available variables
 # $BOSH_COMPILE_TARGET - where this package & spec'd source files are available
 # $BOSH_INSTALL_TARGET - where you copy/install files to be included in package
-export HOME=/var/vcap
+
+# Source script supplied by java vendoring package
 source /var/vcap/packages/openjdk-8/bosh/compile.env
+
+# Compile broker and move it
+cd ${BUILD_DIR}/cassandra-open-service-broker
+./mvnw clean install -DskipTests=true
+mv target/cassandra-open-service-broker-0.0.1-SNAPSHOT.jar ${BUILD_DIR}
+
+# Remove broker source files
+cd ${BUILD_DIR}
+rm -rf cassandra-open-service-broker
+
+
+
 cp -r ${BOSH_COMPILE_TARGET}/cassandra-open-service-broker-0.0.1-SNAPSHOT.jar  ${BOSH_INSTALL_TARGET}/cassandra-broker.jar
 
