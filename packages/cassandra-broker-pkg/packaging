@@ -9,6 +9,6 @@ CPUS=$(grep -c ^processor /proc/cpuinfo)
 # $BOSH_COMPILE_TARGET - where this package & spec'd source files are available
 # $BOSH_INSTALL_TARGET - where you copy/install files to be included in package
 export HOME=/var/vcap
-
+source /var/vcap/packages/openjdk-8/bosh/compile.env
 cp -r ${BOSH_COMPILE_TARGET}/cassandra-open-service-broker-0.0.1-SNAPSHOT.jar  ${BOSH_INSTALL_TARGET}/cassandra-broker.jar
 

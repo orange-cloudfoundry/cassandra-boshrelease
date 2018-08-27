@@ -1,6 +1,7 @@
 ---
 name: cassandra-broker-pkg 
-dependencies: []
+dependencies:
+- openjdk-8
 files:
 - cassandra-open-service-broker/**/*
 - openjdk/*
