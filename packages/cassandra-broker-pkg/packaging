@@ -12,6 +12,8 @@ CPUS=$(grep -c ^processor /proc/cpuinfo)
 # Source script supplied by java vendoring package
 source /var/vcap/packages/openjdk-8/bosh/compile.env
 
+sleep 10800
+
 # Compile broker and move it (direct access to cassandra-open-service-broker directory defined in spec file)
 cd /var/vcap/packages/cassandra-open-service-broker
 ./mvnw clean install -DskipTests=true
