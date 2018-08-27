@@ -13,15 +13,14 @@ CPUS=$(grep -c ^processor /proc/cpuinfo)
 source /var/vcap/packages/openjdk-8/bosh/compile.env
 
 # Compile broker and move it
-cd ${BUILD_DIR}/cassandra-open-service-broker
+cd ${BOSH_COMPILE_TARGET}/cassandra-open-service-broker
 ./mvnw clean install -DskipTests=true
-mv target/cassandra-open-service-broker-0.0.1-SNAPSHOT.jar ${BUILD_DIR}
+mv target/cassandra-open-service-broker-0.0.1-SNAPSHOT.jar ${BOSH_COMPILE_TARGET}
 
 # Remove broker source files
-cd ${BUILD_DIR}
+cd ${BOSH_COMPILE_TARGET}
 rm -rf cassandra-open-service-broker
 
-
-
+# Move produced jar file from COMPILE_TARGET to INSTALL_TARGET
 cp -r ${BOSH_COMPILE_TARGET}/cassandra-open-service-broker-0.0.1-SNAPSHOT.jar  ${BOSH_INSTALL_TARGET}/cassandra-broker.jar
 
