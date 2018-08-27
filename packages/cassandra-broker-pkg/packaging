@@ -13,7 +13,7 @@ CPUS=$(grep -c ^processor /proc/cpuinfo)
 source /var/vcap/packages/openjdk-8/bosh/compile.env
 
 # Compile broker and move it (direct access to cassandra-open-service-broker directory defined in spec file)
-cd cassandra-open-service-broker
+cd /var/vcap/packages/cassandra-open-service-broker
 ./mvnw clean install -DskipTests=true
 mv target/cassandra-open-service-broker-0.0.1-SNAPSHOT.jar ${BOSH_INSTALL_TARGET}/cassandra-broker.jar
 
