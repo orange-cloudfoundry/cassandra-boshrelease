@@ -20,8 +20,8 @@ public class CatalogConfig {
 		return new Catalog(Collections.singletonList(
 				new ServiceDefinition(
 						"cassandra-service-broker",
-						"cassandra",
-						"A simple cassandra service broker implementation",
+						"Apache Cassandra database 3.11 for Cloud Foundry",
+						"Cassandra key-space on demand on shared cluster ",
 						true,
 						false,
 						Collections.singletonList(
@@ -40,10 +40,10 @@ public class CatalogConfig {
 		Map<String, Object> sdMetadata = new HashMap<>();
 		sdMetadata.put("displayName", "cassandra");
 		sdMetadata.put("imageUrl", "http://cassandra.apache.org/img/cassandra_logo.png");
-		sdMetadata.put("longDescription", "cassandra Service");
+		sdMetadata.put("longDescription", "Creating a service Cassandra provisions a key-space. Binding applications provisions unique credentials for each application to access the keys-pace ");
 		sdMetadata.put("providerDisplayName", "Orange");
-		sdMetadata.put("documentationUrl", "https://github.com/orange-cloudfoundry/cassandra-boshrelease\n");
-		sdMetadata.put("supportUrl", "https://github.com/orange-cloudfoundry/cassandra-boshrelease\n");
+		sdMetadata.put("documentationUrl", "http://cassandra.apache.org/doc/latest\n");
+		sdMetadata.put("supportUrl", "https://marketplace.my-company.org/contact-us\n");
 		return sdMetadata;
 	}
 
@@ -58,7 +58,7 @@ public class CatalogConfig {
 		Map<String,Object> costsMap = new HashMap<>();
 
 		Map<String,Object> amount = new HashMap<>();
-		amount.put("usd", 0.0);
+		amount.put("eur", 10.0);
 
 		costsMap.put("amount", amount);
 		costsMap.put("unit", "MONTHLY");
