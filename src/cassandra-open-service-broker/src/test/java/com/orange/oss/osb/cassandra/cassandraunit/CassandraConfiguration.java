@@ -20,6 +20,9 @@ public class CassandraConfiguration extends AbstractCassandraConfiguration{
     @Value("${spring.data.cassandra.port}")
     private int port;
 
+    @Value("${spring.data.cassandra.ssl}")
+    private boolean ssl;
+
     @Value("${spring.data.cassandra.username}")
     private String user;
 
