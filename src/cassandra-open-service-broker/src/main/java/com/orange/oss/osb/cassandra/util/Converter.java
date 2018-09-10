@@ -32,12 +32,12 @@ public final class Converter {
         //"credentials":{
         //	"hostname":"192.168.30.150",
         //	"jdbcUrl":
-        //	"jdbc:mysql://192.168.30.150:3306/cf_a84ef203_285b_415f_8feb_7c8b832e9b3e?user=7TQrKxF2fpfJtWIz\u0026password=HSHY8Ai3zCrlU58z",
+        //	"jdbc:mysql://192.168.30.150:3306/cf_a84ef203_285b_415f_8feb_7c8b832e9b3e?user=7TQrKxF2fpfJtWIz\u0026password=<redacted>",
         //	"name":"cf_a84ef203_285b_415f_8feb_7c8b832e9b3e",
-        //	"password":"HSHY8Ai3zCrlU58z",
+        //	"password":"<redacted>",
         //	"port":3306,
         //	"uri":
-        //	"mysql://7TQrKxF2fpfJtWIz:HSHY8Ai3zCrlU58z@192.168.30.150:3306/cf_a84ef203_285b_415f_8feb_7c8b832e9b3e?reconnect=true",
+        //	"mysql://7TQrKxF2fpfJtWIz:<redacted>@192.168.30.150:3306/cf_a84ef203_285b_415f_8feb_7c8b832e9b3e?reconnect=true",
         //	"username": "7TQrKxF2fpfJtWIz"
         //}
         Map<String, Object> credentials = new HashMap<String, Object>();

@@ -1,11 +1,12 @@
 package com.orange.oss.osb.cassandra;
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.Session;
-import com.orange.oss.osb.cassandra.util.Converter;
+import static com.orange.oss.osb.cassandra.util.Converter.buildCredentials;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.util.Map;
+
 import org.apache.commons.text.RandomStringGenerator;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.servicebroker.model.CreateServiceInstanceAppBindingResponse;
@@ -16,14 +17,12 @@ import org.springframework.cloud.servicebroker.service.ServiceInstanceBindingSer
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.orange.oss.osb.cassandra.util.Converter;
 
 @Service
 public class CassandraServiceInstanceBindingService implements ServiceInstanceBindingService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CassandraServiceInstanceBindingService.class.getName());
-	//private Cluster cluster = null;
+	private static final Logger LOGGER = getLogger(CassandraServiceInstanceBindingService.class);
 
 	@Autowired
 	private CassandraTemplate template;
@@ -44,93 +43,66 @@ public class CassandraServiceInstanceBindingService implements ServiceInstanceBi
 	private String password;
 
 	@Override
-	public CreateServiceInstanceBindingResponse createServiceInstanceBinding(CreateServiceInstanceBindingRequest arg0) {
+	public CreateServiceInstanceBindingResponse createServiceInstanceBinding(CreateServiceInstanceBindingRequest request) {
 		//Create role
-		String passwordGenerated = this.createRole(arg0.getBindingId());
+		String password = createRole(request.getBindingId());
 		//Grant role
-		this.grantRoleOnKeyspace(arg0.getServiceInstanceId(), arg0.getBindingId());
+		grantRoleOnKeyspace(request.getServiceInstanceId(), request.getBindingId());
 		//Build credentials
-		CreateServiceInstanceAppBindingResponse createServiceInstanceAppBindingResponse = new CreateServiceInstanceAppBindingResponse();
-		Map<String, Object> credentials = Converter.buildCredentials(this.contactPoints, String.valueOf(port), ssl, arg0.getServiceInstanceId(), arg0.getBindingId(), passwordGenerated);
-		return createServiceInstanceAppBindingResponse.withCredentials(credentials);
+		CreateServiceInstanceAppBindingResponse response = new CreateServiceInstanceAppBindingResponse();
+		Map<String, Object> credentials = buildCredentials(contactPoints, String.valueOf(port), ssl, request.getServiceInstanceId(), request.getBindingId(), password);
+		return response.withCredentials(credentials);
 
 	}
 
 	@Override
-	public void deleteServiceInstanceBinding(DeleteServiceInstanceBindingRequest arg0) {
+	public void deleteServiceInstanceBinding(DeleteServiceInstanceBindingRequest request) {
 		// TODO broker exception
-		this.revokeRoleOnKeyspace(arg0.getServiceInstanceId(), arg0.getBindingId());
-		this.dropRole(arg0.getBindingId());
+		revokeRoleOnKeyspace(request.getServiceInstanceId(), request.getBindingId());
+		dropRole(request.getBindingId());
 	}
 
 	private String createRole(String pRoleName) {
-
 		//TODO : Test if role doesn't exist
-		//Session session = this.open();
 		LOGGER.info("Begin creating Role " + pRoleName);
 		String roleNameConverted = Converter.uuidToRoleName(pRoleName);
 		LOGGER.info("Role Name converted : " + roleNameConverted);
-		String passwordGenerated = this.generatePassword();
-		LOGGER.info("Password generated : " + passwordGenerated);
-		this.template.getSession().execute("CREATE ROLE " + roleNameConverted + " WITH PASSWORD = '" + passwordGenerated + "' AND LOGIN = true");
+		String password = generatePassword();
+		LOGGER.info("Password generated : " + password);
+		template.getSession().execute("CREATE ROLE " + roleNameConverted + " WITH PASSWORD = '" + password + "' AND LOGIN = true");
 		LOGGER.info("End creating Role " + roleNameConverted);
-		//disconnect(session);
-		return passwordGenerated;
+		return password;
 	}
 
 	private void grantRoleOnKeyspace(String pKeyspaceName, String pRoleName) {
-
 		//TODO : Test if keyspace and role exist
-		//Session session = this.open();
 		LOGGER.info("Begin granting Role " + pRoleName + " to Keyspace " + pKeyspaceName);
 		String roleNameConverted = Converter.uuidToRoleName(pRoleName);
 		String keyspaceNameConverted = Converter.uuidToKeyspaceName(pKeyspaceName);
 		LOGGER.info("Role Name converted : " + roleNameConverted);
 		LOGGER.info("Keyspace Name converted : " + keyspaceNameConverted);
-		this.template.getSession().execute("GRANT ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " TO " + roleNameConverted);
+		template.getSession().execute("GRANT ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " TO " + roleNameConverted);
 		LOGGER.info("End granting Role On Keyspace");
-		//disconnect(session);
 	}
 
 	private void dropRole(String pRoleName) {
-		//Session session = this.open();
 		LOGGER.info("Begin dropping Role " + pRoleName);
 		String roleNameConverted = Converter.uuidToRoleName(pRoleName);
 		LOGGER.info("Role Name converted : " + roleNameConverted);
-		this.template.getSession().execute("DROP ROLE " + roleNameConverted);
+		template.getSession().execute("DROP ROLE " + roleNameConverted);
 		LOGGER.info("End creating Role " + roleNameConverted);
-		//disconnect(session);
 	}
 
 	private void revokeRoleOnKeyspace(String pKeyspaceName, String pRoleName) {
 		//TODO : Test if role and keyspace exist
-		//Session session = this.open();
 		LOGGER.info("Begin revoking Role " + pRoleName + " from Keyspace " + pKeyspaceName);
 		String roleNameConverted = Converter.uuidToRoleName(pRoleName);
 		String keyspaceNameConverted = Converter.uuidToKeyspaceName(pKeyspaceName);
 		LOGGER.info("Role Name converted : " + roleNameConverted);
 		LOGGER.info("Keyspace Name converted : " + keyspaceNameConverted);
-		this.template.getSession().execute("REVOKE ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " FROM " + roleNameConverted);
+		template.getSession().execute("REVOKE ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " FROM " + roleNameConverted);
 		LOGGER.info("End revoking Role On Keyspace");
-		//disconnect(session);
 	}
-
-//	private Session open() {
-//		if (this.cluster == null) {
-//			PlainTextAuthProvider ptap = new PlainTextAuthProvider(user, password);
-//			this.cluster = Cluster.builder()
-//					.addContactPoints(contactPoints)
-//					.withPort(port)
-//					.withCredentials(user, password)
-//					.withAuthProvider(ptap)
-//					.build();
-//		}
-//		return this.cluster.connect();
-//	}
-
-//	private void disconnect(Session session) {
-//		session.close();
-//	}
 
 	private String generatePassword() {
 		RandomStringGenerator generator = new RandomStringGenerator.Builder()

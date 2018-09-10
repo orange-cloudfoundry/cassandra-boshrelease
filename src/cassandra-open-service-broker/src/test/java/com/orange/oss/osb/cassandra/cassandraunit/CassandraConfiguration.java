@@ -1,12 +1,12 @@
 package com.orange.oss.osb.cassandra.cassandraunit;
 
-import com.datastax.driver.core.PlainTextAuthProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.CassandraClusterFactoryBean;
 import org.springframework.data.cassandra.config.java.AbstractCassandraConfiguration;
+
+import com.datastax.driver.core.PlainTextAuthProvider;
 
 /**
  * Created by ijly7474 on 24/08/17.
@@ -41,6 +41,4 @@ public class CassandraConfiguration extends AbstractCassandraConfiguration{
         cluster.setAuthProvider(sap);
         return cluster;
     }
-
-
 }

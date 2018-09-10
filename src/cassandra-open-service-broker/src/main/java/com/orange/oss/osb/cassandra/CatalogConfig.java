@@ -1,5 +1,7 @@
 package com.orange.oss.osb.cassandra;
 
+import static java.util.Arrays.asList;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,7 +12,6 @@ import org.springframework.cloud.servicebroker.model.Catalog;
 import org.springframework.cloud.servicebroker.model.Plan;
 import org.springframework.cloud.servicebroker.model.ServiceDefinition;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +30,7 @@ public class CatalogConfig {
 										"default",
 										"This is a default cassandra plan.  All services are created equally.",
 										getPlanMetadata())),
-						Arrays.asList("cassandra", "document"),
+						asList("cassandra", "document"),
 						getServiceDefinitionMetadata(),
 						null,
 						null)));
