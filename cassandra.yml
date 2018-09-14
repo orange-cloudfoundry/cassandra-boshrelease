@@ -48,8 +48,8 @@ instance_groups:
             - 10.165.0.94=DC1:RAC1
             - 10.165.0.95=DC1:RAC1
     stemcell: *trusty_stemcell
-    vm_type: &cassandra_vm_type large
-    persistent_disk_type: &cassandra_persistent_disk_type small
+    vm_type: &cassandra_vm_type default
+    persistent_disk_type: &cassandra_persistent_disk_type default
     env:
       persistent_disk_fs: xfs
       bosh: { swap_size: 0 }
@@ -68,7 +68,7 @@ instance_groups:
           seeds: { from: *cassandra_seeds_link }          
         properties: *cassandra_properties
     stemcell: *trusty_stemcell
-    vm_type: *cassandra_vm_type
+    vm_type: *cassandra_vm_type 
     persistent_disk_type: *cassandra_persistent_disk_type
     env:
       persistent_disk_fs: xfs
