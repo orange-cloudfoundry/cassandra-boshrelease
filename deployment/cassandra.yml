@@ -26,8 +26,8 @@ instance_groups:
             z3:      { dc: DC1, rack: RAC3 }
             default: { dc: DC1, rack: RAC3 }
     stemcell: *trusty_stemcell
-    vm_type: &cassandra_vm_type default
-    persistent_disk_type: &cassandra_persistent_disk_type default
+    vm_type: &cassandra_vm_type large
+    persistent_disk_type: &cassandra_persistent_disk_type large
     env:
       persistent_disk_fs: xfs
       bosh: { swap_size: 0 }
