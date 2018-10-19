@@ -67,7 +67,7 @@ bosh -d cassandra run-errand broker-registrar
 
 ### BOSH 2.0 manifests
 
-See the documentation in the  [`deployment`](./deployment) directory.
+See the documentation in the  [`cassandra-deployment`](https://github.com/orange-cloudfoundry/cassandra-deployment) repository.
 
 
 ### BOSH 1.0 manifests
