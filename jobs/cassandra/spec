@@ -51,6 +51,7 @@ templates:
   config/jmx_exporter.yml: conf/jmx_exporter.yml
   bin/nodetool: bin/nodetool
   bin/sstableloader: bin/sstableloader
+  bin/cqlsh: bin/cqlsh
 
 properties:
   bpm.enabled:
