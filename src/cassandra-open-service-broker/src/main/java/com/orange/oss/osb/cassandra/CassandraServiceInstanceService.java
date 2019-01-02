@@ -46,7 +46,7 @@ public class CassandraServiceInstanceService implements ServiceInstanceService {
 	public CreateServiceInstanceResponse createServiceInstance(CreateServiceInstanceRequest request) {
 		//Create a cassandra keyspace
 		createKeyspace(request.getServiceInstanceId());
-	    return new CreateServiceInstanceResponse();
+	    return new CreateServiceInstanceResponse().withDashboardUrl("");
 	}
 
 	@Override
