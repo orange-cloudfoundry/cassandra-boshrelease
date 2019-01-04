@@ -28,6 +28,9 @@ properties:
     default: broker
   broker.password:
     description: cassandra service broker password
+  broker.port:
+    description: server http port
+    default: 8080
   broker.heap_size:
     description: |
       The Java heap size to use, knowing that both minimum and maximum heap

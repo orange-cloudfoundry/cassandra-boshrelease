@@ -25,3 +25,6 @@ spring:
       username: cassandra
       port: <%= link('seeds').p('native_transport_port').to_json %>
       ssl: <%= link('seeds').p('client_encryption.enabled').to_json %>
+
+server:
+  port: <%= p('broker.port').to_json %>
