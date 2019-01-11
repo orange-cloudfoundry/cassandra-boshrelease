@@ -1,4 +1,4 @@
-package com.orange.oss.osb.cassandra;
+package com.orange.oss.osb.cassandra.config;
 
 import static java.util.Arrays.asList;
 
@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.servicebroker.model.Catalog;
 import org.springframework.cloud.servicebroker.model.Plan;
 import org.springframework.cloud.servicebroker.model.ServiceDefinition;
@@ -16,35 +17,50 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CatalogConfig {
-	@Bean
-	public Catalog catalog() {
-		return new Catalog(Collections.singletonList(
-				new ServiceDefinition(
-						"cassandra-service-broker",
-						"Apache Cassandra database 3.11 for Cloud Foundry",
-						"Cassandra key-space on demand on shared cluster ",
-						true,
-						false,
-						Collections.singletonList(
-								new Plan("cassandra-plan",
-										"default",
-										"This is a default cassandra plan.  All services are created equally.",
-										getPlanMetadata())),
-						asList("cassandra", "document"),
-						getServiceDefinitionMetadata(),
-						null,
-						null)));
+
+	@Value("${catalog_yml}")
+	private String catalogYml;
+
+	public String getCatalog(){
+		return catalogYml;
 	}
 
+	@Bean
+	public Catalog catalog() {
+		Catalog catalog;
+		if (catalogYml == null) { //hard coded catalog is returned
+			catalog = new Catalog(Collections.singletonList(
+					new ServiceDefinition(
+							"cassandra-service-broker",
+							"Apache Cassandra database 3.11 for Cloud Foundry",
+							"Cassandra key-space on demand on shared cluster",
+							true,
+							false,
+							Collections.singletonList(
+									new Plan("cassandra-plan",
+											"default",
+											"This is a default cassandra plan.  All services are created equally.",
+											getPlanMetadata())),
+							asList("cassandra", "document"),
+							getServiceDefinitionMetadata(),
+							null,
+							null)));
+		}else{
+			CatalogYmlReader catalogYmlReader = new CatalogYmlReader();
+			List<ServiceDefinition> serviceDefinitions = catalogYmlReader.getServiceDefinitions(catalogYml);
+			catalog = new Catalog (serviceDefinitions);
+		}
+		return catalog;
+	}
 
 	private Map<String, Object> getServiceDefinitionMetadata() {
 		Map<String, Object> sdMetadata = new HashMap<>();
 		sdMetadata.put("displayName", "cassandra");
 		sdMetadata.put("imageUrl", "http://cassandra.apache.org/img/cassandra_logo.png");
-		sdMetadata.put("longDescription", "Creating a service Cassandra provisions a key-space. Binding applications provisions unique credentials for each application to access the keys-pace ");
+		sdMetadata.put("longDescription", "Creating a service Cassandra provisions a key-space. Binding applications provisions unique credentials for each application to access the keys-pace");
 		sdMetadata.put("providerDisplayName", "Orange");
 		sdMetadata.put("documentationUrl", "http://cassandra.apache.org/doc/latest\n");
-		sdMetadata.put("supportUrl", "https://marketplace.my-company.org/contact-us\n");
+		sdMetadata.put("supportUrl", "https://contact-us/\n");
 		return sdMetadata;
 	}
 

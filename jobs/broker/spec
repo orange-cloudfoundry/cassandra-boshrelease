@@ -45,3 +45,35 @@ properties:
   broker.truststore_password:
     description: |
       The password to use for the truststore.
+  broker.catalog_yml:
+    description: catalog description in marketplace
+    example: |
+    services:
+    - id: cassandra-service-broker
+      name: Apache Cassandra database 3.11 for Cloud Foundry
+      description: "Cassandra key-space on demand on shared cluster"
+      bindable: true
+      plans:
+        - id: cassandra-plan
+          name: default
+          description: This is a default cassandra plan.  All services are created equally.
+          free: false
+          metadata:
+            bullets:
+            - 100 MB Storage (not enforced)
+            - 40 concurrent connections (not enforced)
+            costs:
+              amount:
+                eur: 10.0
+              unit: MONTHLY
+            displayName: Default - Shared cassandra server
+      tags:
+        - cassandra
+        - document
+      metadata:
+        displayName: cassandra
+        imageUrl: http://cassandra.apache.org/img/cassandra_logo.png
+        longDescription: Creating a service Cassandra provisions a key-space. Binding applications provisions unique credentials for each application to access the keys-pace
+        providerDisplayName: Orange
+        documentationUrl: http://cassandra.apache.org/doc/latest
+        supportUrl: https://contact-us/

@@ -1,27 +1,26 @@
 package com.orange.oss.osb.cassandra.cassandraunit;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.orange.oss.osb.cassandra.config.CatalogYmlReader;
 import org.cassandraunit.spring.CassandraUnitDependencyInjectionTestExecutionListener;
 import org.cassandraunit.spring.CassandraUnitTestExecutionListener;
 import org.cassandraunit.spring.EmbeddedCassandra;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.servicebroker.model.CreateServiceInstanceAppBindingResponse;
-import org.springframework.cloud.servicebroker.model.CreateServiceInstanceBindingRequest;
-import org.springframework.cloud.servicebroker.model.CreateServiceInstanceBindingResponse;
-import org.springframework.cloud.servicebroker.model.CreateServiceInstanceRequest;
-import org.springframework.cloud.servicebroker.model.DeleteServiceInstanceBindingRequest;
-import org.springframework.cloud.servicebroker.model.DeleteServiceInstanceRequest;
+import org.springframework.cloud.servicebroker.model.*;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.test.context.ActiveProfiles;
@@ -33,7 +32,7 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.orange.oss.osb.cassandra.CassandraServiceInstanceBindingService;
 import com.orange.oss.osb.cassandra.CassandraServiceInstanceService;
-import com.orange.oss.osb.cassandra.CatalogConfig;
+import com.orange.oss.osb.cassandra.config.CatalogConfig;
 import com.orange.oss.osb.cassandra.util.Converter;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -195,6 +194,50 @@ public class CassandraOpenServiceBrokerApplicationTests {
         dropKeyspace();
     }
 
+    @Test
+    public void getCatalogShouldMatchWhoseDefinedInApplicationYml() {
+        //Given (catalog is defined in test/resources/application.yml
+
+        //When
+        String catalogYml = catalogConfig.getCatalog();
+        CatalogYmlReader catalogYmlReader = new CatalogYmlReader();
+        List<ServiceDefinition> serviceDefinitions = catalogYmlReader.getServiceDefinitions(catalogYml);
+
+        //Then
+        assertThat(serviceDefinitions.get(0).getId()).isEqualTo("cassandra-service-broker");
+        assertThat(serviceDefinitions.get(0).getName()).isEqualTo("Apache Cassandra database 3.11 for Cloud Foundry");
+        assertThat(serviceDefinitions.get(0).getDescription()).isEqualTo("Cassandra key-space on demand on shared cluster");
+        assertThat(serviceDefinitions.get(0).isBindable()).isEqualTo(true);
+        assertThat(serviceDefinitions.get(0).getPlans().get(0).getId()).isEqualTo("cassandra-plan");
+        assertThat(serviceDefinitions.get(0).getPlans().get(0).getName()).isEqualTo("default");
+        assertThat(serviceDefinitions.get(0).getPlans().get(0).getDescription()).isEqualTo("This is a default cassandra plan.  All services are created equally.");
+        assertThat(serviceDefinitions.get(0).getPlans().get(0).isFree()).isEqualTo(false);
+        //bullets
+        List listBullets = (List) serviceDefinitions.get(0).getPlans().get(0).getMetadata().get("bullets");
+        assertThat(listBullets.get(0)).isEqualTo("100 MB Storage (not enforced)");
+        assertThat(listBullets.get(1)).isEqualTo("40 concurrent connections (not enforced)");
+        //costs
+        Map mapCosts = (Map) serviceDefinitions.get(0).getPlans().get(0).getMetadata().get("costs");
+        Map mapAmount = (Map)mapCosts.get("amount");
+        Double price = (Double)mapAmount.get("eur");
+        assertThat(price).isEqualTo(10.0);
+        String period = (String)mapCosts.get("unit");
+        assertThat(period).isEqualTo("MONTHLY");
+        //displayName
+        String displayName = (String)serviceDefinitions.get(0).getPlans().get(0).getMetadata().get("displayName");
+        assertThat(displayName).isEqualTo("Default - Shared cassandra server");
+
+        assertThat(serviceDefinitions.get(0).getTags().get(0)).isEqualTo("cassandra");
+        assertThat(serviceDefinitions.get(0).getTags().get(1)).isEqualTo("document");
+        assertThat(serviceDefinitions.get(0).getMetadata().get("displayName")).isEqualTo("cassandra");
+        assertThat(serviceDefinitions.get(0).getMetadata().get("imageUrl")).isEqualTo("http://cassandra.apache.org/img/cassandra_logo.png");
+        assertThat(serviceDefinitions.get(0).getMetadata().get("longDescription")).isEqualTo("Creating a service Cassandra provisions a key-space. Binding applications provisions unique credentials for each application to access the keys-pace");
+        assertThat(serviceDefinitions.get(0).getMetadata().get("providerDisplayName")).isEqualTo("Orange");
+        assertThat(serviceDefinitions.get(0).getMetadata().get("documentationUrl")).isEqualTo("http://cassandra.apache.org/doc/latest");
+        assertThat(serviceDefinitions.get(0).getMetadata().get("supportUrl")).isEqualTo("https://contact-us/");
+    }
+
+
 
     //TODO : Tests des cas limites
 
@@ -322,5 +365,11 @@ public class CassandraOpenServiceBrokerApplicationTests {
         //TestCassandraConfiguration.session.execute("REVOKE ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " FROM " + roleNameConverted);
         template.getSession().execute("REVOKE ALL PERMISSIONS ON KEYSPACE " + keyspaceNameConverted + " FROM " + roleNameConverted);
     }
+
+
+
+
+
+
 
 }

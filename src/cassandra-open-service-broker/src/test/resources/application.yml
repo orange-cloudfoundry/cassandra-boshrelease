@@ -1,0 +1,8 @@
+spring:
+  data:
+    cassandra:
+      contact-points: 10.0.8.3
+      port: 9042
+      ssl: false
+      username: cassandra
+      password: cassandra
