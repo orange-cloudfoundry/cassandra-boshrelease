@@ -26,3 +26,5 @@ output
 /packages/*/dists/
 /*.patch
 /jobs/cassandra/*.patch
+/cassandra_exporter-2.1.0.jar
+/.gitignore
