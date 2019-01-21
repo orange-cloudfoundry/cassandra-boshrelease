@@ -5,7 +5,7 @@
 .DS_Store
 
 /.blobs/
-/blobs/
+#/blobs/
 /dev_releases/
 /config/dev.yml
 /config/private.yml
