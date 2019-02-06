@@ -1,0 +1,8 @@
+# abort script on any command that exits with a non zero value
+set -e
+
+export HOME=/var/vcap
+
+tar zxf python/python-2.7.12-Xenial.tar.gz
+cd python
+apt install ./*.deb
