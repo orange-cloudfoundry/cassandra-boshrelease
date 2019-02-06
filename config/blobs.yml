@@ -16,4 +16,5 @@ openjdk/openjdk.tar.gz:
   sha: 9fc65908420c92047346e5bcc66fee0aad422c5e
 python/python-2.7.12-Xenial.tar.gz:
   size: 3877617
+  object_id: 7a107f25-fc5a-4da2-7e08-20449767b417
   sha: e28f3ec7af1c209244987b3e0a426e4c0a36767e

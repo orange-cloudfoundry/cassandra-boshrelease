@@ -3,6 +3,7 @@ name: cassandra-acceptance-tests
 packages:
   - golang-1.9-linux
   - cassandra-acceptance-tests
+  - python
 
 consumes:
   - name: cassandra_seeds_list

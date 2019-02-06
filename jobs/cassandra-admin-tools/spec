@@ -15,6 +15,7 @@ templates:
 packages:
   - cassandra
   - openjdk
+  - python
 
 consumes:
   - name: seeds

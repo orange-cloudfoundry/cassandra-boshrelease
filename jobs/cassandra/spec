@@ -4,6 +4,7 @@ name: cassandra
 packages:
   - cassandra
   - openjdk
+  - python
 
 provides:
   - name: cassandra
