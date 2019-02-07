@@ -2,7 +2,7 @@
 set -e
 
 export HOME=/var/vcap
-
-tar zxf python/python-2.7.12-Xenial.tar.gz
+cd ${BOSH_INSTALL_TARGET}
+tar zxf ${BOSH_INSTALL_TARGET}/python/python-2.7.12-Xenial.tar.gz
 cd python
 apt install ./*.deb
