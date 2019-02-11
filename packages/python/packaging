@@ -1,8 +1,22 @@
 # abort script on any command that exits with a non zero value
-set -e
+#set -ex
 
 export HOME=/var/vcap
-cd ${BOSH_INSTALL_TARGET}
-tar zxf ${BOSH_INSTALL_TARGET}/python-2.7.12-Xenial.tar.gz
-cd python
-apt install ./*.deb
+##cd ${BOSH_INSTALL_TARGET}
+##tar zxf ${BOSH_COMPILE_TARGET}/python-2.7.12-Xenial.tar.gz
+tar zxf python/python-2.7.12-Xenial.tar.gz
+##cd python
+#sleep 10000
+##apt install ./*.deb
+##apt-get install *.deb
+##apt-get install "./*.deb"A
+##dpkg -i  "./*.deb"
+for i in $(ls *.deb)
+do
+##   apt install -y ./$i
+##   dpkg -i ${i} --root=${BOSH_INSTALL_TARGET}
+##    sudo gdebi -i ${i} 
+##   dpkg -i ${i} 
+   dpkg -x ${i} ${BOSH_INSTALL_TARGET}
+done
+##apt-get install python --assume-yes

@@ -9,5 +9,5 @@ export CASSANDRA_CONF=/var/vcap/jobs/cassandra/conf
 export JAVA_HOME=/var/vcap/packages/openjdk
 export JVM_OPTS=-Djava.io.tmpdir=/var/vcap/data/cassandra/jna-tmp
 export JVM_OPTS="${JVM_OPTS} -Djava.security.egd=file:/dev/./urandom"
-
+export PATH=/var/vcap/packages/python/usr/bin:$PATH
 exec /var/vcap/packages/cassandra/bin/cqlsh "$@"

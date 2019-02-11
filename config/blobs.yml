@@ -1,15 +1,20 @@
 cassandra/apache-cassandra-3.11.1-bin.tar.gz:
   size: 38104148
+  object_id: caffd086-fe5c-4c50-75a7-59807c414bed
   sha: 454f4fd60aeed97b0ed80afebe5c08620d8ddf04
 cf-cli/cf-cli_6.30.0_linux_x86-64.tgz:
   size: 5909858
+  object_id: 609fe06f-c010-4b81-4898-a8acc7373029
   sha: 10a795927fd6f03f1b7212f21ac508e6278270fd
 jmx_exporter/jmx_prometheus_javaagent-0.1.0.jar:
   size: 361033
+  object_id: 94daf242-a0e6-46c8-57fb-0ecb402d680f
   sha: 6ab370edccc2eeb3985f4c95769c26c090d0e052
 openjdk/openjdk.tar.gz:
   size: 126476497
+  object_id: 0e9bc626-0999-4b85-638c-c97303a7c602
   sha: 9fc65908420c92047346e5bcc66fee0aad422c5e
 python/python-2.7.12-Xenial.tar.gz:
   size: 3877617
+  object_id: 1022f71f-4bc3-49bf-4f45-187a487dec39
   sha: e28f3ec7af1c209244987b3e0a426e4c0a36767e

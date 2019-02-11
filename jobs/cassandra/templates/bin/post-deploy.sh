@@ -41,7 +41,7 @@ export CASSANDRA_BIN=/var/vcap/packages/cassandra/bin
 export CASSANDRA_CONF=$job_dir/conf
 
 export JAVA_HOME=/var/vcap/packages/openjdk
-export PATH=$PATH:$JAVA_HOME/bin:$CASSANDRA_BIN
+export PATH=/var/vcap/packages/python/usr/bin/:$PATH:$JAVA_HOME/bin:$CASSANDRA_BIN
 
 
 function log_err() {
