@@ -1,7 +1,7 @@
 name: cassandra
-version: "10"
-commit_hash: 7c84ff0
-uncommitted_changes: false
+version: 11
+commit_hash: bd3a2f3
+uncommitted_changes: true
 jobs:
 - name: broker
   version: cb13eccb70b203ac2dba698e62c83f2868806433
@@ -12,28 +12,29 @@ jobs:
   fingerprint: 6aab08840fbf3b83416eb93b45e8b0c9a3ef7906
   sha1: cc0dd5e009b2d492eaac275ed361faf82b16689e
 - name: cassandra
-  version: c8a317500df34755bc74657d883df2a09327c381
-  fingerprint: c8a317500df34755bc74657d883df2a09327c381
-  sha1: d8010b0d10fe5c4396b5d6c0255261b9772bffed
+  version: eb6a055fd5b77be12c45fda46259ac49c66af02f
+  fingerprint: eb6a055fd5b77be12c45fda46259ac49c66af02f
+  sha1: 1cea3510c9dedc5c4d8c5c8a74c39039d8735483
 - name: cassandra-acceptance-tests
-  version: 1ad650e4dd9aead294cc542dbb89c12b1ff91c45
-  fingerprint: 1ad650e4dd9aead294cc542dbb89c12b1ff91c45
-  sha1: 151cc2d3bb61805237908c6de8fc2f8ca4d44c29
+  version: 99f234cdab763ef2b54d0bf0291ca11926302cb8
+  fingerprint: 99f234cdab763ef2b54d0bf0291ca11926302cb8
+  sha1: 7b4d515bd3ff811926fd9cd6fb56762c8fd3daee
 - name: cassandra-admin-tools
-  version: 35425cb3bd7cddb741a07b96e1776c3c5332f4ff
-  fingerprint: 35425cb3bd7cddb741a07b96e1776c3c5332f4ff
-  sha1: 4c32001debeae5064f1f70ab297cb69ee9dff846
+  version: 814d33e468be0a016b22191014dc9a3d7efe1825
+  fingerprint: 814d33e468be0a016b22191014dc9a3d7efe1825
+  sha1: f8e6e46389f68ff6b2a3e039d6fdda75e39852de
 packages:
 - name: cassandra
-  version: c91accf9a2b2fb2ae74f5af7b154f06c80c06e06
-  fingerprint: c91accf9a2b2fb2ae74f5af7b154f06c80c06e06
-  sha1: afaa487f2b6cfeaf4d1fa088ec1cf17afd5ac9eb
+  version: b9d0b01282a055107e322b89f8e94be7ee136b5e
+  fingerprint: b9d0b01282a055107e322b89f8e94be7ee136b5e
+  sha1: b2162239861db615813392e33f92ab39153c5189
   dependencies:
   - openjdk
+  - python
 - name: cassandra-acceptance-tests
-  version: cb9f619ef4935e3aa5453cc80f1d4c1bef0e2cd1
-  fingerprint: cb9f619ef4935e3aa5453cc80f1d4c1bef0e2cd1
-  sha1: 1c88e073d4a561a92d4787a90a2ee5e2b5931d88
+  version: ff46eea9d8d7eacb818ebb44a1d1e618621a53fc
+  fingerprint: ff46eea9d8d7eacb818ebb44a1d1e618621a53fc
+  sha1: 0e9c54b8dc68d8a6f1a601ed38990527c4a862a0
   dependencies:
   - golang-1.9-linux
 - name: cassandra-broker-pkg
@@ -42,9 +43,9 @@ packages:
   sha1: d434a2bcea2c573b02aae2f69427bdf7e222ccd2
   dependencies: []
 - name: cf-cassandra-example-app
-  version: 29c4de20e48c567ca32d19d35ac88bf89a758c55
-  fingerprint: 29c4de20e48c567ca32d19d35ac88bf89a758c55
-  sha1: 918bddf060043a3a7226a03252f5e6d8d8c8db9a
+  version: a26b0f28a0d532b3146018eebf619da53ad659c1
+  fingerprint: a26b0f28a0d532b3146018eebf619da53ad659c1
+  sha1: 3fcf6dcd519aceffd91f74b453c199f4c00ccb06
   dependencies: []
 - name: cf-cli
   version: 19050c0a1e025241fed29f6656adaf4f6df170fb
@@ -65,6 +66,11 @@ packages:
   version: 93c072891062f43e6a7fad1f3232064da90429af
   fingerprint: 93c072891062f43e6a7fad1f3232064da90429af
   sha1: cb11bdc0c7526b927eb4b5c6860b57fea00cd640
+  dependencies: []
+- name: python
+  version: 4ccd9112df7976ddb725714517f5c9205ebc1a30
+  fingerprint: 4ccd9112df7976ddb725714517f5c9205ebc1a30
+  sha1: 532e6d2249ac8c5e022ad6e5ccd406a0bb1dab03
   dependencies: []
 license:
   version: 32ba4e7baff79aa4731846b70691d98a998a483b
