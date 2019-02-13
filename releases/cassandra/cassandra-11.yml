@@ -1,7 +1,7 @@
 name: cassandra
-version: 11
-commit_hash: bd3a2f3
-uncommitted_changes: true
+version: "11"
+commit_hash: 00d9abd
+uncommitted_changes: false
 jobs:
 - name: broker
   version: cb13eccb70b203ac2dba698e62c83f2868806433
@@ -14,27 +14,27 @@ jobs:
 - name: cassandra
   version: eb6a055fd5b77be12c45fda46259ac49c66af02f
   fingerprint: eb6a055fd5b77be12c45fda46259ac49c66af02f
-  sha1: 1cea3510c9dedc5c4d8c5c8a74c39039d8735483
+  sha1: 0d1029380cba26d89a177c54c9263905f03e7a97
 - name: cassandra-acceptance-tests
   version: 99f234cdab763ef2b54d0bf0291ca11926302cb8
   fingerprint: 99f234cdab763ef2b54d0bf0291ca11926302cb8
-  sha1: 7b4d515bd3ff811926fd9cd6fb56762c8fd3daee
+  sha1: 3cf0ad677c043455e6445d6af3b2689cf23fcae8
 - name: cassandra-admin-tools
   version: 814d33e468be0a016b22191014dc9a3d7efe1825
   fingerprint: 814d33e468be0a016b22191014dc9a3d7efe1825
-  sha1: f8e6e46389f68ff6b2a3e039d6fdda75e39852de
+  sha1: f19e7120e220b61cabe086ccc25c2d8f900db6da
 packages:
 - name: cassandra
   version: b9d0b01282a055107e322b89f8e94be7ee136b5e
   fingerprint: b9d0b01282a055107e322b89f8e94be7ee136b5e
-  sha1: b2162239861db615813392e33f92ab39153c5189
+  sha1: bd7d5f5845aeb82a39aeb8c4816b1f6c233b9be6
   dependencies:
   - openjdk
   - python
 - name: cassandra-acceptance-tests
-  version: ff46eea9d8d7eacb818ebb44a1d1e618621a53fc
-  fingerprint: ff46eea9d8d7eacb818ebb44a1d1e618621a53fc
-  sha1: 0e9c54b8dc68d8a6f1a601ed38990527c4a862a0
+  version: cb9f619ef4935e3aa5453cc80f1d4c1bef0e2cd1
+  fingerprint: cb9f619ef4935e3aa5453cc80f1d4c1bef0e2cd1
+  sha1: 1c88e073d4a561a92d4787a90a2ee5e2b5931d88
   dependencies:
   - golang-1.9-linux
 - name: cassandra-broker-pkg
@@ -43,9 +43,9 @@ packages:
   sha1: d434a2bcea2c573b02aae2f69427bdf7e222ccd2
   dependencies: []
 - name: cf-cassandra-example-app
-  version: a26b0f28a0d532b3146018eebf619da53ad659c1
-  fingerprint: a26b0f28a0d532b3146018eebf619da53ad659c1
-  sha1: 3fcf6dcd519aceffd91f74b453c199f4c00ccb06
+  version: 29c4de20e48c567ca32d19d35ac88bf89a758c55
+  fingerprint: 29c4de20e48c567ca32d19d35ac88bf89a758c55
+  sha1: 918bddf060043a3a7226a03252f5e6d8d8c8db9a
   dependencies: []
 - name: cf-cli
   version: 19050c0a1e025241fed29f6656adaf4f6df170fb
@@ -70,7 +70,7 @@ packages:
 - name: python
   version: 4ccd9112df7976ddb725714517f5c9205ebc1a30
   fingerprint: 4ccd9112df7976ddb725714517f5c9205ebc1a30
-  sha1: 532e6d2249ac8c5e022ad6e5ccd406a0bb1dab03
+  sha1: 458db01c1363beb83babad9f7977f3d0538fdd39
   dependencies: []
 license:
   version: 32ba4e7baff79aa4731846b70691d98a998a483b
