@@ -1,5 +1,6 @@
 cassandra/apache-cassandra-3.11.4-bin.tar.gz:
   size: 41235177
+  object_id: e09c4246-ec2c-4303-43df-e12892aea870
   sha: 44c658c9b166089f8c6fe51571ad535fd6987a04
 cf-cli/cf-cli_6.30.0_linux_x86-64.tgz:
   size: 5909858
@@ -15,5 +16,5 @@ openjdk/openjdk.tar.gz:
   sha: 9fc65908420c92047346e5bcc66fee0aad422c5e
 python/python-2.7.12-Xenial.tar.gz:
   size: 3877617
-  object_id: 4a8f823f-e722-4888-7ee0-8e828a150519
-  sha: 5038076b3c7164b505835b6ee495c571a474df7d
+  object_id: 870519ef-ca24-4e62-7ad2-42becf4b66ee
+  sha: e28f3ec7af1c209244987b3e0a426e4c0a36767e
