@@ -1,0 +1,77 @@
+name: cassandra
+version: 10+dev.1
+commit_hash: ad7371e
+uncommitted_changes: false
+jobs:
+- name: broker
+  version: cb13eccb70b203ac2dba698e62c83f2868806433
+  fingerprint: cb13eccb70b203ac2dba698e62c83f2868806433
+  sha1: d42c17d373afe1aaeafdd31fcf19d00b113ab323
+- name: broker-smoke-tests
+  version: 6aab08840fbf3b83416eb93b45e8b0c9a3ef7906
+  fingerprint: 6aab08840fbf3b83416eb93b45e8b0c9a3ef7906
+  sha1: cc0dd5e009b2d492eaac275ed361faf82b16689e
+- name: cassandra
+  version: c8a317500df34755bc74657d883df2a09327c381
+  fingerprint: c8a317500df34755bc74657d883df2a09327c381
+  sha1: d8010b0d10fe5c4396b5d6c0255261b9772bffed
+- name: cassandra-acceptance-tests
+  version: 1ad650e4dd9aead294cc542dbb89c12b1ff91c45
+  fingerprint: 1ad650e4dd9aead294cc542dbb89c12b1ff91c45
+  sha1: 151cc2d3bb61805237908c6de8fc2f8ca4d44c29
+- name: cassandra-admin-tools
+  version: 35425cb3bd7cddb741a07b96e1776c3c5332f4ff
+  fingerprint: 35425cb3bd7cddb741a07b96e1776c3c5332f4ff
+  sha1: 4c32001debeae5064f1f70ab297cb69ee9dff846
+packages:
+- name: cassandra
+  version: c91accf9a2b2fb2ae74f5af7b154f06c80c06e06
+  fingerprint: c91accf9a2b2fb2ae74f5af7b154f06c80c06e06
+  sha1: afaa487f2b6cfeaf4d1fa088ec1cf17afd5ac9eb
+  dependencies:
+  - openjdk
+- name: cassandra-acceptance-tests
+  version: 75bbbf8791696c72cbff354476af0ae91145f14e
+  fingerprint: 75bbbf8791696c72cbff354476af0ae91145f14e
+  sha1: 0c1a2523a8cddc3780fc8c9d30ea05c6a0c690e0
+  dependencies:
+  - golang-1.9-linux
+- name: cassandra-broker-pkg
+  version: 7497420df05d3e45f36de51569b99e2b5a808e11
+  fingerprint: 7497420df05d3e45f36de51569b99e2b5a808e11
+  sha1: d434a2bcea2c573b02aae2f69427bdf7e222ccd2
+  dependencies: []
+- name: cf-cassandra-example-app
+  version: e9f36f6ddc2e5a36ab42dbd66a162a508cfe783b
+  fingerprint: e9f36f6ddc2e5a36ab42dbd66a162a508cfe783b
+  sha1: 85c977f10c5a573369e9b01f6cd7b840f6104f6e
+  dependencies: []
+- name: cf-cli
+  version: 19050c0a1e025241fed29f6656adaf4f6df170fb
+  fingerprint: 19050c0a1e025241fed29f6656adaf4f6df170fb
+  sha1: 709bee1e2793c2f2f10fb0cbf94a1a07c8c98769
+  dependencies: []
+- name: golang-1.9-linux
+  version: 200a29b129a9078cb156be44c4a792ae24f42900
+  fingerprint: 200a29b129a9078cb156be44c4a792ae24f42900
+  sha1: bacfa6a162fa7085f95df7d43e911404a3644b01
+  dependencies: []
+- name: java-common
+  version: 018744938b5a691527c626963211f4ba4b5772bf
+  fingerprint: 018744938b5a691527c626963211f4ba4b5772bf
+  sha1: 66061ebebb28b87bc42be447a7f32f326c5b84e6
+  dependencies: []
+- name: openjdk
+  version: 93c072891062f43e6a7fad1f3232064da90429af
+  fingerprint: 93c072891062f43e6a7fad1f3232064da90429af
+  sha1: cb11bdc0c7526b927eb4b5c6860b57fea00cd640
+  dependencies: []
+- name: python
+  version: 3bc240e5bad8ccefdc30b11ab91f80b59851c5c7
+  fingerprint: 3bc240e5bad8ccefdc30b11ab91f80b59851c5c7
+  sha1: 6176ac806f91566c321a28f5fa215c8ce66c2815
+  dependencies: []
+license:
+  version: 32ba4e7baff79aa4731846b70691d98a998a483b
+  fingerprint: 32ba4e7baff79aa4731846b70691d98a998a483b
+  sha1: 9a9f801df42ba312392281575962b42b17c5f46f
