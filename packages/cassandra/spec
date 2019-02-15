@@ -6,5 +6,5 @@ dependencies:
 files:
 - openjdk/**/*
 - python/python-2.7.12-Xenial.tar.gz
-- cassandra/apache-cassandra-3.11.1-bin.tar.gz
+- cassandra/apache-cassandra-3.11.4-bin.tar.gz
 - jmx_exporter/jmx_prometheus_javaagent-0.1.0.jar
