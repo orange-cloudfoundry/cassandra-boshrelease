@@ -1,7 +1,3 @@
-cassandra/apache-cassandra-3.11.4-bin.tar.gz:
-  size: 41235177
-  object_id: e09c4246-ec2c-4303-43df-e12892aea870
-  sha: 44c658c9b166089f8c6fe51571ad535fd6987a04
 cf-cli/cf-cli_6.30.0_linux_x86-64.tgz:
   size: 5909858
   object_id: 2c11f0bd-87f0-4e5b-79c1-f4b22254abf3
