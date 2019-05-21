@@ -127,3 +127,34 @@ to do it manually by running this command:
 cd /var/vcap/jobs/cassandra-admin-tools/bin
 ./node-tool.sh clearsnapshot
 ```
+
+## Configuring Cloud Foundry to use Cassandra service
+
+### Broker registration
+The `cf create-service-broker` command expects the credentials for the cloud controller to authenticate itself to the broker. 
+```bash
+cf create-service-broker p-cassandra-broker <user> <password> <url> 
+cf enable-service-access cassandra
+```
+
+### Service provisioning
+```bash
+cf create-service cassandra <plan> cassandra-instance
+```
+
+### Service binding
+```bash
+cf bind-service cassandra-example-app cassandra-instance
+```
+
+### Service unbinding
+```bash
+cf unbind-service cassandra-example-app cassandra-instance
+```
+
+### Service deprovisioning
+```bash
+cf delete-service cassandra-instance
+```
+
+
