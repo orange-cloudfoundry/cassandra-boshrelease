@@ -26,3 +26,4 @@ output
 /packages/*/dists/
 /*.patch
 /jobs/cassandra/*.patch
+src/cassandra-open-service-broker/.mvn
